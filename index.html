@@ -14,7 +14,7 @@
     <link rel="icon" type="image/png" href="assets/logos/index_logo.png">
 
     <!-- Fast OCR Engine for Image Text Reading -->
-    <script src="https://unpkg.com/tesseract.js@v2.1.0/dist/tesseract.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
@@ -90,7 +90,7 @@
     let wordDatabase = [];
     let quizQuestions = [];
 
-    // ১. উন্নত ভয়েস সার্চ ফিচারের ফাংশন
+    // ১. ভয়েস সার্চ ফিচারের ফাংশন
     function startVoiceSearch() {
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         const resultContainer = document.getElementById('resultContainer');
@@ -98,14 +98,13 @@
         const wordInput = document.getElementById('wordInput');
         
         if (!SpeechRecognition) {
-            alert("আপনার ব্রাউজারে ভয়েস সাপোর্ট করে না। Google Chrome ব্রাউজার ব্যবহার করুন।");
+            alert("আপনার ব্রাউজারে ভয়েস সাপোর্ট করে না। Google Chrome ব্যবহার করুন।");
             return;
         }
 
         const recognition = new SpeechRecognition();
         recognition.lang = 'en-US';
         recognition.interimResults = false;
-        recognition.maxAlternatives = 1;
 
         micBtn.classList.add('listening');
         resultContainer.innerHTML = '<p style="text-align: center; color: #e74c3c; font-weight: bold;">🎙️ শুনছি... এখন কথা বলুন</p>';
@@ -124,17 +123,38 @@
             micBtn.classList.remove('listening');
         };
 
-        recognition.onerror = function(event) {
+        recognition.onerror = function() {
             micBtn.classList.remove('listening');
-            if(event.error === 'not-allowed') {
-                alert("মাইক্রোফোনের পারমিশন দেওয়া হয়নি। ব্রাউজার সেটিংস থেকে Microphone Allow করুন।");
-            } else {
-                resultContainer.innerHTML = '<p style="color: red; text-align: center;">কথা স্পষ্টভাবে বোঝা যায়নি। আবার চেষ্টা করুন!</p>';
-            }
+            resultContainer.innerHTML = '<p style="color: red; text-align: center;">কথা বোঝা যায়নি। আবার চেষ্টা করুন!</p>';
         };
     }
 
-    // ২. দ্রুততম ইমেজ থেকে লেখা বের করার ফাংশন
+    // ছবি দ্রুত প্রসেস করার জন্য ইমেজ সাইজ রিডিউস ফাংশন
+    function preprocessImage(file) {
+        return new Promise((resolve) => {
+            const img = new Image();
+            img.src = URL.createObjectURL(file);
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                
+                // সর্বোচ্চ প্রস্থ ১০০০ পিক্সেল রাখা হচ্ছে যেন প্রসেসিং দ্রুত হয়
+                const maxWidth = 1000;
+                let scale = 1;
+                if (img.width > maxWidth) {
+                    scale = maxWidth / img.width;
+                }
+                
+                canvas.width = img.width * scale;
+                canvas.height = img.height * scale;
+                
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                resolve(canvas.toDataURL('image/jpeg', 0.8));
+            };
+        });
+    }
+
+    // ২. উন্নত ছবি থেকে টেক্সট পড়ার ফাংশন
     async function processImageSearch(event) {
         const file = event.target.files[0];
         const resultContainer = document.getElementById('resultContainer');
@@ -142,31 +162,30 @@
         
         if (!file) return;
 
-        resultContainer.innerHTML = '<p style="text-align: center; color: #3498db; font-weight: bold;">🔍 ছবি বিশ্লেষণ করা হচ্ছে... একটু অপেক্ষা করুন</p>';
-
-        if (typeof Tesseract === 'undefined') {
-            resultContainer.innerHTML = '<p style="color: red; text-align: center;">ইমেজ ইঞ্জিন লোড হয়নি। ইন্টারনেট সংযোগ চেক করুন!</p>';
-            return;
-        }
+        resultContainer.innerHTML = '<p style="text-align: center; color: #3498db; font-weight: bold;">🔍 ছবি অপটিমাইজ ও পড়া হচ্ছে...</p>';
 
         try {
-            const { data: { text } } = await Tesseract.recognize(
-                file,
-                'eng',
-                { logger: m => console.log(m) }
-            );
+            const optimizedImageData = await preprocessImage(file);
 
-            const cleanedText = text.replace(/[^a-zA-Z0-9\s]/g, '').trim();
+            const worker = await Tesseract.createWorker('eng');
+            const ret = await worker.recognize(optimizedImageData);
+            await worker.terminate();
+
+            // অপ্রয়োজনীয় ক্যারেক্টার ও একাধিক স্পেস দূর করা
+            let cleanedText = ret.data.text
+                .replace(/[^a-zA-Z0-9\s]/g, ' ')
+                .replace(/\s+/g, ' ')
+                .trim();
 
             if (cleanedText) {
                 wordInput.value = cleanedText;
-                searchWord();
+                searchWord(); // স্বয়ংক্রিয় অনুবাদ চালু
             } else {
-                resultContainer.innerHTML = '<p style="color: red; text-align: center;">ছবিতে কোনো স্পষ্ট ইংরেজি লেখা পাওয়া যায়নি!</p>';
+                resultContainer.innerHTML = '<p style="color: red; text-align: center;">ছবিতে কোনো স্পষ্ট ইংরেজি শব্দ পাওয়া যায়নি!</p>';
             }
         } catch (error) {
             console.error("OCR Error:", error);
-            resultContainer.innerHTML = '<p style="color: red; text-align: center;">ছবি প্রসেস করা সম্ভব হয়নি। পরিষ্কার ছবি দিয়ে চেষ্টা করুন!</p>';
+            resultContainer.innerHTML = '<p style="color: red; text-align: center;">ছবি প্রসেস করতে সমস্যা হয়েছে। আবার চেষ্টা করুন!</p>';
         }
     }
 
@@ -348,5 +367,7 @@
     }
 </script>
 
+</body>
+</html>
 </body>
 </html>
