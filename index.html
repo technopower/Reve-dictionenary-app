@@ -5,17 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>শব্দকোষ ও কুইজ একাডেমি</title>
 
-    <!-- PWA Manifest Link -->
     <link rel="manifest" href="manifest.json">
-
-    <!-- PWA Meta Tags -->
     <meta name="theme-color" content="#2ecc71">
     <link rel="apple-touch-icon" href="assets/logos/index_logo.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="ডিকুইজ অ্যাপ">
-
-    <!-- Favicon -->
     <link rel="icon" type="image/png" href="assets/logos/index_logo.png">
 
     <style>
@@ -77,7 +72,37 @@
     let wordDatabase = [];
     let quizQuestions = [];
 
-    // JSON ফাইল থেকে ডাটাবেজ লোড করা
+    // অডিও সাউন্ড ইফেক্ট ফাংশন
+    function playSound(type) {
+        try {
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            if (type === 'correct') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(587.33, audioCtx.currentTime);
+                osc.frequency.setValueAtTime(880, audioCtx.currentTime + 0.1);
+                gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.3);
+            } else if (type === 'wrong') {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(150, audioCtx.currentTime);
+                osc.frequency.setValueAtTime(100, audioCtx.currentTime + 0.1);
+                gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.3);
+            }
+        } catch (e) {
+            console.log("Audio error:", e);
+        }
+    }
+
     async function loadWordsData() {
         try {
             const response = await fetch('./words.json');
@@ -88,7 +113,6 @@
         }
     }
 
-    // শব্দভাণ্ডার থেকে স্বয়ংক্রিয় কুইজ তৈরি
     function generateQuizFromDatabase() {
         if (wordDatabase.length < 3) return;
 
@@ -124,7 +148,6 @@
         }
     }
 
-    // ডিকশনারি ও পূর্ণাঙ্গ বাক্য অনুবাদ
     async function searchWord() {
         const textInput = document.getElementById('wordInput').value.trim();
         const resultContainer = document.getElementById('resultContainer');
@@ -138,7 +161,6 @@
 
         const cleanInput = textInput.toLowerCase();
 
-        // ১. একক শব্দ হলে লোকাল JSON ডাটাবেজে দেখা হবে
         if (!textInput.includes(' ')) {
             const found = wordDatabase.find(item => item.word.toLowerCase() === cleanInput);
             if (found) {
@@ -147,7 +169,6 @@
             }
         }
 
-        // ২. বাক্য ও নতুন শব্দের জন্য রিয়েল-টাইম ফুল সেন্টেন্স ট্রান্সলেশন
         try {
             const apiUrl = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=bn&dt=t&dj=1&q=${encodeURIComponent(textInput)}`;
             const response = await fetch(apiUrl);
@@ -177,7 +198,6 @@
         document.getElementById('score').innerText = userScore;
     }
 
-    // কুইজ লোড ফাংশন
     function loadQuiz() {
         if (quizQuestions.length === 0) generateQuizFromDatabase();
         if (quizQuestions.length === 0) return;
@@ -198,12 +218,12 @@
         });
     }
 
-    // কুইজের উত্তর চেক
     function checkAnswer(selectedOption) {
         const feedback = document.getElementById('quizFeedback');
         const currentCorrect = quizQuestions[currentQuizIndex].correct;
 
         if (selectedOption === currentCorrect) {
+            playSound('correct');
             feedback.style.color = 'green';
             feedback.innerText = 'সঠিক উত্তর! 🎉 (+১০ পয়েন্ট)';
             userScore += 10;
@@ -214,15 +234,14 @@
                 loadQuiz();
             }, 1000);
         } else {
+            playSound('wrong');
             feedback.style.color = 'red';
             feedback.innerText = 'ভুল উত্তর! আবার চেষ্টা করুন।';
         }
     }
 
-    // পেজ লোড হলে ডাটাবেজ লোড হবে
     window.addEventListener('DOMContentLoaded', loadWordsData);
 
-    // Service Worker Registration
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             navigator.serviceWorker.register('./pwabuilder-sw.js')
