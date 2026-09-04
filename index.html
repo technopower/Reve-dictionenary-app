@@ -93,36 +93,44 @@
     }
 
     async function searchWord() {
-        const word = document.getElementById('wordInput').value.trim().toLowerCase();
+        const wordInput = document.getElementById('wordInput').value.trim().toLowerCase();
         const resultContainer = document.getElementById('resultContainer');
 
-        if (!word) {
+        if (!wordInput) {
             resultContainer.innerHTML = '<p style="color: red; text-align: center;">দয়া করে একটি শব্দ লিখুন!</p>';
             return;
         }
 
-        resultContainer.innerHTML = '<p style="text-align: center;">খোঁজা হচ্ছে...</p>';
+        resultContainer.innerHTML = '<p style="text-align: center; color: #3498db;">খোঁজা হচ্ছে...</p>';
 
         try {
-            const response = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`);
+            // Free English Dictionary & Translation API
+            const response = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(wordInput)}`);
+            
             if (!response.ok) {
-                resultContainer.innerHTML = '<p style="color: red; text-align: center;">শব্দটি পাওয়া যায়নি।</p>';
+                resultContainer.innerHTML = '<p style="color: red; text-align: center;">শব্দটি পাওয়া যায়নি। বানান সঠিক কিনা পরীক্ষা করুন।</p>';
                 return;
             }
 
             const data = await response.json();
             const entry = data[0];
-            const definition = entry.meanings[0].definitions[0].definition;
+            
+            // Extract Part of Speech and Definition safely
+            const partOfSpeech = entry.meanings[0]?.partOfSpeech || 'n/a';
+            const definition = entry.meanings[0]?.definitions[0]?.definition || 'Definition not found.';
+            const example = entry.meanings[0]?.definitions[0]?.example || '';
 
             resultContainer.innerHTML = `
-                <div style="font-size: 18px; font-weight: bold; color: #2c3e50;">${entry.word}</div>
-                <div style="font-size: 15px; color: #e74c3c; margin-top: 4px;">অর্থ: ${definition}</div>
+                <div style="font-size: 18px; font-weight: bold; color: #2c3e50; text-transform: capitalize;">${entry.word} <span style="font-size: 12px; color: #7f8c8d;">(${partOfSpeech})</span></div>
+                <div style="font-size: 14px; color: #27ae60; margin-top: 6px;"><b>Meaning:</b> ${definition}</div>
+                ${example ? `<div style="font-size: 13px; color: #7f8c8d; margin-top: 4px;"><i>Example: ${example}</i></div>` : ''}
             `;
             
             userScore += 5;
             document.getElementById('score').innerText = userScore;
         } catch (error) {
-            resultContainer.innerHTML = '<p style="color: red; text-align: center;">ইন্টারনেট সংযোগ চেক করুন।</p>';
+            console.error(error);
+            resultContainer.innerHTML = '<p style="color: red; text-align: center;">ইন্টারনেট সংযোগ বা API সমস্যা হয়েছে। কিছুক্ষণ পর আবার চেষ্টা করুন।</p>';
         }
     }
 
@@ -139,15 +147,12 @@
         }
     }
 
-    // PWA Service Worker Registration
+    // Service Worker Registration
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             navigator.serviceWorker.register('./pwabuilder-sw.js')
-                .then((reg) => console.log('Service Worker Registered Successfully:', reg))
-                .catch((err) => console.error('Service Worker Registration Failed:', err));
+                .then((reg) => console.log('Service Worker Registered:', reg))
+                .catch((err) => console.error('SW Registration Failed:', err));
         });
     }
 </script>
-
-</body>
-</html>
