@@ -44,7 +44,7 @@
 <div class="app-container">
     <div class="header">
         <span>🔥 ডিকুইজ অ্যাপ</span>
-        <div class="stats">পয়েন্ট: <span id="score">0</span> | স্ট্রিক: <span id="streak">1</span> দিন</div>
+        <div class="stats">পয়েন্ট: <span id="score">0</span></div>
     </div>
 
     <div class="tabs">
@@ -54,23 +54,19 @@
 
     <div id="dictSection" class="section active">
         <div class="search-box">
-            <input type="text" id="wordInput" placeholder="ইংরেজি শব্দ লিখুন...">
+            <input type="text" id="wordInput" placeholder="ইংরেজি শব্দ বা বাক্য লিখুন...">
             <button class="action-btn" onclick="searchWord()">খুঁজুন</button>
         </div>
         <div id="resultContainer" class="result-card">
-            <p style="color: #888; text-align: center; font-size: 14px;">শব্দের অর্থ দেখতে সার্চ করুন</p>
+            <p style="color: #888; text-align: center; font-size: 14px;">অর্থ দেখতে শব্দ বা বাক্য সার্চ করুন</p>
         </div>
     </div>
 
     <div id="quizSection" class="section">
         <div class="quiz-card">
-            <p id="quizQuestion" style="font-weight: bold; margin-bottom: 10px;">'Apple' এর সঠিক অর্থ কোনটি?</p>
+            <p id="quizQuestion" style="font-weight: bold; margin-bottom: 10px;">লোডিং...</p>
         </div>
-        <div class="options-grid" id="optionsContainer">
-            <button class="opt-btn" onclick="checkAnswer('আপেল')">আপেল</button>
-            <button class="opt-btn" onclick="checkAnswer('কলা')">কলা</button>
-            <button class="opt-btn" onclick="checkAnswer('আম')">আম</button>
-        </div>
+        <div class="options-grid" id="optionsContainer"></div>
         <p id="quizFeedback" style="text-align: center; margin-top: 10px; font-weight: bold;"></p>
     </div>
 </div>
@@ -92,7 +88,7 @@
         }
     }
 
-    // শব্দভাণ্ডার থেকে কুইজ তৈরি
+    // শব্দভাণ্ডার থেকে স্বয়ংক্রিয় কুইজ তৈরি
     function generateQuizFromDatabase() {
         if (wordDatabase.length < 3) return;
 
@@ -128,7 +124,7 @@
         }
     }
 
-    // ডিকশনারি ও পূর্ণাঙ্গ বাক্য অনুবাদ ফাংশন
+    // ডিকশনারি ও পূর্ণাঙ্গ বাক্য অনুবাদ
     async function searchWord() {
         const textInput = document.getElementById('wordInput').value.trim();
         const resultContainer = document.getElementById('resultContainer');
@@ -142,7 +138,7 @@
 
         const cleanInput = textInput.toLowerCase();
 
-        // ১. একক শব্দ হলে প্রথমে লোকাল JSON ডাটাবেজে দেখা হবে
+        // ১. একক শব্দ হলে লোকাল JSON ডাটাবেজে দেখা হবে
         if (!textInput.includes(' ')) {
             const found = wordDatabase.find(item => item.word.toLowerCase() === cleanInput);
             if (found) {
@@ -151,19 +147,14 @@
             }
         }
 
-        // ২. বাক্য বা অজানা শব্দের জন্য রিয়েল-টাইম ফুল সেন্টেন্স ট্রান্সলেশন API
+        // ২. বাক্য ও নতুন শব্দের জন্য রিয়েল-টাইম ফুল সেন্টেন্স ট্রান্সলেশন
         try {
-            const apiUrl = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=bn&dt=t&q=${encodeURIComponent(textInput)}`;
+            const apiUrl = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=bn&dt=t&dj=1&q=${encodeURIComponent(textInput)}`;
             const response = await fetch(apiUrl);
             const data = await response.json();
 
-            if (data && data[0]) {
-                // পুরো বাক্যের সব অংশ একত্রিত করা
-                let translatedText = '';
-                data[0].forEach(part => {
-                    if (part[0]) translatedText += part[0];
-                });
-
+            if (data && data.sentences && data.sentences.length > 0) {
+                let translatedText = data.sentences.map(s => s.trans).join('');
                 const isSentence = textInput.includes(' ');
                 renderResult(textInput, translatedText, isSentence ? "Sentence" : "Online API");
             } else {
@@ -240,3 +231,6 @@
         });
     }
 </script>
+
+</body>
+</html>
