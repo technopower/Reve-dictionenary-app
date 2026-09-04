@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>শব্দকোষ ও কুইজ একাডেমি</title>
+    <title>শব্দকোষ ও কুইজ একাডে একাডেমি</title>
 
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#2ecc71">
@@ -12,6 +12,9 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="ডিকুইজ অ্যাপ">
     <link rel="icon" type="image/png" href="assets/logos/index_logo.png">
+
+    <!-- Tesseract.js OCR for Image Text Search -->
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
 
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
@@ -24,9 +27,14 @@
         .tab-btn.active { background: #3498db; color: white; }
         .section { display: none; }
         .section.active { display: block; }
-        .search-box { display: flex; gap: 8px; margin-bottom: 15px; }
-        input { flex: 1; padding: 10px; font-size: 15px; border: 2px solid #ddd; border-radius: 8px; outline: none; }
-        button.action-btn { background: #3498db; color: white; border: none; padding: 0 15px; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        
+        /* Search Box with Voice & Image Buttons */
+        .search-box { display: flex; gap: 6px; margin-bottom: 15px; align-items: center; }
+        input { flex: 1; padding: 10px; font-size: 14px; border: 2px solid #ddd; border-radius: 8px; outline: none; }
+        .icon-btn { background: #f0f0f0; border: 1px solid #ccc; padding: 8px; border-radius: 8px; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; }
+        .icon-btn:hover { background: #e0e0e0; }
+        button.action-btn { background: #3498db; color: white; border: none; padding: 10px 12px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 14px; }
+        
         .result-card { background: #f9f9f9; padding: 12px; border-radius: 8px; border-left: 4px solid #3498db; min-height: 90px; margin-bottom: 15px; }
         .quiz-card { background: #fff9c4; padding: 15px; border-radius: 10px; margin-bottom: 15px; text-align: center; }
         .options-grid { display: grid; gap: 8px; }
@@ -49,11 +57,14 @@
 
     <div id="dictSection" class="section active">
         <div class="search-box">
-            <input type="text" id="wordInput" placeholder="ইংরেজি শব্দ বা বাক্য লিখুন...">
+            <input type="text" id="wordInput" placeholder="শব্দ বা বাক্য লিখুন...">
+            <button class="icon-btn" onclick="startVoiceSearch()" title="ভয়েস ইনপুট">🎙️</button>
+            <button class="icon-btn" onclick="document.getElementById('imageInput').click()" title="ছবি থেকে সার্চ">📷</button>
+            <input type="file" id="imageInput" accept="image/*" style="display: none;" onchange="processImageSearch(event)">
             <button class="action-btn" onclick="searchWord()">খুঁজুন</button>
         </div>
         <div id="resultContainer" class="result-card">
-            <p style="color: #888; text-align: center; font-size: 14px;">অর্থ দেখতে শব্দ বা বাক্য সার্চ করুন</p>
+            <p style="color: #888; text-align: center; font-size: 14px;">অর্থ দেখতে সার্চ, ভয়েস বা ছবি ব্যবহার করুন</p>
         </div>
     </div>
 
@@ -72,7 +83,61 @@
     let wordDatabase = [];
     let quizQuestions = [];
 
-    // অডিও সাউন্ড ইফেক্ট ফাংশন
+    // ১. ভয়েস সার্চ ফিচারের ফাংশন
+    function startVoiceSearch() {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        const resultContainer = document.getElementById('resultContainer');
+        
+        if (!SpeechRecognition) {
+            alert("আপনার ব্রাউজারে ভয়েস সার্চ সাপোর্ট করে না!");
+            return;
+        }
+
+        const recognition = new SpeechRecognition();
+        recognition.lang = 'en-US'; // ইংরেজি ভয়েস ডিটেক্ট করবে
+        
+        resultContainer.innerHTML = '<p style="text-align: center; color: #e67e22;">🎙️ শুনছি... কথা বলুন</p>';
+        recognition.start();
+
+        recognition.onresult = function(event) {
+            const transcript = event.results[0][0].transcript;
+            document.getElementById('wordInput').value = transcript;
+            searchWord();
+        };
+
+        recognition.onerror = function() {
+            resultContainer.innerHTML = '<p style="color: red; text-align: center;">ভয়েস বুঝতে সমস্যা হয়েছে। আবার চেষ্টা করুন!</p>';
+        };
+    }
+
+    // ২. ছবি থেকে লেখা পড়ার (Image Text Search) ফাংশন
+    async function processImageSearch(event) {
+        const file = event.target.files[0];
+        const resultContainer = document.getElementById('resultContainer');
+        
+        if (!file) return;
+
+        resultContainer.innerHTML = '<p style="text-align: center; color: #3498db;">🔍 ছবি থেকে লেখা বের করা হচ্ছে...</p>';
+
+        try {
+            const worker = await Tesseract.createWorker('eng');
+            const ret = await worker.recognize(file);
+            await worker.terminate();
+
+            const extractedText = ret.data.text.trim();
+            if (extractedText) {
+                document.getElementById('wordInput').value = extractedText;
+                searchWord();
+            } else {
+                resultContainer.innerHTML = '<p style="color: red; text-align: center;">ছবিতে কোনো পরিষ্কার লেখা পাওয়া যায়নি!</p>';
+            }
+        } catch (error) {
+            console.error("OCR Error:", error);
+            resultContainer.innerHTML = '<p style="color: red; text-align: center;">ছবি প্রসেস করতে সমস্যা হয়েছে!</p>';
+        }
+    }
+
+    // সাউন্ড ইফেক্ট জেনারেটর
     function playSound(type) {
         try {
             const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -251,5 +316,7 @@
     }
 </script>
 
+</body>
+</html>
 </body>
 </html>
