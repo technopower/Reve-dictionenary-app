@@ -77,44 +77,44 @@
 
 <script>
     let userScore = 0;
-    let userStreak = 1;
     let currentQuizIndex = 0;
+    let wordDatabase = [];
+    let quizQuestions = [];
 
-    // অফলাইন ব্যাকআপ ডিকশনারি ডাটাবেজ
-    const localDictionary = {
-        "apple": "আপেল", "book": "বই", "water": "পানি", "school": "বিদ্যালয়", "cat": "বিড়াল",
-        "dog": "কুকুর", "pen": "কলম", "sun": "সূর্য", "moon": "চাঁদ", "tree": "গাছ",
-        "flower": "ফুল", "mother": "মা", "father": "বাবা", "brother": "ভাই", "sister": "বোন",
-        "friend": "বন্ধু", "love": "ভালোবাসা", "home": "বাড়ি", "food": "খাবার", "milk": "দুধ",
-        "time": "সময়", "day": "দিন", "night": "রাত", "boy": "ছেলে", "girl": "মেয়ে",
-        "teacher": "শিক্ষক", "student": "ছাত্র/ছাত্রী", "bird": "পাখি", "fish": "মাছ", "sky": "আকাশ",
-        "river": "নদী", "city": "শহর", "village": "গ্রাম", "car": "গাড়ি", "road": "রাস্তা",
-        "computer": "কম্পিউটার", "phone": "ফোন", "money": "টাকা", "work": "কাজ", "life": "জীবন"
-    };
+    // JSON ফাইল থেকে ডিকশনারি ও কুইজ ডাটা লোড করা
+    async function loadWordsData() {
+        try {
+            const response = await fetch('./words.json');
+            wordDatabase = await response.json();
+            generateQuizFromDatabase();
+        } catch (error) {
+            console.error("Data loading error:", error);
+        }
+    }
 
-    // কুইজের বড় তালিকা (২০টি প্রশ্ন)
-    const quizData = [
-        { question: "'Apple' এর সঠিক বাংলা অর্থ কোনটি?", options: ["আপেল", "কলা", "আম"], correct: "আপেল" },
-        { question: "'Book' এর সঠিক বাংলা অর্থ কোনটি?", options: ["কলম", "বই", "খাতা"], correct: "বই" },
-        { question: "'Water' এর সঠিক বাংলা অর্থ কোনটি?", options: ["পানি", "আগুন", "বাতাস"], correct: "পানি" },
-        { question: "'School' এর সঠিক বাংলা অর্থ কোনটি?", options: ["হাসপাতাল", "বিদ্যালয়", "দোকান"], correct: "বিদ্যালয়" },
-        { question: "'Sun' এর সঠিক বাংলা অর্থ কোনটি?", options: ["চাঁদ", "সূর্য", "তারা"], correct: "সূর্য" },
-        { question: "'Mother' এর সঠিক বাংলা অর্থ কোনটি?", options: ["বোন", "মা", "খালা"], correct: "মা" },
-        { question: "'Tree' এর সঠিক বাংলা অর্থ কোনটি?", options: ["গাছ", "ফুল", "পাতা"], correct: "গাছ" },
-        { question: "'Cat' এর সঠিক বাংলা অর্থ কোনটি?", options: ["কুকুর", "বিড়াল", "ইঁদুর"], correct: "বিড়াল" },
-        { question: "'Home' এর সঠিক বাংলা অর্থ কোনটি?", options: ["বাড়ি", "দোকান", "অফিস"], correct: "বাড়ি" },
-        { question: "'Friend' এর সঠিক বাংলা অর্থ কোনটি?", options: ["শত্রু", "বন্ধু", "ভাই"], correct: "বন্ধু" },
-        { question: "'Teacher' এর সঠিক বাংলা অর্থ কোনটি?", options: ["ছাত্র", "শিক্ষক", "ডাক্তার"], correct: "শিক্ষক" },
-        { question: "'Money' এর সঠিক বাংলা অর্থ কোনটি?", options: ["টাকা", "খাবার", "কাপড়"], correct: "টাকা" },
-        { question: "'Fish' এর সঠিক বাংলা অর্থ কোনটি?", options: ["পাখি", "মাছ", "হরিণ"], correct: "মাছ" },
-        { question: "'Sky' এর সঠিক বাংলা অর্থ কোনটি?", options: ["মাটি", "আকাশ", "পাহাড়"], correct: "আকাশ" },
-        { question: "'Road' এর সঠিক বাংলা অর্থ কোনটি?", options: ["রাস্তা", "নদী", "মাঠ"], correct: "রাস্তা" },
-        { question: "'Food' এর সঠিক বাংলা অর্থ কোনটি?", options: ["পানি", "খাবার", "ফল"], correct: "খাবার" },
-        { question: "'Time' এর সঠিক বাংলা অর্থ কোনটি?", options: ["সময়", "তারিখ", "ঘড়ি"], correct: "সময়" },
-        { question: "'Brother' এর সঠিক বাংলা অর্থ কোনটি?", options: ["ভাই", "বোন", "বাবা"], correct: "ভাই" },
-        { question: "'Love' এর সঠিক বাংলা অর্থ কোনটি?", options: ["ঘৃণা", "ভালোবাসা", "রাগ"], correct: "ভালোবাসা" },
-        { question: "'Bird' এর সঠিক বাংলা অর্থ কোনটি?", options: ["মাছ", "পাখি", "পশু"], correct: "পাখি" }
-    ];
+    // শব্দভাণ্ডার থেকে স্বয়ংক্রিয়ভাবে Duolingo স্টাইল কুইজ তৈরি
+    function generateQuizFromDatabase() {
+        if (wordDatabase.length < 3) return;
+
+        // এলোমেলো প্রশ্ন সাজানো
+        const shuffled = [...wordDatabase].sort(() => 0.5 - Math.random());
+        quizQuestions = shuffled.map(item => {
+            // ভুল ৩টি অপশন বাছাই
+            const otherMeanings = wordDatabase
+                .filter(w => w.meaning !== item.meaning)
+                .map(w => w.meaning)
+                .sort(() => 0.5 - Math.random())
+                .slice(0, 2);
+
+            const options = [item.meaning, ...otherMeanings].sort(() => 0.5 - Math.random());
+
+            return {
+                question: `'${item.word.toUpperCase()}' এর সঠিক বাংলা অর্থ কোনটি?`,
+                options: options,
+                correct: item.meaning
+            };
+        });
+    }
 
     function switchTab(tabName) {
         document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
@@ -130,7 +130,7 @@
         }
     }
 
-    // ডিকশনারি সার্চ (হাইব্রিড: অফলাইন ডিকশনারি + অনলাইন এপিআই)
+    // ডিকশনারি সার্চ (JSON ডাটাবেজ + অনলাইন ব্যাকআপ)
     async function searchWord() {
         const wordInput = document.getElementById('wordInput').value.trim().toLowerCase();
         const resultContainer = document.getElementById('resultContainer');
@@ -142,19 +142,20 @@
 
         resultContainer.innerHTML = '<p style="text-align: center; color: #3498db;">খোঁজা হচ্ছে...</p>';
 
-        // প্রথমে অফলাইন ডাটাবেজে দেখা হবে
-        if (localDictionary[wordInput]) {
-            renderResult(wordInput, localDictionary[wordInput]);
+        // প্রথমে লোকাল JSON ফাইলে সার্চ করবে
+        const found = wordDatabase.find(item => item.word.toLowerCase() === wordInput);
+        if (found) {
+            renderResult(found.word, found.meaning, found.category);
             return;
         }
 
-        // অফলাইনে না পেলে অনলাইন থেকে ট্রাই করবে
+        // না পেলে অনলাইন সার্ভিস ব্যবহার করবে
         try {
             const response = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(wordInput)}&langpair=en|bn`);
             const data = await response.json();
 
             if (data.responseData && data.responseData.translatedText) {
-                renderResult(wordInput, data.responseData.translatedText);
+                renderResult(wordInput, data.responseData.translatedText, "General");
             } else {
                 resultContainer.innerHTML = '<p style="color: red; text-align: center;">শব্দটি পাওয়া যায়নি!</p>';
             }
@@ -163,19 +164,24 @@
         }
     }
 
-    function renderResult(word, meaning) {
+    function renderResult(word, meaning, category) {
         const resultContainer = document.getElementById('resultContainer');
         resultContainer.innerHTML = `
-            <div style="font-size: 18px; font-weight: bold; color: #2c3e50; text-transform: capitalize;">${word}</div>
+            <div style="font-size: 18px; font-weight: bold; color: #2c3e50; text-transform: capitalize;">
+                ${word} <span style="font-size: 11px; background: #e0e0e0; padding: 2px 6px; border-radius: 4px; color: #555;">${category}</span>
+            </div>
             <div style="font-size: 16px; color: #27ae60; margin-top: 6px;"><b>বাংলা অর্থ:</b> ${meaning}</div>
         `;
         userScore += 5;
         document.getElementById('score').innerText = userScore;
     }
 
-    // কুইজ লোড করার ফাংশন
+    // কুইজ লোড ফাংশন
     function loadQuiz() {
-        const quiz = quizData[currentQuizIndex];
+        if (quizQuestions.length === 0) generateQuizFromDatabase();
+        if (quizQuestions.length === 0) return;
+
+        const quiz = quizQuestions[currentQuizIndex];
         document.getElementById('quizQuestion').innerText = quiz.question;
         document.getElementById('quizFeedback').innerText = '';
 
@@ -194,7 +200,7 @@
     // কুইজের উত্তর চেক
     function checkAnswer(selectedOption) {
         const feedback = document.getElementById('quizFeedback');
-        const currentCorrect = quizData[currentQuizIndex].correct;
+        const currentCorrect = quizQuestions[currentQuizIndex].correct;
 
         if (selectedOption === currentCorrect) {
             feedback.style.color = 'green';
@@ -203,7 +209,7 @@
             document.getElementById('score').innerText = userScore;
 
             setTimeout(() => {
-                currentQuizIndex = (currentQuizIndex + 1) % quizData.length;
+                currentQuizIndex = (currentQuizIndex + 1) % quizQuestions.length;
                 loadQuiz();
             }, 1000);
         } else {
@@ -211,6 +217,9 @@
             feedback.innerText = 'ভুল উত্তর! আবার চেষ্টা করুন।';
         }
     }
+
+    // পেজ লোড হলে ডাটাবেজ লোড হবে
+    window.addEventListener('DOMContentLoaded', loadWordsData);
 
     // Service Worker Registration
     if ('serviceWorker' in navigator) {
