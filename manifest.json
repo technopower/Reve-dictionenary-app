@@ -1,12 +1,12 @@
 {
-  "name": "Reve Dictionary App",
-  "short_name": "Reve Dict",
-  "description": "A comprehensive Reve Dictionary Progressive Web App",
+  "name": "শব্দকোষ ও কুইজ একাডেমি",
+  "short_name": "ডিকুইজ",
+  "description": "A comprehensive Dictionary and Quiz PWA",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#2196f3",
+  "theme_color": "#2ecc71",
   "icons": [
     {
       "src": "./assets/logos/index_logo.png",
