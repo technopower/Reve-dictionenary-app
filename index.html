@@ -78,6 +78,31 @@
 <script>
     let userScore = 0;
     let userStreak = 1;
+    let currentQuizIndex = 0;
+
+    // কুইজের প্রশ্নের তালিকা
+    const quizData = [
+        {
+            question: "'Apple' এর সঠিক বাংলা অর্থ কোনটি?",
+            options: ["আপেল", "কলা", "আম"],
+            correct: "আপেল"
+        },
+        {
+            question: "'Book' এর সঠিক বাংলা অর্থ কোনটি?",
+            options: ["কলম", "বই", "খাতা"],
+            correct: "বই"
+        },
+        {
+            question: "'Water' এর সঠিক বাংলা অর্থ কোনটি?",
+            options: ["পানি", "আগুন", "বাতাস"],
+            correct: "পানি"
+        },
+        {
+            question: "'School' এর সঠিক বাংলা অর্থ কোনটি?",
+            options: ["হাসপাতাল", "বিদ্যালয়", "দোকান"],
+            correct: "বিদ্যালয়"
+        }
+    ];
 
     function switchTab(tabName) {
         document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
@@ -89,9 +114,11 @@
         } else {
             document.querySelectorAll('.tab-btn')[1].classList.add('active');
             document.getElementById('quizSection').classList.add('active');
+            loadQuiz(); // কুইজ ট্যাবে গেলে প্রশ্ন লোড হবে
         }
     }
 
+    // ডিকশনারি সার্চ ফাংশন
     async function searchWord() {
         const wordInput = document.getElementById('wordInput').value.trim().toLowerCase();
         const resultContainer = document.getElementById('resultContainer');
@@ -104,50 +131,71 @@
         resultContainer.innerHTML = '<p style="text-align: center; color: #3498db;">খোঁজা হচ্ছে...</p>';
 
         try {
-            // Free English Dictionary & Translation API
             const response = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(wordInput)}`);
             
             if (!response.ok) {
-                resultContainer.innerHTML = '<p style="color: red; text-align: center;">শব্দটি পাওয়া যায়নি। বানান সঠিক কিনা পরীক্ষা করুন।</p>';
+                resultContainer.innerHTML = '<p style="color: red; text-align: center;">শব্দটি পাওয়া যায়নি।</p>';
                 return;
             }
 
             const data = await response.json();
             const entry = data[0];
-            
-            // Extract Part of Speech and Definition safely
-            const partOfSpeech = entry.meanings[0]?.partOfSpeech || 'n/a';
+            const partOfSpeech = entry.meanings[0]?.partOfSpeech || '';
             const definition = entry.meanings[0]?.definitions[0]?.definition || 'Definition not found.';
-            const example = entry.meanings[0]?.definitions[0]?.example || '';
 
             resultContainer.innerHTML = `
                 <div style="font-size: 18px; font-weight: bold; color: #2c3e50; text-transform: capitalize;">${entry.word} <span style="font-size: 12px; color: #7f8c8d;">(${partOfSpeech})</span></div>
                 <div style="font-size: 14px; color: #27ae60; margin-top: 6px;"><b>Meaning:</b> ${definition}</div>
-                ${example ? `<div style="font-size: 13px; color: #7f8c8d; margin-top: 4px;"><i>Example: ${example}</i></div>` : ''}
             `;
             
             userScore += 5;
             document.getElementById('score').innerText = userScore;
         } catch (error) {
-            console.error(error);
-            resultContainer.innerHTML = '<p style="color: red; text-align: center;">ইন্টারনেট সংযোগ বা API সমস্যা হয়েছে। কিছুক্ষণ পর আবার চেষ্টা করুন।</p>';
+            resultContainer.innerHTML = '<p style="color: red; text-align: center;">নেটওয়ার্ক সমস্যা! ইন্টারনেট সংযোগ চেক করুন।</p>';
         }
     }
 
-    function checkAnswer(selected) {
+    // কুইজ লোড করার ফাংশন
+    function loadQuiz() {
+        const quiz = quizData[currentQuizIndex];
+        document.getElementById('quizQuestion').innerText = quiz.question;
+        document.getElementById('quizFeedback').innerText = '';
+
+        const optionsContainer = document.getElementById('optionsContainer');
+        optionsContainer.innerHTML = '';
+
+        quiz.options.forEach(opt => {
+            const btn = document.createElement('button');
+            btn.className = 'opt-btn';
+            btn.innerText = opt;
+            btn.onclick = () => checkAnswer(opt);
+            optionsContainer.appendChild(btn);
+        });
+    }
+
+    // কুইজের উত্তর পরীক্ষা করার ফাংশন
+    function checkAnswer(selectedOption) {
         const feedback = document.getElementById('quizFeedback');
-        if (selected === 'আপেল') {
+        const currentCorrect = quizData[currentQuizIndex].correct;
+
+        if (selectedOption === currentCorrect) {
             feedback.style.color = 'green';
             feedback.innerText = 'সঠিক উত্তর! 🎉 (+১০ পয়েন্ট)';
             userScore += 10;
             document.getElementById('score').innerText = userScore;
+
+            // ১.৫ সেকেন্ড পর পরবর্তী প্রশ্ন আসবে
+            setTimeout(() => {
+                currentQuizIndex = (currentQuizIndex + 1) % quizData.length;
+                loadQuiz();
+            }, 1500);
         } else {
             feedback.style.color = 'red';
             feedback.innerText = 'ভুল উত্তর! আবার চেষ্টা করুন।';
         }
     }
 
-    // Service Worker Registration
+    // PWA Service Worker Registration
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             navigator.serviceWorker.register('./pwabuilder-sw.js')
