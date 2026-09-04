@@ -1,4 +1,13 @@
-"icons": [
+{
+  "name": "শব্দকোষ ও কুইজ একাডেমি",
+  "short_name": "ডিকুইজ",
+  "start_url": "/Reve-dictionenary-app/",
+  "scope": "/Reve-dictionenary-app/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2ecc71",
+  "description": "একটি চমৎকার ইংরেজি থেকে বাংলা ডিকশনারি ও লার্নিং কুইজ অ্যাপ।",
+  "icons": [
     {
       "src": "https://technopower.github.io/Reve-dictionenary-app/icon.png",
       "sizes": "192x192",
@@ -12,3 +21,4 @@
       "purpose": "any maskable"
     }
   ]
+}
