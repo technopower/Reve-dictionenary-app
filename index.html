@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>শব্দকোষ ও কুইজ একাডেমি</title>
+    <!-- ম্যানিফেস্ট লিংক -->
+    <link rel="manifest" href="manifest.json">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: #f0f4f8; color: #333; padding: 15px; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
@@ -15,14 +17,10 @@
         .tab-btn.active { background: #3498db; color: white; }
         .section { display: none; }
         .section.active { display: block; }
-        
-        /* ডিকশনারি স্টাইল */
         .search-box { display: flex; gap: 8px; margin-bottom: 15px; }
         input { flex: 1; padding: 10px; font-size: 15px; border: 2px solid #ddd; border-radius: 8px; outline: none; }
         button.action-btn { background: #3498db; color: white; border: none; padding: 0 15px; border-radius: 8px; cursor: pointer; font-weight: bold; }
         .result-card { background: #f9f9f9; padding: 12px; border-radius: 8px; border-left: 4px solid #3498db; min-height: 90px; margin-bottom: 15px; }
-        
-        /* কুইজ স্টাইল */
         .quiz-card { background: #fff9c4; padding: 15px; border-radius: 10px; margin-bottom: 15px; text-align: center; }
         .options-grid { display: grid; gap: 8px; }
         .opt-btn { padding: 10px; background: white; border: 2px solid #fbc02d; border-radius: 8px; cursor: pointer; font-size: 15px; text-align: center; font-weight: bold; }
@@ -32,19 +30,16 @@
 <body>
 
 <div class="app-container">
-    <!-- টপ স্ট্রিক বার -->
     <div class="header">
         <span>🔥 ডিকুইজ অ্যাপ</span>
         <div class="stats">পয়েন্ট: <span id="score">0</span> | স্ট্রিক: <span id="streak">1</span> দিন</div>
     </div>
 
-    <!-- ট্যাব মেনু -->
     <div class="tabs">
         <button class="tab-btn active" onclick="switchTab('dict')">ডিকশনারি</button>
         <button class="tab-btn" onclick="switchTab('quiz')">ডেইলি কুইজ</button>
     </div>
 
-    <!-- ডিকশনারি সেকশন -->
     <div id="dictSection" class="section active">
         <div class="search-box">
             <input type="text" id="wordInput" placeholder="ইংরেজি শব্দ লিখুন...">
@@ -55,7 +50,6 @@
         </div>
     </div>
 
-    <!-- কুইজ সেকশন -->
     <div id="quizSection" class="section">
         <div class="quiz-card">
             <p id="quizQuestion" style="font-weight: bold; margin-bottom: 10px;">'Apple' এর সঠিক অর্থ কোনটি?</p>
@@ -113,7 +107,6 @@
                 <div style="font-size: 15px; color: #e74c3c; margin-top: 4px;">অর্থ: ${definition}</div>
             `;
             
-            // শব্দ খুঁজলে পয়েন্ট বাড়ার গ্যামিফিকেশন বোনাস
             userScore += 5;
             document.getElementById('score').innerText = userScore;
         } catch (error) {
