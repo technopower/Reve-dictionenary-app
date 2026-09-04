@@ -8,8 +8,13 @@
   "description": "একটি চমৎকার ইংরেজি থেকে বাংলা ডিকশনারি ও লার্নিং কুইজ অ্যাপ।",
   "icons": [
     {
-      "src": "https://i.imgur.com/your-icon-link.png",
+      "src": "/icon.png",
       "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
       "type": "image/png"
     }
   ]
