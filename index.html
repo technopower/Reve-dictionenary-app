@@ -80,7 +80,7 @@
     let userStreak = 1;
     let currentQuizIndex = 0;
 
-    // কুইজের প্রশ্নের তালিকা
+    // কুইজের ডাটা
     const quizData = [
         {
             question: "'Apple' এর সঠিক বাংলা অর্থ কোনটি?",
@@ -114,11 +114,11 @@
         } else {
             document.querySelectorAll('.tab-btn')[1].classList.add('active');
             document.getElementById('quizSection').classList.add('active');
-            loadQuiz(); // কুইজ ট্যাবে গেলে প্রশ্ন লোড হবে
+            loadQuiz();
         }
     }
 
-    // ডিকশনারি সার্চ ফাংশন
+    // ডিকশনারি সার্চ (নতুন ও নির্ভরযোগ্য API)
     async function searchWord() {
         const wordInput = document.getElementById('wordInput').value.trim().toLowerCase();
         const resultContainer = document.getElementById('resultContainer');
@@ -131,31 +131,29 @@
         resultContainer.innerHTML = '<p style="text-align: center; color: #3498db;">খোঁজা হচ্ছে...</p>';
 
         try {
-            const response = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(wordInput)}`);
-            
-            if (!response.ok) {
-                resultContainer.innerHTML = '<p style="color: red; text-align: center;">শব্দটি পাওয়া যায়নি।</p>';
-                return;
-            }
-
+            // MyMemory Translation API (বাংলা অর্থ পাওয়ার জন্য)
+            const response = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(wordInput)}&langpair=en|bn`);
             const data = await response.json();
-            const entry = data[0];
-            const partOfSpeech = entry.meanings[0]?.partOfSpeech || '';
-            const definition = entry.meanings[0]?.definitions[0]?.definition || 'Definition not found.';
 
-            resultContainer.innerHTML = `
-                <div style="font-size: 18px; font-weight: bold; color: #2c3e50; text-transform: capitalize;">${entry.word} <span style="font-size: 12px; color: #7f8c8d;">(${partOfSpeech})</span></div>
-                <div style="font-size: 14px; color: #27ae60; margin-top: 6px;"><b>Meaning:</b> ${definition}</div>
-            `;
-            
-            userScore += 5;
-            document.getElementById('score').innerText = userScore;
+            if (data.responseData && data.responseData.translatedText) {
+                const bnMeaning = data.responseData.translatedText;
+
+                resultContainer.innerHTML = `
+                    <div style="font-size: 18px; font-weight: bold; color: #2c3e50; text-transform: capitalize;">${wordInput}</div>
+                    <div style="font-size: 16px; color: #27ae60; margin-top: 6px;"><b>বাংলা অর্থ:</b> ${bnMeaning}</div>
+                `;
+
+                userScore += 5;
+                document.getElementById('score').innerText = userScore;
+            } else {
+                resultContainer.innerHTML = '<p style="color: red; text-align: center;">শব্দটি পাওয়া যায়নি!</p>';
+            }
         } catch (error) {
-            resultContainer.innerHTML = '<p style="color: red; text-align: center;">নেটওয়ার্ক সমস্যা! ইন্টারনেট সংযোগ চেক করুন।</p>';
+            resultContainer.innerHTML = '<p style="color: red; text-align: center;">নেটওয়ার্ক সমস্যা! আপনার ফোনের ইন্টারনেট কানেকশন চেক করুন।</p>';
         }
     }
 
-    // কুইজ লোড করার ফাংশন
+    // কুইজ লোড ফাংশন
     function loadQuiz() {
         const quiz = quizData[currentQuizIndex];
         document.getElementById('quizQuestion').innerText = quiz.question;
@@ -173,7 +171,7 @@
         });
     }
 
-    // কুইজের উত্তর পরীক্ষা করার ফাংশন
+    // কুইজের উত্তর চেক
     function checkAnswer(selectedOption) {
         const feedback = document.getElementById('quizFeedback');
         const currentCorrect = quizData[currentQuizIndex].correct;
@@ -184,18 +182,17 @@
             userScore += 10;
             document.getElementById('score').innerText = userScore;
 
-            // ১.৫ সেকেন্ড পর পরবর্তী প্রশ্ন আসবে
             setTimeout(() => {
                 currentQuizIndex = (currentQuizIndex + 1) % quizData.length;
                 loadQuiz();
-            }, 1500);
+            }, 1200);
         } else {
             feedback.style.color = 'red';
             feedback.innerText = 'ভুল উত্তর! আবার চেষ্টা করুন।';
         }
     }
 
-    // PWA Service Worker Registration
+    // Service Worker Registration
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             navigator.serviceWorker.register('./pwabuilder-sw.js')
