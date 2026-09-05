@@ -28,7 +28,7 @@
         .lang-select { padding: 6px 10px; border-radius: 6px; border: 1px solid #16a085; font-size: 13px; font-weight: bold; outline: none; background: white; cursor: pointer; }
 
         .tabs { display: flex; gap: 10px; margin-bottom: 20px; }
-        .tab-btn { flex: 1; padding: 10px; border: none; background: #e0e0e0; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        .tab-btn { flex: 1; padding: 10px; border: none; background: #e0e0e0; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.3s; font-size: 12px; }
         .tab-btn.active { background: #3498db; color: white; }
         .section { display: none; }
         .section.active { display: block; }
@@ -47,7 +47,10 @@
 
         button.action-btn { background: #3498db; color: white; border: none; padding: 10px 12px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 14px; }
         
-        /* Result & AI Analysis Styles */
+        /* Speaker & Pronunciation Styles */
+        .speak-btn { background: #e74c3c; color: white; border: none; padding: 4px 8px; border-radius: 50%; cursor: pointer; font-size: 12px; margin-left: 6px; display: inline-flex; align-items: center; justify-content: center; }
+        .speak-btn:hover { background: #c0392b; }
+
         .result-card { background: #f9f9f9; padding: 12px; border-radius: 10px; border-left: 4px solid #3498db; min-height: 90px; margin-bottom: 15px; }
         .ai-card { background: #f4ecf7; padding: 12px; border-radius: 10px; border-left: 4px solid #8e44ad; margin-top: 10px; font-size: 13px; color: #2c3e50; }
         .ai-header { font-weight: bold; color: #8e44ad; display: flex; align-items: center; gap: 5px; margin-bottom: 6px; font-size: 14px; }
@@ -55,7 +58,9 @@
         .quiz-card { background: #fff9c4; padding: 15px; border-radius: 10px; margin-bottom: 15px; text-align: center; }
         .quiz-title-eng { font-size: 12px; color: #795548; font-weight: bold; margin-bottom: 4px; display: block; }
         .options-grid { display: grid; gap: 8px; }
-        .opt-btn { padding: 10px; background: white; border: 2px solid #fbc02d; border-radius: 8px; cursor: pointer; font-size: 15px; text-align: center; font-weight: bold; }
+        
+        .opt-wrapper { display: flex; align-items: center; gap: 6px; }
+        .opt-btn { flex: 1; padding: 10px; background: white; border: 2px solid #fbc02d; border-radius: 8px; cursor: pointer; font-size: 15px; text-align: center; font-weight: bold; }
         .opt-btn:hover { background: #fffde7; }
     </style>
 </head>
@@ -100,14 +105,17 @@
             <button class="action-btn" onclick="searchWord()">খুঁজুন</button>
         </div>
         <div id="resultContainer" class="result-card">
-            <p style="color: #888; text-align: center; font-size: 14px;">যেকোনো ভাষায় লিখলে নির্বাচিত ভাষায় অনুবাদ দেখতে পাবেন</p>
+            <p style="color: #888; text-align: center; font-size: 14px;">যেকোনো ভাষায় লিখলে নির্বাচিত ভাষায় অনুবাদ ও উচ্চারণ দেখতে পাবেন</p>
         </div>
     </div>
 
     <div id="quizSection" class="section">
         <div class="quiz-card">
             <span id="quizQuestionEng" class="quiz-title-eng">What is the correct meaning?</span>
-            <p id="quizQuestion" style="font-weight: bold; margin-bottom: 10px; font-size: 16px;">লোডিং...</p>
+            <div style="display: flex; align-items: center; justify-content: center;">
+                <p id="quizQuestion" style="font-weight: bold; font-size: 16px; margin: 0;">লোডিং...</p>
+                <button class="speak-btn" onclick="speakCurrentQuestion()" title="উচ্চারণ শুনুন">🔊</button>
+            </div>
         </div>
         <div class="options-grid" id="optionsContainer"></div>
         <p id="quizFeedback" style="text-align: center; margin-top: 10px; font-weight: bold;"></p>
@@ -128,6 +136,26 @@
         generateQuizFromDatabase();
         if (document.getElementById('quizSection').classList.contains('active')) {
             loadQuiz();
+        }
+    }
+
+    // Text To Speech (উচ্চারণ করার টেক্সট-টু-স্পিচ ফংশন)
+    function speakText(text, langCode = 'en-US') {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel(); // আগের কোনো পড়া থাকলে বন্ধ করবে
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = langCode;
+            utterance.rate = 0.9;
+            window.speechSynthesis.speak(utterance);
+        } else {
+            alert("আপনার ব্রাউজারে স্পিচ সাপোর্ট নেই!");
+        }
+    }
+
+    function speakCurrentQuestion() {
+        const quiz = quizQuestions[currentQuizIndex];
+        if (quiz) {
+            speakText(quiz.rawWord, 'en-US');
         }
     }
 
@@ -310,7 +338,7 @@
             return;
         }
 
-        resultContainer.innerHTML = '<p style="text-align: center; color: #3498db;">🔍 অনুবাদ ও ব্যাকরণ বিশ্লেষণ করা হচ্ছে...</p>';
+        resultContainer.innerHTML = '<p style="text-align: center; color: #3498db;">🔍 অনুবাদ ও উচ্চারণ বিশ্লেষণ করা হচ্ছে...</p>';
 
         const translationRes = await fetchUniversalTranslation(textInput, currentLang);
 
@@ -350,7 +378,7 @@
                 dictDetailHtml = `
                     <div style="margin-top: 8px; font-size: 13px; color: #555;">
                         <span><b>Part of Speech (পদ):</b> <i>${partOfSpeech}</i></span>
-                        ${phonetic ? `<span style="margin-left: 10px; color: #e67e22;"><b>Pronunciation:</b> ${phonetic}</span>` : ''}
+                        ${phonetic ? `<span style="margin-left: 10px; color: #e67e22;"><b>উচ্চারণ (Phonetic):</b> ${phonetic}</span>` : ''}
                     </div>
                 `;
 
@@ -364,17 +392,27 @@
             }
         }
 
-        renderResult(textInput, translationRes.translatedText, `${translationRes.srcLang.toUpperCase()} ➔ ${currentLang.toUpperCase()}`, dictDetailHtml, aiAnalysisHtml);
+        renderResult(textInput, translationRes.translatedText, translationRes.srcLang, currentLang, dictDetailHtml, aiAnalysisHtml);
     }
 
-    function renderResult(original, translation, tag, dictHtml = '', aiHtml = '') {
+    function renderResult(original, translation, srcLang, targetLang, dictHtml = '', aiHtml = '') {
         const resultContainer = document.getElementById('resultContainer');
+        
+        // এসকেপ ক্যারেক্টার সমস্যা এড়াতে সেফ টেক্সট
+        const safeOriginal = original.replace(/'/g, "\\'");
+        const safeTranslation = translation.replace(/'/g, "\\'");
+
         resultContainer.innerHTML = `
-            <div style="font-size: 18px; font-weight: bold; color: #2c3e50;">
-                ${original} <span style="font-size: 11px; background: #2ecc71; color: white; padding: 2px 6px; border-radius: 4px; margin-left: 5px;">${tag}</span>
+            <div style="font-size: 18px; font-weight: bold; color: #2c3e50; display: flex; align-items: center; flex-wrap: wrap;">
+                ${original} 
+                <button class="speak-btn" onclick="speakText('${safeOriginal}', '${srcLang}')" title="উচ্চারণ শুনুন">🔊</button>
+                <span style="font-size: 11px; background: #2ecc71; color: white; padding: 2px 6px; border-radius: 4px; margin-left: 5px;">${srcLang.toUpperCase()} ➔ ${targetLang.toUpperCase()}</span>
             </div>
             ${dictHtml}
-            <div style="font-size: 16px; color: #27ae60; margin-top: 8px;"><b>Translation (অনুবাদ):</b> ${translation}</div>
+            <div style="font-size: 16px; color: #27ae60; margin-top: 8px; display: flex; align-items: center; flex-wrap: wrap;">
+                <b>Translation (অনুবাদ):</b> ${translation}
+                <button class="speak-btn" onclick="speakText('${safeTranslation}', '${targetLang}')" title="উচ্চারণ শুনুন">🔊</button>
+            </div>
             ${aiHtml}
         `;
         userScore += 5;
@@ -406,6 +444,7 @@
             const options = [correctMeaning, wrongOption1, wrongOption2].sort(() => 0.5 - Math.random());
 
             quizQuestions.push({
+                rawWord: questionWord,
                 questionEng: `What is the correct meaning of '${questionWord.toUpperCase()}'?`,
                 questionBn: `'${questionWord.toUpperCase()}' - এর সঠিক অর্থ কোনটি?`,
                 options: options,
@@ -444,11 +483,26 @@
         optionsContainer.innerHTML = '';
 
         quiz.options.forEach(opt => {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'opt-wrapper';
+
             const btn = document.createElement('button');
             btn.className = 'opt-btn';
             btn.innerText = opt;
             btn.onclick = () => checkAnswer(opt);
-            optionsContainer.appendChild(btn);
+
+            const audioBtn = document.createElement('button');
+            audioBtn.className = 'speak-btn';
+            audioBtn.innerHTML = '🔊';
+            audioBtn.title = 'উচ্চারণ শুনুন';
+            audioBtn.onclick = (e) => {
+                e.stopPropagation();
+                speakText(opt, currentLang);
+            };
+
+            wrapper.appendChild(btn);
+            wrapper.appendChild(audioBtn);
+            optionsContainer.appendChild(wrapper);
         });
     }
 
