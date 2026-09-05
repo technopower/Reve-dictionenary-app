@@ -66,11 +66,12 @@
         <div class="stats">পয়েন্ট: <span id="score">0</span></div>
     </div>
 
-    <!-- হোমপেজে ভাষা নির্বাচন ড্রপডাউন -->
+    <!-- হোমপেজে সার্বজনীন ড্রপডাউন -->
     <div class="lang-bar">
-        <label for="targetLang">অনুবাদ ও কুইজের ভাষা:</label>
+        <label for="targetLang">লক্ষ্যভিত্তিক ভাষা (Target Language):</label>
         <select id="targetLang" class="lang-select" onchange="changeLanguage()">
-            <option value="auto" selected>Bangla ⇆ English (স্বয়ংক্রিয়)</option>
+            <option value="bn">Bangla (বাংলা)</option>
+            <option value="en" selected>English</option>
             <option value="ar">Arabic (العربية)</option>
             <option value="fr">French (Français)</option>
             <option value="de">German (Deutsch)</option>
@@ -89,14 +90,14 @@
 
     <div id="dictSection" class="section active">
         <div class="search-box">
-            <input type="text" id="wordInput" placeholder="বাংলা বা ইংরেজি শব্দ লিখুন...">
+            <input type="text" id="wordInput" placeholder="যেকোনো ভাষায় শব্দ বা বাক্য লিখুন...">
             <button id="micBtn" class="icon-btn" onclick="startVoiceSearch()" title="ভয়েস ইনপুট">🎙️</button>
             <button class="icon-btn" onclick="document.getElementById('imageInput').click()" title="ছবি থেকে সার্চ">📷</button>
             <input type="file" id="imageInput" accept="image/*" style="display: none;" onchange="processImageSearch(event)">
             <button class="action-btn" onclick="searchWord()">খুঁজুন</button>
         </div>
         <div id="resultContainer" class="result-card">
-            <p style="color: #888; text-align: center; font-size: 14px;">বাংলা লিখলে ইংরেজি এবং ইংরেজি লিখলে বাংলা অনুবাদ দেখতে পাবেন</p>
+            <p style="color: #888; text-align: center; font-size: 14px;">যেকোনো ভাষায় লিখলে নির্বাচিত ভাষায় অনুবাদ দেখতে পাবেন</p>
         </div>
     </div>
 
@@ -114,12 +115,12 @@
     let currentQuizIndex = 0;
     let wordDatabase = [];
     let quizQuestions = [];
-    let currentLang = 'auto';
+    let currentLang = 'en';
 
     function changeLanguage() {
         currentLang = document.getElementById('targetLang').value;
         const resultContainer = document.getElementById('resultContainer');
-        resultContainer.innerHTML = '<p style="color: #888; text-align: center; font-size: 14px;">ভাষা মোড পরিবর্তন করা হয়েছে। নতুন সার্চ করুন!</p>';
+        resultContainer.innerHTML = '<p style="color: #888; text-align: center; font-size: 14px;">ভাষা পরিবর্তন করা হয়েছে। নতুন সার্চ করুন!</p>';
         generateQuizFromDatabase();
         if (document.getElementById('quizSection').classList.contains('active')) {
             loadQuiz();
@@ -260,14 +261,27 @@
         }
     }
 
-    async function fetchTranslation(text, targetLanguage) {
+    // সার্বজনীন দ্বিমুখী অনুবাদ ফাংশন
+    async function fetchUniversalTranslation(text, targetLang) {
         try {
-            const apiUrl = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${targetLanguage}&dt=t&dj=1&q=${encodeURIComponent(text)}`;
+            const apiUrl = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${targetLang}&dt=t&dj=1&q=${encodeURIComponent(text)}`;
             const response = await fetch(apiUrl);
             const data = await response.json();
 
             if (data && data.sentences && data.sentences.length > 0) {
-                return data.sentences.map(s => s.trans).join('');
+                const translatedText = data.sentences.map(s => s.trans).join('');
+                const detectedLang = data.src || 'auto';
+                
+                // ইনপুট দেওয়া ভাষা এবং সিলেক্ট করা ভাষা একই হলে বাংলা অথবা ইংরেজিতে অটো অদলবদল
+                if (detectedLang === targetLang) {
+                    const fallbackLang = targetLang === 'bn' ? 'en' : 'bn';
+                    return await fetchUniversalTranslation(text, fallbackLang);
+                }
+
+                return {
+                    translatedText: translatedText,
+                    srcLang: detectedLang
+                };
             }
         } catch (error) {
             console.error("Translation API error:", error);
@@ -297,19 +311,11 @@
             return;
         }
 
-        resultContainer.innerHTML = '<p style="text-align: center; color: #3498db;">🔍 অনুবাদ ও বিশ্লেষণ করা হচ্ছে...</p>';
+        resultContainer.innerHTML = '<p style="text-align: center; color: #3498db;">🔍 অনুবাদ ও ব্যাকরণ বিশ্লেষণ করা হচ্ছে...</p>';
 
-        const isBanglaInput = /[\u0980-\u09FF]/.test(textInput);
-        let targetLanguage = currentLang;
+        const translationRes = await fetchUniversalTranslation(textInput, currentLang);
 
-        // বাংলা ইনপুট হলে ইংরেজিতে এবং ইংরেজি ইনপুট হলে বাংলায় অটো অনুবাদ
-        if (currentLang === 'auto') {
-            targetLanguage = isBanglaInput ? 'en' : 'bn';
-        }
-
-        let mainTranslation = await fetchTranslation(textInput, targetLanguage);
-
-        if (!mainTranslation) {
+        if (!translationRes) {
             resultContainer.innerHTML = '<p style="color: red; text-align: center;">অনুবাদ পাওয়া যায়নি!</p>';
             return;
         }
@@ -320,8 +326,9 @@
 
         if (isSingleWord) {
             let englishWord = textInput;
-            if (isBanglaInput) {
-                englishWord = mainTranslation;
+            if (translationRes.srcLang !== 'en') {
+                const engRes = await fetchUniversalTranslation(textInput, 'en');
+                if (engRes) englishWord = engRes.translatedText;
             }
 
             const dictData = await fetchDictionaryDetails(englishWord);
@@ -332,8 +339,14 @@
                 let definition = dictData.meanings[0]?.definitions[0]?.definition || '';
                 let example = dictData.meanings[0]?.definitions[0]?.example || '';
 
-                if (definition) definition = (await fetchTranslation(definition, 'bn')) || definition;
-                if (example) example = (await fetchTranslation(example, 'bn')) || example;
+                if (definition && currentLang !== 'en') {
+                    const transDef = await fetchUniversalTranslation(definition, currentLang);
+                    if (transDef) definition = transDef.translatedText;
+                }
+                if (example && currentLang !== 'en') {
+                    const transEx = await fetchUniversalTranslation(example, currentLang);
+                    if (transEx) example = transEx.translatedText;
+                }
 
                 dictDetailHtml = `
                     <div style="margin-top: 8px; font-size: 13px; color: #555;">
@@ -352,7 +365,7 @@
             }
         }
 
-        renderResult(textInput, mainTranslation, isBanglaInput ? "বাংলা ➔ ইংরেজি" : "ইংরেজি ➔ বাংলা", dictDetailHtml, aiAnalysisHtml);
+        renderResult(textInput, translationRes.translatedText, `${translationRes.srcLang.toUpperCase()} ➔ ${currentLang.toUpperCase()}`, dictDetailHtml, aiAnalysisHtml);
     }
 
     function renderResult(original, translation, tag, dictHtml = '', aiHtml = '') {
@@ -379,21 +392,17 @@
             let correctMeaning = item.meaning;
             let questionWord = item.word;
 
-            if (currentLang !== 'auto') {
-                const transWord = await fetchTranslation(item.word, currentLang);
-                if (transWord) correctMeaning = transWord;
-            }
+            const transRes = await fetchUniversalTranslation(item.word, currentLang);
+            if (transRes) correctMeaning = transRes.translatedText;
 
             const otherWords = wordDatabase.filter(w => w.word !== item.word).sort(() => 0.5 - Math.random()).slice(0, 2);
             let wrongOption1 = otherWords[0].meaning;
             let wrongOption2 = otherWords[1].meaning;
 
-            if (currentLang !== 'auto') {
-                const trans1 = await fetchTranslation(otherWords[0].word, currentLang);
-                const trans2 = await fetchTranslation(otherWords[1].word, currentLang);
-                if (trans1) wrongOption1 = trans1;
-                if (trans2) wrongOption2 = trans2;
-            }
+            const trans1 = await fetchUniversalTranslation(otherWords[0].word, currentLang);
+            const trans2 = await fetchUniversalTranslation(otherWords[1].word, currentLang);
+            if (trans1) wrongOption1 = trans1.translatedText;
+            if (trans2) wrongOption2 = trans2.translatedText;
 
             const options = [correctMeaning, wrongOption1, wrongOption2].sort(() => 0.5 - Math.random());
 
@@ -475,7 +484,5 @@
     }
 </script>
 
-</body>
-</html>
 </body>
 </html>
