@@ -53,6 +53,7 @@
         .ai-header { font-weight: bold; color: #8e44ad; display: flex; align-items: center; gap: 5px; margin-bottom: 6px; font-size: 14px; }
         
         .quiz-card { background: #fff9c4; padding: 15px; border-radius: 10px; margin-bottom: 15px; text-align: center; }
+        .quiz-title-eng { font-size: 12px; color: #795548; font-weight: bold; margin-bottom: 4px; display: block; }
         .options-grid { display: grid; gap: 8px; }
         .opt-btn { padding: 10px; background: white; border: 2px solid #fbc02d; border-radius: 8px; cursor: pointer; font-size: 15px; text-align: center; font-weight: bold; }
         .opt-btn:hover { background: #fffde7; }
@@ -66,7 +67,7 @@
         <div class="stats">পয়েন্ট: <span id="score">0</span></div>
     </div>
 
-    <!-- হোমপেজে সার্বজনীন ১২টি ভাষার ড্রপডাউন -->
+    <!-- হোমপেজে সার্বজনীন ড্রপডাউন -->
     <div class="lang-bar">
         <label for="targetLang">লক্ষ্যভিত্তিক ভাষা (Target Language):</label>
         <select id="targetLang" class="lang-select" onchange="changeLanguage()">
@@ -86,8 +87,8 @@
     </div>
 
     <div class="tabs">
-        <button class="tab-btn active" onclick="switchTab('dict')">ডিকশনারি</button>
-        <button class="tab-btn" onclick="switchTab('quiz')">ডেইলি কুইজ</button>
+        <button class="tab-btn active" onclick="switchTab('dict')">DICTIONARY (ডিকশনারি)</button>
+        <button class="tab-btn" onclick="switchTab('quiz')">DAILY QUIZ (ডেইলি কুইজ)</button>
     </div>
 
     <div id="dictSection" class="section active">
@@ -105,7 +106,8 @@
 
     <div id="quizSection" class="section">
         <div class="quiz-card">
-            <p id="quizQuestion" style="font-weight: bold; margin-bottom: 10px;">লোডিং...</p>
+            <span id="quizQuestionEng" class="quiz-title-eng">What is the correct meaning?</span>
+            <p id="quizQuestion" style="font-weight: bold; margin-bottom: 10px; font-size: 16px;">লোডিং...</p>
         </div>
         <div class="options-grid" id="optionsContainer"></div>
         <p id="quizFeedback" style="text-align: center; margin-top: 10px; font-weight: bold;"></p>
@@ -260,7 +262,6 @@
         }
     }
 
-    // সার্বজনীন দ্বিমুখী অনুবাদ ফাংশন
     async function fetchUniversalTranslation(text, targetLang) {
         try {
             const apiUrl = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${targetLang}&dt=t&dj=1&q=${encodeURIComponent(text)}`;
@@ -271,7 +272,6 @@
                 const translatedText = data.sentences.map(s => s.trans).join('');
                 const detectedLang = data.src || 'auto';
                 
-                // ইনপুট দেওয়া ভাষা এবং সিলেক্ট করা ভাষা একই হলে বাংলা অথবা ইংরেজিতে অটো অদলবদল
                 if (detectedLang === targetLang) {
                     const fallbackLang = targetLang === 'bn' ? 'en' : 'bn';
                     return await fetchUniversalTranslation(text, fallbackLang);
@@ -349,16 +349,16 @@
 
                 dictDetailHtml = `
                     <div style="margin-top: 8px; font-size: 13px; color: #555;">
-                        <span><b>পদ (Part of Speech):</b> <i>${partOfSpeech}</i></span>
-                        ${phonetic ? `<span style="margin-left: 10px; color: #e67e22;"><b>উচ্চারণ:</b> ${phonetic}</span>` : ''}
+                        <span><b>Part of Speech (পদ):</b> <i>${partOfSpeech}</i></span>
+                        ${phonetic ? `<span style="margin-left: 10px; color: #e67e22;"><b>Pronunciation:</b> ${phonetic}</span>` : ''}
                     </div>
                 `;
 
                 aiAnalysisHtml = `
                     <div class="ai-card">
-                        <div class="ai-header">🤖 AI ব্যাকরণ ও বিস্তারিত বিশ্লেষণ</div>
-                        <p style="margin-bottom: 5px;"><b>সংজ্ঞা (Definition):</b> ${definition}</p>
-                        ${example ? `<p style="margin-bottom: 5px; color: #27ae60;"><b>উদাহরণ (Example):</b> "${example}"</p>` : ''}
+                        <div class="ai-header">🤖 AI Grammar & Definition (বিশ্লেষণ)</div>
+                        <p style="margin-bottom: 5px;"><b>Definition (সংজ্ঞা):</b> ${definition}</p>
+                        ${example ? `<p style="margin-bottom: 5px; color: #27ae60;"><b>Example (উদাহরণ):</b> "${example}"</p>` : ''}
                     </div>
                 `;
             }
@@ -374,7 +374,7 @@
                 ${original} <span style="font-size: 11px; background: #2ecc71; color: white; padding: 2px 6px; border-radius: 4px; margin-left: 5px;">${tag}</span>
             </div>
             ${dictHtml}
-            <div style="font-size: 16px; color: #27ae60; margin-top: 8px;"><b>অনুবাদ:</b> ${translation}</div>
+            <div style="font-size: 16px; color: #27ae60; margin-top: 8px;"><b>Translation (অনুবাদ):</b> ${translation}</div>
             ${aiHtml}
         `;
         userScore += 5;
@@ -406,7 +406,8 @@
             const options = [correctMeaning, wrongOption1, wrongOption2].sort(() => 0.5 - Math.random());
 
             quizQuestions.push({
-                question: `'${questionWord.toUpperCase()}' - এর সঠিক অর্থ কোনটি?`,
+                questionEng: `What is the correct meaning of '${questionWord.toUpperCase()}'?`,
+                questionBn: `'${questionWord.toUpperCase()}' - এর সঠিক অর্থ কোনটি?`,
                 options: options,
                 correct: correctMeaning
             });
@@ -435,7 +436,8 @@
         }
 
         const quiz = quizQuestions[currentQuizIndex];
-        document.getElementById('quizQuestion').innerText = quiz.question;
+        document.getElementById('quizQuestionEng').innerText = quiz.questionEng;
+        document.getElementById('quizQuestion').innerText = quiz.questionBn;
         document.getElementById('quizFeedback').innerText = '';
 
         const optionsContainer = document.getElementById('optionsContainer');
@@ -457,7 +459,7 @@
         if (selectedOption === currentCorrect) {
             playSound('correct');
             feedback.style.color = 'green';
-            feedback.innerText = 'সঠিক উত্তর! 🎉 (+১০ পয়েন্ট)';
+            feedback.innerText = 'Correct! / সঠিক উত্তর! 🎉 (+১০ পয়েন্ট)';
             userScore += 10;
             document.getElementById('score').innerText = userScore;
 
@@ -468,7 +470,7 @@
         } else {
             playSound('wrong');
             feedback.style.color = 'red';
-            feedback.innerText = 'ভুল উত্তর! আবার চেষ্টা করুন।';
+            feedback.innerText = 'Wrong Answer! / ভুল উত্তর! আবার চেষ্টা করুন।';
         }
     }
 
