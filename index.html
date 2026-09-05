@@ -70,9 +70,8 @@
     <div class="lang-bar">
         <label for="targetLang">অনুবাদ ও কুইজের ভাষা:</label>
         <select id="targetLang" class="lang-select" onchange="changeLanguage()">
-            <option value="bn" selected>Bangla (বাংলা)</option>
+            <option value="auto" selected>Bangla ⇆ English (স্বয়ংক্রিয়)</option>
             <option value="ar">Arabic (العربية)</option>
-            <option value="en">English</option>
             <option value="fr">French (Français)</option>
             <option value="de">German (Deutsch)</option>
             <option value="hi">Hindi (हिन्दी)</option>
@@ -90,14 +89,14 @@
 
     <div id="dictSection" class="section active">
         <div class="search-box">
-            <input type="text" id="wordInput" placeholder="শব্দ বা বাক্য লিখুন...">
+            <input type="text" id="wordInput" placeholder="বাংলা বা ইংরেজি শব্দ লিখুন...">
             <button id="micBtn" class="icon-btn" onclick="startVoiceSearch()" title="ভয়েস ইনপুট">🎙️</button>
             <button class="icon-btn" onclick="document.getElementById('imageInput').click()" title="ছবি থেকে সার্চ">📷</button>
             <input type="file" id="imageInput" accept="image/*" style="display: none;" onchange="processImageSearch(event)">
             <button class="action-btn" onclick="searchWord()">খুঁজুন</button>
         </div>
         <div id="resultContainer" class="result-card">
-            <p style="color: #888; text-align: center; font-size: 14px;">অর্থ দেখতে সার্চ, ভয়েস বা ছবি ব্যবহার করুন</p>
+            <p style="color: #888; text-align: center; font-size: 14px;">বাংলা লিখলে ইংরেজি এবং ইংরেজি লিখলে বাংলা অনুবাদ দেখতে পাবেন</p>
         </div>
     </div>
 
@@ -115,12 +114,12 @@
     let currentQuizIndex = 0;
     let wordDatabase = [];
     let quizQuestions = [];
-    let currentLang = 'bn';
+    let currentLang = 'auto';
 
     function changeLanguage() {
         currentLang = document.getElementById('targetLang').value;
         const resultContainer = document.getElementById('resultContainer');
-        resultContainer.innerHTML = '<p style="color: #888; text-align: center; font-size: 14px;">ভাষা পরিবর্তন করা হয়েছে। নতুন সার্চ করুন!</p>';
+        resultContainer.innerHTML = '<p style="color: #888; text-align: center; font-size: 14px;">ভাষা মোড পরিবর্তন করা হয়েছে। নতুন সার্চ করুন!</p>';
         generateQuizFromDatabase();
         if (document.getElementById('quizSection').classList.contains('active')) {
             loadQuiz();
@@ -200,12 +199,12 @@
         try {
             const optimizedImageData = await preprocessImage(file);
 
-            const worker = await Tesseract.createWorker('eng');
+            const worker = await Tesseract.createWorker('eng+ben');
             const ret = await worker.recognize(optimizedImageData);
             await worker.terminate();
 
             let cleanedText = ret.data.text
-                .replace(/[^a-zA-Z0-9\s]/g, ' ')
+                .replace(/[^\u0980-\u09FFa-zA-Z0-9\s]/g, ' ')
                 .replace(/\s+/g, ' ')
                 .trim();
 
@@ -213,7 +212,7 @@
                 wordInput.value = cleanedText;
                 searchWord();
             } else {
-                resultContainer.innerHTML = '<p style="color: red; text-align: center;">ছবিতে কোনো স্পষ্ট ইংরেজি শব্দ পাওয়া যায়নি!</p>';
+                resultContainer.innerHTML = '<p style="color: red; text-align: center;">ছবিতে কোনো স্পষ্ট লেখা পাওয়া যায়নি!</p>';
             }
         } catch (error) {
             console.error("OCR Error:", error);
@@ -276,7 +275,6 @@
         return null;
     }
 
-    // ফ্রি ডিকশনারি API (Word Details, Phonetic, Part of Speech-এর জন্য)
     async function fetchDictionaryDetails(word) {
         try {
             const res = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(word)}`);
@@ -299,34 +297,43 @@
             return;
         }
 
-        resultContainer.innerHTML = '<p style="text-align: center; color: #3498db;">🔍 শব্দ বিশ্লেষণ করা হচ্ছে...</p>';
+        resultContainer.innerHTML = '<p style="text-align: center; color: #3498db;">🔍 অনুবাদ ও বিশ্লেষণ করা হচ্ছে...</p>';
 
-        const cleanInput = textInput.toLowerCase();
-        const isSingleWord = !textInput.includes(' ');
+        const isBanglaInput = /[\u0980-\u09FF]/.test(textInput);
+        let targetLanguage = currentLang;
 
-        // মূল অনুবাদ বের করা
-        let mainTranslation = await fetchTranslation(textInput, currentLang);
-        if (!mainTranslation && currentLang === 'bn' && isSingleWord) {
-            const found = wordDatabase.find(item => item.word.toLowerCase() === cleanInput);
-            if (found) mainTranslation = found.meaning;
+        // বাংলা ইনপুট হলে ইংরেজিতে এবং ইংরেজি ইনপুট হলে বাংলায় অটো অনুবাদ
+        if (currentLang === 'auto') {
+            targetLanguage = isBanglaInput ? 'en' : 'bn';
         }
+
+        let mainTranslation = await fetchTranslation(textInput, targetLanguage);
 
         if (!mainTranslation) {
             resultContainer.innerHTML = '<p style="color: red; text-align: center;">অনুবাদ পাওয়া যায়নি!</p>';
             return;
         }
 
+        const isSingleWord = !textInput.includes(' ');
         let dictDetailHtml = '';
         let aiAnalysisHtml = '';
 
         if (isSingleWord) {
-            const dictData = await fetchDictionaryDetails(cleanInput);
+            let englishWord = textInput;
+            if (isBanglaInput) {
+                englishWord = mainTranslation;
+            }
+
+            const dictData = await fetchDictionaryDetails(englishWord);
 
             if (dictData) {
                 const partOfSpeech = dictData.meanings[0]?.partOfSpeech || 'word';
                 const phonetic = dictData.phonetic || (dictData.phonetics.find(p => p.text)?.text) || '';
-                const definition = dictData.meanings[0]?.definitions[0]?.definition || '';
-                const example = dictData.meanings[0]?.definitions[0]?.example || '';
+                let definition = dictData.meanings[0]?.definitions[0]?.definition || '';
+                let example = dictData.meanings[0]?.definitions[0]?.example || '';
+
+                if (definition) definition = (await fetchTranslation(definition, 'bn')) || definition;
+                if (example) example = (await fetchTranslation(example, 'bn')) || example;
 
                 dictDetailHtml = `
                     <div style="margin-top: 8px; font-size: 13px; color: #555;">
@@ -335,26 +342,17 @@
                     </div>
                 `;
 
-                // AI স্মার্ট বিশ্লেষণ কার্ড তৈরি
                 aiAnalysisHtml = `
                     <div class="ai-card">
-                        <div class="ai-header">🤖 AI ব্যাকরণ ও সঠিক ব্যবহার বিশ্লেষণ</div>
+                        <div class="ai-header">🤖 AI ব্যাকরণ ও বিস্তারিত বিশ্লেষণ</div>
                         <p style="margin-bottom: 5px;"><b>সংজ্ঞা (Definition):</b> ${definition}</p>
-                        ${example ? `<p style="margin-bottom: 5px; color: #27ae60;"><b>উদাহরণ বাক্য:</b> "${example}"</p>` : ''}
-                        <p style="color: #7f8c8d; font-size: 12px; margin-top: 5px;">💡 <i>টিপস: বাক্য গঠনে এই শব্দটির সঠিক অবস্থান লক্ষ্য রাখুন।</i></p>
-                    </div>
-                `;
-            } else {
-                aiAnalysisHtml = `
-                    <div class="ai-card">
-                        <div class="ai-header">🤖 AI বিশ্লেষণ</div>
-                        <p>এটি একটি সাধারণ শব্দ। বাক্য গঠনে সঠিক ব্যাকরণ অনুসরণ করুন।</p>
+                        ${example ? `<p style="margin-bottom: 5px; color: #27ae60;"><b>উদাহরণ (Example):</b> "${example}"</p>` : ''}
                     </div>
                 `;
             }
         }
 
-        renderResult(textInput, mainTranslation, isSingleWord ? "Word" : "Sentence", dictDetailHtml, aiAnalysisHtml);
+        renderResult(textInput, mainTranslation, isBanglaInput ? "বাংলা ➔ ইংরেজি" : "ইংরেজি ➔ বাংলা", dictDetailHtml, aiAnalysisHtml);
     }
 
     function renderResult(original, translation, tag, dictHtml = '', aiHtml = '') {
@@ -379,17 +377,18 @@
         quizQuestions = [];
         for (let item of shuffled) {
             let correctMeaning = item.meaning;
-            
-            if (currentLang !== 'bn') {
-                const trans = await fetchTranslation(item.word, currentLang);
-                if (trans) correctMeaning = trans;
+            let questionWord = item.word;
+
+            if (currentLang !== 'auto') {
+                const transWord = await fetchTranslation(item.word, currentLang);
+                if (transWord) correctMeaning = transWord;
             }
 
             const otherWords = wordDatabase.filter(w => w.word !== item.word).sort(() => 0.5 - Math.random()).slice(0, 2);
             let wrongOption1 = otherWords[0].meaning;
             let wrongOption2 = otherWords[1].meaning;
 
-            if (currentLang !== 'bn') {
+            if (currentLang !== 'auto') {
                 const trans1 = await fetchTranslation(otherWords[0].word, currentLang);
                 const trans2 = await fetchTranslation(otherWords[1].word, currentLang);
                 if (trans1) wrongOption1 = trans1;
@@ -399,7 +398,7 @@
             const options = [correctMeaning, wrongOption1, wrongOption2].sort(() => 0.5 - Math.random());
 
             quizQuestions.push({
-                question: `'${item.word.toUpperCase()}' - এর সঠিক অর্থ কোনটি?`,
+                question: `'${questionWord.toUpperCase()}' - এর সঠিক অর্থ কোনটি?`,
                 options: options,
                 correct: correctMeaning
             });
@@ -476,5 +475,7 @@
     }
 </script>
 
+</body>
+</html>
 </body>
 </html>
