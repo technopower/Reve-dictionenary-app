@@ -66,7 +66,7 @@
         <div class="stats">পয়েন্ট: <span id="score">0</span></div>
     </div>
 
-    <!-- হোমপেজে সার্বজনীন ড্রপডাউন -->
+    <!-- হোমপেজে সার্বজনীন ১২টি ভাষার ড্রপডাউন -->
     <div class="lang-bar">
         <label for="targetLang">লক্ষ্যভিত্তিক ভাষা (Target Language):</label>
         <select id="targetLang" class="lang-select" onchange="changeLanguage()">
@@ -80,6 +80,8 @@
             <option value="es">Spanish (Español)</option>
             <option value="ru">Russian (Русский)</option>
             <option value="ur">Urdu (উর্দু)</option>
+            <option value="ja">Japanese (日本語)</option>
+            <option value="ko">Korean (한국어)</option>
         </select>
     </div>
 
@@ -200,14 +202,11 @@
         try {
             const optimizedImageData = await preprocessImage(file);
 
-            const worker = await Tesseract.createWorker('eng+ben');
+            const worker = await Tesseract.createWorker('eng+ben+jpn+kor');
             const ret = await worker.recognize(optimizedImageData);
             await worker.terminate();
 
-            let cleanedText = ret.data.text
-                .replace(/[^\u0980-\u09FFa-zA-Z0-9\s]/g, ' ')
-                .replace(/\s+/g, ' ')
-                .trim();
+            let cleanedText = ret.data.text.trim();
 
             if (cleanedText) {
                 wordInput.value = cleanedText;
