@@ -55,8 +55,7 @@
         .speak-btn { background: #e74c3c; color: white; border: none; padding: 4px 8px; border-radius: 50%; cursor: pointer; font-size: 12px; margin-left: 6px; display: inline-flex; align-items: center; justify-content: center; }
         .speak-btn:hover { background: #c0392b; }
 
-        .result-card { background: #f9f9f9; padding: 12px; border-radius: 10px; border-left: 4px solid #3498db; min-height: 90px; margin-bottom: 15px; }
-        .pronunciation-badge { background: #f39c12; color: white; font-size: 13px; font-weight: bold; padding: 3px 8px; border-radius: 12px; margin-left: 5px; display: inline-block; }
+        .result-card { background: #f9f9f9; padding: 15px; border-radius: 10px; border-left: 4px solid #3498db; min-height: 90px; margin-bottom: 15px; line-height: 1.6; }
         
         .quiz-card { background: #fff9c4; padding: 15px; border-radius: 10px; margin-bottom: 15px; text-align: center; border: 1px solid #fbc02d; }
         .quiz-title-eng { font-size: 12px; color: #795548; font-weight: bold; margin-bottom: 6px; display: block; }
@@ -79,10 +78,10 @@
         <div class="lang-select-box">
             <label for="sourceLang">থেকে (From):</label>
             <select id="sourceLang" class="lang-select" onchange="onLanguageChange()">
-                <option value="bn" selected>Bangla (বাংলা)</option>
+                <option value="en" selected>English</option>
+                <option value="bn">Bangla (বাংলা)</option>
                 <option value="auto">🌐 Auto Detect</option>
                 <option value="ar">Arabic (العربية)</option>
-                <option value="en">English</option>
                 <option value="fr">French (Français)</option>
                 <option value="de">German (Deutsch)</option>
                 <option value="hi">Hindi (हिन्दी)</option>
@@ -100,11 +99,11 @@
         <div class="lang-select-box">
             <label for="targetLang">অনুবাদ (To):</label>
             <select id="targetLang" class="lang-select" onchange="onLanguageChange()">
-                <option value="ar">Arabic (العربية)</option>
-                <option value="en" selected>English</option>
+                <option value="de" selected>German (Deutsch)</option>
                 <option value="bn">Bangla (বাংলা)</option>
+                <option value="ar">Arabic (العربية)</option>
+                <option value="en">English</option>
                 <option value="fr">French (Français)</option>
-                <option value="de">German (Deutsch)</option>
                 <option value="hi">Hindi (हिन्दी)</option>
                 <option value="ja">Japanese (日本語)</option>
                 <option value="ko">Korean (한국어)</option>
@@ -221,7 +220,7 @@
             'pt': 'pt-PT', 'ru': 'ru-RU', 'es': 'es-ES', 'ur': 'ur-PK'
         };
 
-        recognition.lang = langMap[sourceLang] || 'bn-BD';
+        recognition.lang = langMap[sourceLang] || 'en-US';
         recognition.interimResults = false;
 
         micBtn.classList.add('listening');
@@ -355,7 +354,7 @@
             return;
         }
 
-        resultContainer.innerHTML = '<p style="text-align: center; color: #3498db;">🔍 অনুবাদ ও বাংলা উচ্চারণ তৈরি হচ্ছে...</p>';
+        resultContainer.innerHTML = '<p style="text-align: center; color: #3498db;">🔍 অনুবাদ ও উচ্চারণ তৈরি হচ্ছে...</p>';
 
         const translationRes = await fetchUniversalTranslation(textInput, sourceLang, targetLang);
 
@@ -364,20 +363,18 @@
             return;
         }
 
-        let banglaPronunciation = '';
+        let banglaMeaning = '';
         if (targetLang !== 'bn') {
-            const bnPronRes = await fetchUniversalTranslation(translationRes.translatedText, targetLang, 'bn');
-            if (bnPronRes && bnPronRes.transliteration) {
-                banglaPronunciation = bnPronRes.transliteration;
-            } else if (bnPronRes) {
-                banglaPronunciation = bnPronRes.translatedText;
+            const bnMeaningRes = await fetchUniversalTranslation(textInput, sourceLang, 'bn');
+            if (bnMeaningRes) {
+                banglaMeaning = bnMeaningRes.translatedText;
             }
         }
 
-        renderResult(textInput, translationRes.translatedText, translationRes.srcLang, targetLang, banglaPronunciation);
+        renderResult(textInput, translationRes.translatedText, translationRes.srcLang, targetLang, banglaMeaning);
     }
 
-    function renderResult(original, translation, srcLang, targetLang, pronunciation = '') {
+    function renderResult(original, translation, srcLang, targetLang, banglaMeaning = '') {
         const resultContainer = document.getElementById('resultContainer');
         
         const safeOriginal = original.replace(/'/g, "\\'");
@@ -389,14 +386,14 @@
                 <button class="speak-btn" onclick="speakText('${safeOriginal}', '${srcLang}')" title="উচ্চারণ শুনুন">🔊</button>
             </div>
             
-            <div style="font-size: 18px; color: #27ae60; margin-top: 10px; display: flex; align-items: center; flex-wrap: wrap;">
-                <b>অনুবাদ:</b> <span style="margin-left: 5px;">${translation}</span>
+            <div style="font-size: 17px; color: #27ae60; margin-top: 10px; display: flex; align-items: center; flex-wrap: wrap;">
+                <b>অনুবাদ:</b> <span style="margin-left: 5px; font-weight: bold;">${translation}</span>
                 <button class="speak-btn" onclick="speakText('${safeTranslation}', '${targetLang}')" title="উচ্চারণ শুনুন">🔊</button>
             </div>
 
-            ${pronunciation ? `
-            <div style="font-size: 14px; color: #d35400; margin-top: 8px;">
-                <b>বাংলা উচ্চারণ:</b> <span class="pronunciation-badge">${pronunciation}</span>
+            ${banglaMeaning ? `
+            <div style="font-size: 15px; color: #d35400; margin-top: 8px;">
+                <b>বাংলা অর্থ/উচ্চারণ:</b> <span style="font-weight: bold;">${banglaMeaning}</span>
             </div>` : ''}
         `;
         userScore += 5;
