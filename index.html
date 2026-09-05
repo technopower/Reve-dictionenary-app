@@ -343,9 +343,14 @@
         return null;
     }
 
-    // যেকোনো ল্যাটিন/রোমান টেক্সট বা ট্রান্সলিটারেশনকে সার্বজনীনভাবে বাংলায় রূপান্তরের ফাংশন
+    // ল্যাটিন/রোমান ট্রান্সলিটারেশনকে বাংলায় রূপান্তরের ফাংশন
     function latinToBanglaPhonetic(text) {
         if (!text) return '';
+
+        // যদি টেক্সটে ইতোমধ্যে বাংলা হরফ থাকে, তবে রূপান্তর বন্ধ থাকবে
+        if (/[\u0980-\u09FF]/.test(text)) {
+            return text;
+        }
 
         const exactWordMap = {
             'I': 'আই', 'WILL': 'উইল', 'GO': 'গো', 'TO': 'টু', 'DHAKA': 'ঢাকা',
@@ -362,7 +367,8 @@
             return w.toLowerCase()
                 .replace(/sh/g, 'শ').replace(/ch/g, 'চ').replace(/kh/g, 'খ')
                 .replace(/gh/g, 'ঘ').replace(/th/g, 'থ').replace(/ph/g, 'ফ')
-                .replace(/bh/g, 'ভ').replace(/a/g, 'আ').replace(/e/g, 'এ')
+                .replace(/bh/g, 'ভ').replace(/aa/g, 'আ').replace(/ee/g, 'ঈ')
+                .replace(/oo/g, 'ঊ').replace(/a/g, 'আ').replace(/e/g, 'এ')
                 .replace(/i/g, 'ই').replace(/o/g, 'ও').replace(/u/g, 'উ')
                 .replace(/b/g, 'ব').replace(/c/g, 'ক').replace(/d/g, 'ড')
                 .replace(/f/g, 'ফ').replace(/g/g, 'গ').replace(/h/g, 'হ')
@@ -400,19 +406,23 @@
         let targetBanglaPhonetic = '';
         let banglaMeaning = '';
 
-        // মূল বাক্যের উচ্চারণ বাংলা হরফে রূপান্তর
-        if (translationRes.transliteration) {
-            sourceBanglaPhonetic = latinToBanglaPhonetic(translationRes.transliteration);
-        } else if (sourceLang === 'en' || translationRes.srcLang === 'en') {
-            sourceBanglaPhonetic = latinToBanglaPhonetic(textInput);
+        // মূল বাক্যের উচ্চারণ বাংলা হরফে রূপান্তর (যদি মূল বাক্যটি বাংলা না হয়)
+        if (!/[\u0980-\u09FF]/.test(textInput)) {
+            if (translationRes.transliteration) {
+                sourceBanglaPhonetic = latinToBanglaPhonetic(translationRes.transliteration);
+            } else if (sourceLang === 'en' || translationRes.srcLang === 'en') {
+                sourceBanglaPhonetic = latinToBanglaPhonetic(textInput);
+            }
         }
 
-        // অনূদিত বাক্যের বাংলা উচ্চারণ রূপান্তর (সব ভাষার ক্ষেত্রে)
-        const targetTransRes = await fetchUniversalTranslation(translationRes.translatedText, targetLang, 'en');
-        if (targetTransRes && targetTransRes.transliteration) {
-            targetBanglaPhonetic = latinToBanglaPhonetic(targetTransRes.transliteration);
-        } else if (targetLang === 'en') {
-            targetBanglaPhonetic = latinToBanglaPhonetic(translationRes.translatedText);
+        // অনূদিত বাক্য যদি বাংলা না হয় (যেমন: আরবি, ইংরেজি, ফ্রেঞ্চ), তবেই বাংলা উচ্চারণ দেখাবে
+        if (targetLang !== 'bn' && !/[\u0980-\u09FF]/.test(translationRes.translatedText)) {
+            const targetTransRes = await fetchUniversalTranslation(translationRes.translatedText, targetLang, 'en');
+            if (targetTransRes && targetTransRes.transliteration) {
+                targetBanglaPhonetic = latinToBanglaPhonetic(targetTransRes.transliteration);
+            } else if (targetLang === 'en') {
+                targetBanglaPhonetic = latinToBanglaPhonetic(translationRes.translatedText);
+            }
         }
 
         // বাংলা অর্থ তৈরি
