@@ -16,9 +16,12 @@
     <!-- Fast OCR Engine for Image Text Reading -->
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 
+    <!-- Google AdSense / AdMob Web Script -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3940256099942544" crossorigin="anonymous"></script>
+
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: #eef2f5; color: #333; padding: 15px; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        body { background-color: #eef2f5; color: #333; padding: 15px; display: flex; justify-content: center; align-items: center; min-height: 100vh; flex-direction: column; }
         .app-container { background: #fff; padding: 20px; border-radius: 20px; box-shadow: 0 8px 25px rgba(0,0,0,0.12); width: 100%; max-width: 440px; overflow: hidden; }
         
         /* Banner Header */
@@ -30,11 +33,68 @@
         .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; background: #27ae60; color: white; padding: 10px 15px; border-radius: 10px; }
         .stats { font-size: 14px; font-weight: bold; }
         
-        .translation-direction { display: flex; align-items: center; justify-content: space-between; background: #e8f8f5; padding: 10px; border-radius: 12px; margin-bottom: 15px; border: 1px solid #a3e4d7; gap: 5px; }
-        .lang-select-box { display: flex; flex-direction: column; flex: 1; }
-        .lang-select-box label { font-size: 11px; font-weight: bold; color: #16a085; margin-bottom: 2px; }
-        .lang-select { padding: 6px; border-radius: 6px; border: 1px solid #16a085; font-size: 12px; font-weight: bold; outline: none; background: white; cursor: pointer; }
-        .swap-btn { background: #16a085; color: white; border: none; border-radius: 50%; width: 28px; height: 28px; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; margin-top: 12px; flex-shrink: 0; }
+        /* Centered Translation Direction Styling */
+        .translation-direction { 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            background: #e8f8f5; 
+            padding: 10px; 
+            border-radius: 12px; 
+            margin-bottom: 15px; 
+            border: 1px solid #a3e4d7; 
+            gap: 8px; 
+            width: 100%;
+        }
+
+        .lang-select-box { 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center;
+            justify-content: center;
+            flex: 1; 
+            min-width: 0;
+        }
+
+        .lang-select-box label { 
+            font-size: 11px; 
+            font-weight: bold; 
+            color: #16a085; 
+            margin-bottom: 4px; 
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .lang-select { 
+            width: 100%;
+            padding: 6px 4px; 
+            border-radius: 6px; 
+            border: 1px solid #16a085; 
+            font-size: 12px; 
+            font-weight: bold; 
+            outline: none; 
+            background: white; 
+            cursor: pointer; 
+            text-align: center;
+            text-align-last: center;
+        }
+
+        .swap-btn { 
+            background: #16a085; 
+            color: white; 
+            border: none; 
+            border-radius: 50%; 
+            width: 32px; 
+            height: 32px; 
+            font-size: 14px; 
+            cursor: pointer; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            margin-top: 14px; 
+            flex-shrink: 0; 
+        }
+
         .swap-btn:hover { background: #117a65; }
 
         /* Feature Grid System */
@@ -79,6 +139,9 @@
         .opt-btn { flex: 1; padding: 12px; background: white; border: 2px solid #fbc02d; border-radius: 8px; cursor: pointer; font-size: 15px; text-align: center; font-weight: bold; color: #333; }
         .opt-btn:hover { background: #fffde7; }
 
+        /* Ad Placement Styles */
+        .ad-container { width: 100%; text-align: center; margin: 10px 0; min-height: 50px; background: #f1f1f1; border: 1px dashed #ccc; border-radius: 8px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+
         /* Bottom Badge Strip */
         .footer-badge { display: flex; justify-content: space-around; align-items: center; background: #0b874b; color: white; padding: 8px; border-radius: 10px; font-size: 12px; font-weight: bold; margin-top: 10px; }
         .footer-badge span { display: flex; align-items: center; gap: 4px; }
@@ -92,6 +155,17 @@
     <div class="hero-banner">
         <h1>প্রবাসী সেবা <span>Apps</span></h1>
         <p>ভাষা অনুবাদ করুন, বিশ্বকে সহজে জানুন</p>
+    </div>
+
+    <!-- AdMob / AdSense Top Banner Ad Container -->
+    <div class="ad-container">
+        <ins class="adsbygoogle"
+             style="display:block; width:100%; height:50px;"
+             data-ad-client="ca-pub-3940256099942544"
+             data-ad-slot="6301802184"></ins>
+        <script>
+             (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
     </div>
 
     <div class="header">
@@ -190,6 +264,17 @@
         <p id="quizFeedback" style="text-align: center; margin-top: 12px; font-weight: bold; font-size: 15px;"></p>
     </div>
 
+    <!-- AdMob / AdSense Bottom Banner Ad Container -->
+    <div class="ad-container">
+        <ins class="adsbygoogle"
+             style="display:block; width:100%; height:50px;"
+             data-ad-client="ca-pub-3940256099942544"
+             data-ad-slot="6301802184"></ins>
+        <script>
+             (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
+
     <!-- Bottom Feature Badges -->
     <div class="footer-badge">
         <span>✓ সহজ</span>
@@ -204,6 +289,20 @@
     let currentQuizIndex = 0;
     let wordDatabase = [];
     let quizQuestions = [];
+    let searchCount = 0;
+
+    // AdMob Helper for Mobile Apps (Cordova / Capacitor / WebView)
+    function showAdMobInterstitial() {
+        searchCount++;
+        // Trigger Interstitial Ad every 3 searches
+        if (searchCount % 3 === 0) {
+            if (window.admob && window.admob.interstitial) {
+                window.admob.interstitial.show();
+            } else {
+                console.log("AdMob Interstitial Triggered (Shows in compiled APK)");
+            }
+        }
+    }
 
     function swapLanguages() {
         const sourceSelect = document.getElementById('sourceLang');
@@ -439,6 +538,8 @@
             resultContainer.innerHTML = '<p style="color: red; text-align: center;">দয়া করে কোনো শব্দ বা বাক্য লিখুন!</p>';
             return;
         }
+
+        showAdMobInterstitial();
 
         resultContainer.innerHTML = '<p style="text-align: center; color: #3498db;">🔍 অনুবাদ ও উচ্চারণ তৈরি হচ্ছে...</p>';
 
