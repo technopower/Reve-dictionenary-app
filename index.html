@@ -321,7 +321,7 @@
             const data = await response.json();
 
             if (data && data.sentences && data.sentences.length > 0) {
-                const translatedText = data.sentences.map(s => s.trans).join('');
+                const translatedText = data.sentences.map(s => s.trans || '').join('');
                 const detectedLang = data.src || sourceLang;
                 
                 let transliteration = '';
@@ -343,16 +343,36 @@
         return null;
     }
 
-    function latinToBanglaPronunciation(text) {
-        const wordMap = {
+    // যেকোনো ল্যাটিন/রোমান টেক্সট বা ট্রান্সলিটারেশনকে সার্বজনীনভাবে বাংলায় রূপান্তরের ফাংশন
+    function latinToBanglaPhonetic(text) {
+        if (!text) return '';
+
+        const exactWordMap = {
             'I': 'আই', 'WILL': 'উইল', 'GO': 'গো', 'TO': 'টু', 'DHAKA': 'ঢাকা',
             'YOU': 'ইউ', 'HE': 'হি', 'SHE': 'শি', 'THEY': 'দে', 'WE': 'উই',
             'AM': 'এম', 'IS': 'ইজ', 'ARE': 'আর', 'WAS': 'ওয়াজ', 'WERE': 'ওয়ার',
-            'ICH': 'ইখ', 'WERDE': 'ভের্ডে', 'NACH': 'নাখ', 'GEHEN': 'গেহেন'
+            'SA-AZHABU': 'সা-আজহাবূ', 'ILA': 'ইলা', 'MARHABAN': 'মারহাবান', 'SHUKRAN': 'শুকরান'
         };
 
-        const words = text.toUpperCase().split(/\s+/);
-        const banglaWords = words.map(w => wordMap[w] || w);
+        const words = text.trim().split(/\s+/);
+        const banglaWords = words.map(w => {
+            const upperW = w.toUpperCase();
+            if (exactWordMap[upperW]) return exactWordMap[upperW];
+
+            return w.toLowerCase()
+                .replace(/sh/g, 'শ').replace(/ch/g, 'চ').replace(/kh/g, 'খ')
+                .replace(/gh/g, 'ঘ').replace(/th/g, 'থ').replace(/ph/g, 'ফ')
+                .replace(/bh/g, 'ভ').replace(/a/g, 'আ').replace(/e/g, 'এ')
+                .replace(/i/g, 'ই').replace(/o/g, 'ও').replace(/u/g, 'উ')
+                .replace(/b/g, 'ব').replace(/c/g, 'ক').replace(/d/g, 'ড')
+                .replace(/f/g, 'ফ').replace(/g/g, 'গ').replace(/h/g, 'হ')
+                .replace(/j/g, 'জ').replace(/k/g, 'ক').replace(/l/g, 'ল')
+                .replace(/m/g, 'ম').replace(/n/g, 'ন').replace(/p/g, 'প')
+                .replace(/r/g, 'র').replace(/s/g, 'স').replace(/t/g, 'ট')
+                .replace(/v/g, 'ভ').replace(/w/g, 'ওয়া').replace(/y/g, 'ইয়')
+                .replace(/z/g, 'জ');
+        });
+
         return banglaWords.join(' ');
     }
 
@@ -376,40 +396,54 @@
             return;
         }
 
-        let banglaPhonetic = '';
+        let sourceBanglaPhonetic = '';
+        let targetBanglaPhonetic = '';
         let banglaMeaning = '';
 
-        if (sourceLang === 'en' || translationRes.srcLang === 'en') {
-            banglaPhonetic = latinToBanglaPronunciation(textInput);
+        // মূল বাক্যের উচ্চারণ বাংলা হরফে রূপান্তর
+        if (translationRes.transliteration) {
+            sourceBanglaPhonetic = latinToBanglaPhonetic(translationRes.transliteration);
+        } else if (sourceLang === 'en' || translationRes.srcLang === 'en') {
+            sourceBanglaPhonetic = latinToBanglaPhonetic(textInput);
         }
 
-        if (targetLang !== 'bn') {
+        // অনূদিত বাক্যের বাংলা উচ্চারণ রূপান্তর (সব ভাষার ক্ষেত্রে)
+        const targetTransRes = await fetchUniversalTranslation(translationRes.translatedText, targetLang, 'en');
+        if (targetTransRes && targetTransRes.transliteration) {
+            targetBanglaPhonetic = latinToBanglaPhonetic(targetTransRes.transliteration);
+        } else if (targetLang === 'en') {
+            targetBanglaPhonetic = latinToBanglaPhonetic(translationRes.translatedText);
+        }
+
+        // বাংলা অর্থ তৈরি
+        if (targetLang === 'bn') {
+            banglaMeaning = translationRes.translatedText;
+        } else {
             const bnMeaningRes = await fetchUniversalTranslation(textInput, sourceLang, 'bn');
             if (bnMeaningRes) {
                 banglaMeaning = bnMeaningRes.translatedText;
             }
-        } else {
-            banglaMeaning = translationRes.translatedText;
         }
 
-        renderResult(textInput, translationRes.translatedText, translationRes.srcLang, targetLang, banglaPhonetic, banglaMeaning);
+        renderResult(textInput, translationRes.translatedText, translationRes.srcLang, targetLang, sourceBanglaPhonetic, targetBanglaPhonetic, banglaMeaning);
     }
 
-    function renderResult(original, translation, srcLang, targetLang, banglaPhonetic = '', banglaMeaning = '') {
+    function renderResult(original, translation, srcLang, targetLang, sourcePhonetic = '', targetPhonetic = '', banglaMeaning = '') {
         const resultContainer = document.getElementById('resultContainer');
         
         const safeOriginal = original.replace(/'/g, "\\'");
         const safeTranslation = translation.replace(/'/g, "\\'");
 
         resultContainer.innerHTML = `
-            <div style="font-size: 16px; font-weight: bold; color: #2c3e50; display: flex; align-items: center; flex-wrap: wrap; margin-bottom: 8px;">
+            <div style="font-size: 16px; font-weight: bold; color: #2c3e50; margin-bottom: 8px;">
                 <span><b>মূল শব্দ:</b> ${original}</span> 
-                ${banglaPhonetic ? `<span style="color: #27ae60; margin-left: 6px;">👉 ${banglaPhonetic}</span>` : ''}
+                ${sourcePhonetic ? `<span style="color: #27ae60; margin-left: 6px;">👉 ${sourcePhonetic}</span>` : ''}
                 <button class="speak-btn" onclick="speakText('${safeOriginal}', '${srcLang}')" title="উচ্চারণ শুনুন">🔊</button>
             </div>
             
             <div style="font-size: 17px; color: #27ae60; margin-bottom: 8px; display: flex; align-items: center; flex-wrap: wrap;">
                 <b>অনুবাদ:</b> <span style="margin-left: 5px; font-weight: bold;">${translation}</span>
+                ${targetPhonetic ? `<span style="color: #8e44ad; margin-left: 6px; font-size: 15px;">👉 (${targetPhonetic})</span>` : ''}
                 <button class="speak-btn" onclick="speakText('${safeTranslation}', '${targetLang}')" title="উচ্চারণ শুনুন">🔊</button>
             </div>
 
