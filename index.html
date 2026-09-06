@@ -83,6 +83,9 @@
 
         .result-card { background: #f9f9f9; padding: 15px; border-radius: 10px; border-left: 4px solid #27ae60; min-height: 80px; margin-bottom: 15px; line-height: 1.6; }
         
+        .ai-explain-box { background: #f4ecf7; border: 1px solid #d7bde2; padding: 12px; border-radius: 10px; margin-top: 12px; font-size: 12px; color: #2c3e50; }
+        .ai-explain-title { font-weight: bold; color: #8e44ad; margin-bottom: 6px; font-size: 13px; }
+
         /* Practice Type Buttons */
         .practice-type-group { display: flex; gap: 6px; margin-top: 8px; justify-content: center; }
         .practice-chip { background: white; border: 1px solid #27ae60; color: #27ae60; padding: 5px 8px; border-radius: 15px; font-size: 11px; font-weight: bold; cursor: pointer; transition: all 0.2s; }
@@ -313,7 +316,7 @@
 
 <script>
     let searchCount = 0;
-    let currentPracticeMode = 'vocab'; // 'vocab', 'speaking', 'grammar'
+    let currentPracticeMode = 'vocab';
 
     const aiQuestionsList = [
         "Where do you live and what do you do?",
@@ -343,7 +346,7 @@
     ];
 
     let grammarDatabase = [
-        { q: "She ___ to the market yesterday.", options: ["go", "went", "gone", "going"], correct: "went", desc: "Past Tense " },
+        { q: "She ___ to the market yesterday.", options: ["go", "went", "gone", "going"], correct: "went", desc: "Past Tense" },
         { q: "I have been working here ___ 2020.", options: ["since", "for", "from", "at"], correct: "since", desc: "Time preposition" },
         { q: "He is ___ honest man.", options: ["a", "an", "the", "no article"], correct: "an", desc: "Article rule" },
         { q: "They ___ playing football now.", options: ["is", "are", "was", "were"], correct: "are", desc: "Present Continuous" },
@@ -415,7 +418,7 @@
         setTimeout(() => { toast.style.display = "none"; }, 2000);
     }
 
-    /* 🔊 TEXT TO SPEECH (APK WebView-Safe Version) */
+    /* 🔊 TEXT TO SPEECH */
     function speakText(text, langCode = 'en-US') {
         if (!('speechSynthesis' in window)) {
             alert("⚠️ আপনার ডিভাইসে সাউন্ড আউটপুট পাওয়া যায়নি।");
@@ -437,7 +440,6 @@
         document.getElementById('aiScoreBox').style.display = 'none';
     }
 
-    /* 🎙️ SPEECH TO TEXT WITH RUNTIME PERMISSION */
     function startSpeakingAnswer() {
         requestMicPermissionThen(() => {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -515,7 +517,7 @@
         }
     }
 
-    /* DICTIONARY & AI EXPLANATION FUNCTIONS WITH COPY OPTION */
+    /* DICTIONARY & AI EXPLANATION FUNCTIONS */
     async function searchWord() {
         const textInput = document.getElementById('wordInput').value.trim();
         const resultContainer = document.getElementById('resultContainer');
@@ -523,7 +525,7 @@
         const targetLang = document.getElementById('targetLang').value;
 
         if (!textInput) {
-            resultContainer.innerHTML = '<p style="color: red; text-align: center;">দয়া করে শব্দ লিখুন!</p>';
+            resultContainer.innerHTML = '<p style="color: red; text-align: center;">দয়া করে শব্দ বা বাক্য লিখুন!</p>';
             return;
         }
 
@@ -547,26 +549,41 @@
                     <span><b>অনুবাদ:</b> ${translationRes.translatedText}</span>
                     <button class="copy-btn" style="background:#27ae60;" onclick="copyToClipboard('${safeTranslated}')">📋 কপি</button>
                 </div>
-                <button class="action-btn" style="width:100%; background: #8e44ad; font-size: 11px;" onclick="getAiExplanation('${safeText}')">🤖 Ask AI Explanation About This Word</button>
+                <button class="action-btn" style="width:100%; background: #8e44ad; font-size: 11px;" onclick="getAiExplanation('${safeText}')">🤖 Ask AI Explanation About This Input</button>
                 <div id="aiExplainContainer"></div>
             `;
         }
     }
 
+    /* UPDATED: AI EXPLANATION FOR WORDS VS SENTENCES */
     async function getAiExplanation(word) {
         const container = document.getElementById('aiExplainContainer');
-        container.innerHTML = '<p style="font-size:11px; color:#8e44ad; text-align:center; margin-top:8px;">🤖 AI তথ্য তৈরি করছে...</p>';
+        container.innerHTML = '<p style="font-size:11px; color:#8e44ad; text-align:center; margin-top:8px;">🤖 AI তথ্য বিশ্লেষণ করছে...</p>';
+
+        const wordsArray = word.trim().split(/\s+/);
+        const isSentence = wordsArray.length > 1;
 
         setTimeout(() => {
-            container.innerHTML = `
-                <div class="ai-explain-box">
-                    <div class="ai-explain-title">🤖 AI Smart Explanation:</div>
-                    <p><b>Simple Meaning:</b> A key vocabulary used in daily communication.</p>
-                    <p><b>Example:</b> "I need to use ${word} in my project."</p>
-                    <p><b>Parts of Speech:</b> Noun / Verb</p>
-                </div>
-            `;
-        }, 1000);
+            if (isSentence) {
+                container.innerHTML = `
+                    <div class="ai-explain-box">
+                        <div class="ai-explain-title">🤖 AI Sentence Analysis:</div>
+                        <p><b>Type:</b> Complete Sentence (পূর্ণাঙ্গ বাক্য)</p>
+                        <p><b>Grammar Structure:</b> Subject + Verb / Auxiliary Verb + Object/Extension</p>
+                        <p><b>Usage:</b> Expresses a complete thought or action in communication.</p>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = `
+                    <div class="ai-explain-box">
+                        <div class="ai-explain-title">🤖 AI Word Explanation:</div>
+                        <p><b>Word:</b> ${word}</p>
+                        <p><b>Simple Meaning:</b> A key vocabulary word used in daily communication.</p>
+                        <p><b>Example Sentence:</b> "I learned how to use '${word}' properly today."</p>
+                    </div>
+                `;
+            }
+        }, 500);
     }
 
     async function fetchTranslation(text, sourceLang, targetLang) {
@@ -581,7 +598,7 @@
         return null;
     }
 
-    /* OCR IMAGE TRANSLATOR WITH COPY OPTION */
+    /* OCR IMAGE TRANSLATOR */
     async function processImageSearch(event) {
         const file = event.target.files[0];
         const resultContainer = document.getElementById('resultContainer');
@@ -613,12 +630,6 @@
                         <p style="font-size:12px; font-weight:bold; color:#27ae60;"><b>বাংলা অনুবাদ:</b> ${trans ? trans.translatedText : ''}</p>
                         <button class="copy-btn" style="background:#27ae60;" onclick="copyToClipboard('${safeTrans}')">📋 কপি</button>
                     </div>
-                    
-                    <div class="ai-explain-box" style="margin-top:10px;">
-                        <div class="ai-explain-title">📌 Important Words (AI Analysis):</div>
-                        <p>• <b>Submit:</b> জমা দেওয়া</p>
-                        <p>• <b>Document:</b> কাগজপত্র</p>
-                    </div>
                 `;
             } else {
                 resultContainer.innerHTML = '<p style="color: red; text-align: center;">কোনো লেখা পাওয়া যায়নি!</p>';
@@ -642,7 +653,7 @@
         });
     }
 
-    /* STEP QUIZ & TAB SWITCHING logic */
+    /* TAB SWITCHING */
     function switchTab(tabName) {
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
@@ -660,7 +671,6 @@
         }
     }
 
-    /* SET PRACTICE TYPE */
     function setPracticeType(type) {
         currentPracticeMode = type;
         document.querySelectorAll('.practice-chip').forEach(btn => btn.classList.remove('active'));
@@ -784,7 +794,6 @@
         const q = currentQuizQuestions[currentQuizIndex];
         document.getElementById('quizQuestion').innerText = q.questionText;
         
-        // Auto play audio for speaking mode
         if (currentPracticeMode === 'speaking') {
             speakText(q.audioText);
         }
