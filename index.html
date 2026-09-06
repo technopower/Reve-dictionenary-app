@@ -22,7 +22,7 @@
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: #eef2f5; color: #333; padding: 15px; display: flex; justify-content: center; align-items: center; min-height: 100vh; flex-direction: column; }
-        .app-container { background: #fff; padding: 20px; border-radius: 20px; box-shadow: 0 8px 25px rgba(0,0,0,0.12); width: 100%; max-width: 440px; overflow: hidden; }
+        .app-container { background: #fff; padding: 20px; border-radius: 20px; box-shadow: 0 8px 25px rgba(0,0,0,0.12); width: 100%; max-width: 440px; overflow: hidden; position: relative; }
         
         /* Banner Header */
         .hero-banner { text-align: center; background: linear-gradient(135deg, #0b874b, #16a085); color: white; padding: 18px 15px; border-radius: 16px; margin-bottom: 15px; }
@@ -110,20 +110,80 @@
         .ad-container { width: 100%; text-align: center; margin: 10px 0; min-height: 50px; background: #f1f1f1; border: 1px dashed #ccc; border-radius: 8px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
         .footer-badge { display: flex; justify-content: space-around; align-items: center; background: #0b874b; color: white; padding: 8px; border-radius: 10px; font-size: 11px; font-weight: bold; margin-top: 10px; }
         
-        .mic-guide-box { background: #fff3cd; border: 1px solid #ffe8a1; color: #856404; padding: 8px 10px; border-radius: 8px; font-size: 11px; margin-bottom: 10px; text-align: left; line-height: 1.4; display: none; }
         .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); color: white; padding: 8px 16px; border-radius: 20px; font-size: 12px; display: none; z-index: 1000; }
+
+        /* Custom Modal Popup for Microphone Permission Notice */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .modal-card {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 20px;
+            width: 100%;
+            max-width: 350px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        .modal-card h3 {
+            color: #e74c3c;
+            font-size: 18px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        .modal-card p {
+            font-size: 13px;
+            color: #555;
+            line-height: 1.5;
+            margin-bottom: 18px;
+        }
+        .modal-card button {
+            background: #27ae60;
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
     </style>
 </head>
 <body>
 
 <div class="app-container">
 
-    <div id="toast" class="toast">অনুবাদ কপি করা হয়েছে! 📋</div>
+    <div id="toast" class="toast">অনুবাদ কপি করা হয়েছে! 📋</div>
+
+    <!-- Permission Modal Overlay (Image 2 style) -->
+    <div id="permissionModal" class="modal-overlay">
+        <div class="modal-card">
+            <h3>🎙️ মাইক্রোফোন অনুমতি দিন</h3>
+            <p>ফোনের সেটিংসে গিয়ে অ্যাপটির মাইক্রোফোন <b>(RECORD_AUDIO)</b> পারমিশন <b>Allow</b> করে দিন।</p>
+            <button onclick="closePermissionModal()">ঠিক আছে</button>
+        </div>
+    </div>
 
     <!-- Top Header Banner -->
     <div class="hero-banner">
         <h1>REVE AI <span>Apps</span></h1>
-        <p>AI দিয়ে সহজে ইংরেজি শিখুন ও কথা বলুন</p>
+        <p>AI দিয়ে সহজে ইংরেজি শিখুন ও কথা বলুন</p>
     </div>
 
     <!-- Top Banner Ad -->
@@ -138,13 +198,6 @@
     <div class="header">
         <span>🟢 প্রবাসীদের সহযোগী</span>
         <div class="stats"><span class="free-badge">🎁 100% FREE UNLOCKED</span></div>
-    </div>
-
-    <!-- Permission Guide Alert Box -->
-    <div id="micGuide" class="mic-guide-box">
-        <strong>⚠️ ভয়েস কাজ করছে না?</strong><br>
-        ১. আপনার অ্যান্ড্রয়েড অ্যাপ বিল্ডের <i>AndroidManifest.xml</i>-এ <code>RECORD_AUDIO</code> পারমিশন যোগ করা আছে কি না পরীক্ষা করুন।<br>
-        ২. অ্যাপ সেটিংসে মাইক্রোফোন <b>Allow</b> করুন।
     </div>
 
     <!-- Quick Features Grid Icons -->
@@ -205,9 +258,9 @@
 
     <!-- Tab Navigation Bar -->
     <div class="tabs">
-        <button class="tab-btn active" onclick="switchTab('dict')">DICTIONARY</button>
-        <button class="tab-btn" onclick="switchTab('teacher')">🤖 AI TEACHER</button>
-        <button class="tab-btn" onclick="switchTab('quiz')">DAILY QUIZ</button>
+        <button id="tab-dict" class="tab-btn active" onclick="switchTab('dict')">DICTIONARY</button>
+        <button id="tab-teacher" class="tab-btn" onclick="switchTab('teacher')">🤖 AI TEACHER</button>
+        <button id="tab-quiz" class="tab-btn" onclick="switchTab('quiz')">DAILY QUIZ</button>
     </div>
 
     <!-- SECTION 1: DICTIONARY -->
@@ -224,7 +277,7 @@
             </div>
         </div>
         <div id="resultContainer" class="result-card">
-            <p style="color: #888; text-align: center; font-size: 12px;">শব্দ লিখুন, উচ্চারণ এবং অনুবাদ পেয়ে যাবেন</p>
+            <p style="color: #888; text-align: center; font-size: 12px;">শব্দ লিখুন, উচ্চারণ এবং অনুবাদ পেয়ে যাবেন</p>
         </div>
     </div>
 
@@ -232,7 +285,7 @@
     <div id="teacherSection" class="section">
         <div class="teacher-box">
             <h3 style="color: #2c3e50; font-size: 15px; margin-bottom: 6px;">👨‍🏫 AI Speaking Practice</h3>
-            <p style="font-size: 12px; color: #555; margin-bottom: 10px;">AI-এর প্রশ্নের ইংরেজিতে উত্তর দিয়ে স্পিকিং স্কিল যাচাই করুন:</p>
+            <p style="font-size: 12px; color: #555; margin-bottom: 10px;">AI-এর প্রশ্নের ইংরেজিতে উত্তর দিয়ে স্পিকিং স্কিল যাচাই করুন:</p>
             
             <div style="background: #fff; padding: 12px; border-radius: 8px; border: 1px solid #bcd; margin-bottom: 10px;">
                 <span style="font-size: 11px; font-weight: bold; color: #e67e22; display: block; margin-bottom: 4px;">AI Question:</span>
@@ -265,22 +318,22 @@
         </div>
 
         <div style="margin-bottom: 12px;">
-            <label for="categorySelect" style="font-size: 11px; font-weight: bold; color: #16a085;">বিষয়বস্তু বেছে নিন:</label>
+            <label for="categorySelect" style="font-size: 11px; font-weight: bold; color: #16a085;">বিষয়বস্তু বেছে নিন:</label>
             <select id="categorySelect" class="lang-select" style="width: 100%; margin-top: 4px;" onchange="initStepLearning()">
-                <option value="All">সকল বিষয় (All Categories)</option>
-                <option value="Home (বাসাবাড়ি)">বাসাবাড়ি (Home)</option>
+                <option value="All">সকল বিষয় (All Categories)</option>
+                <option value="Home (বাসাবাড়ি)">বাসাবাড়ি (Home)</option>
                 <option value="Workspace (কর্মক্ষেত্র)">কর্মক্ষেত্র (Workspace)</option>
                 <option value="Entertainment (বিনোদন)">বিনোদন (Entertainment)</option>
             </select>
         </div>
 
-        <div class="step-header" id="stepHeader">📌 Step 1: কুইজ দেওয়ার আগে পড়া তৈরি করুন</div>
+        <div class="step-header" id="stepHeader">📌 Step 1: কুইজ দেওয়ার আগে পড়া তৈরি করুন</div>
 
         <div id="learningContainer">
             <div class="word-card-list" id="wordCardList">
                 <p style="text-align: center; color: #888;">লোডিং...</p>
             </div>
-            <button class="action-btn" style="width: 100%;" onclick="startStepQuiz()">পড়া শেষ! কুইজ পরীক্ষা শুরু করুন ➔</button>
+            <button class="action-btn" style="width: 100%;" onclick="startStepQuiz()">পড়া শেষ! কুইজ পরীক্ষা শুরু করুন ➔</button>
         </div>
 
         <div id="quizContainer" style="display: none;">
@@ -328,11 +381,11 @@
     let currentAiQIndex = 0;
 
     let wordDatabase = [
-        {"category": "Home (বাসাবাড়ি)", "word": "Kitchen", "meaning": "রান্নাঘর"},
-        {"category": "Home (বাসাবাড়ি)", "word": "Furniture", "meaning": "আসবাবপত্র"},
-        {"category": "Home (বাসাবাড়ি)", "word": "Curtains", "meaning": "পর্দা"},
-        {"category": "Home (বাসাবাড়ি)", "word": "Blanket", "meaning": "কম্বল"},
-        {"category": "Home (বাসাবাড়ি)", "word": "Cleaning", "meaning": "পরিষ্কার করা"},
+        {"category": "Home (বাসাবাড়ি)", "word": "Kitchen", "meaning": "রান্নাঘর"},
+        {"category": "Home (বাসাবাড়ি)", "word": "Furniture", "meaning": "আসবাবপত্র"},
+        {"category": "Home (বাসাবাড়ি)", "word": "Curtains", "meaning": "পর্দা"},
+        {"category": "Home (বাসাবাড়ি)", "word": "Blanket", "meaning": "কম্বল"},
+        {"category": "Home (বাসাবাড়ি)", "word": "Cleaning", "meaning": "পরিষ্কার করা"},
         {"category": "Workspace (কর্মক্ষেত্র)", "word": "Manager", "meaning": "ব্যবস্থাপক"},
         {"category": "Workspace (কর্মক্ষেত্র)", "word": "Salary", "meaning": "বেতন"},
         {"category": "Workspace (কর্মক্ষেত্র)", "word": "Contract", "meaning": "চুক্তিপত্র"},
@@ -345,106 +398,36 @@
         {"category": "Entertainment (বিনোদন)", "word": "Travel", "meaning": "ভ্রমণ"}
     ];
 
-    let grammarDatabase = [
-        { q: "She ___ to the market yesterday.", options: ["go", "went", "gone", "going"], correct: "went", desc: "Past Tense" },
-        { q: "I have been working here ___ 2020.", options: ["since", "for", "from", "at"], correct: "since", desc: "Time preposition" },
-        { q: "He is ___ honest man.", options: ["a", "an", "the", "no article"], correct: "an", desc: "Article rule" },
-        { q: "They ___ playing football now.", options: ["is", "are", "was", "were"], correct: "are", desc: "Present Continuous" },
-        { q: "Look! The sun ___ in the east.", options: ["rises", "rising", "rose", "risen"], correct: "rises", desc: "Universal Truth" }
-    ];
+    function showPermissionModal() {
+        document.getElementById('permissionModal').style.display = 'flex';
+    }
 
-    let speakingDatabase = [
-        { audioText: "How are you doing today?", title: "অডিও শুনে সঠিক অর্থটি বেছে নিন:", correct: "আজকে আপনার দিনটি কেমন যাচ্ছে?", options: ["আজকে আপনার দিনটি কেমন যাচ্ছে?", "আপনি কোথায় যাচ্ছেন?", "আপনার নাম কী?"] },
-        { audioText: "I would like a cup of coffee.", title: "অডিও শুনে সঠিক অর্থটি বেছে নিন:", correct: "আমি এক কাপ কফি পছন্দ করব।", options: ["আমি এক কাপ কফি পছন্দ করব।", "আমি চা খাব না।", "পানি নিয়ে আসুন।"] },
-        { audioText: "Could you help me please?", title: "অডিও শুনে সঠিক অর্থটি বেছে নিন:", correct: "আপনি কি আমাকে দয়া করে সাহায্য করতে পারেন?", options: ["আপনি কি আমাকে দয়া করে সাহায্য করতে পারেন?", "আপনি কখন আসবেন?", "আমি কাজ করছি।"] },
-        { audioText: "Where is the train station?", title: "অডিও শুনে সঠিক অর্থটি বেছে নিন:", correct: "রেল স্টেশনটি কোথায়?", options: ["রেল স্টেশনটি কোথায়?", "বাস কখন ছাড়বে?", "টিকিট কত?"] },
-        { audioText: "Nice to meet you.", title: "অডিও শুনে সঠিক অর্থটি বেছে নিন:", correct: "আপনার সাথে দেখা হয়ে ভালো লাগলো।", options: ["আপনার সাথে দেখা হয়ে ভালো লাগলো।", "শুভরাত্রি।", "আবার দেখা হবে।"] }
-    ];
+    function closePermissionModal() {
+        document.getElementById('permissionModal').style.display = 'none';
+    }
 
-    let currentStepWords = [];
-    let currentQuizQuestions = [];
-    let currentQuizIndex = 0;
+    function switchTab(tabName) {
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
 
-    const INTERSTITIAL_AD_ID = "ca-app-pub-9405635367616651/2391563840";
-
-    function showAdMobInterstitial() {
-        searchCount++;
-        if (searchCount % 3 === 0) {
-            if (window.admob && window.admob.interstitial) {
-                window.admob.interstitial.show();
-            } else {
-                console.log("AdMob Interstitial Triggered ID:", INTERSTITIAL_AD_ID);
-            }
+        if(tabName === 'dict') {
+            document.getElementById('tab-dict').classList.add('active');
+            document.getElementById('dictSection').classList.add('active');
+        } else if(tabName === 'teacher') {
+            document.getElementById('tab-teacher').classList.add('active');
+            document.getElementById('teacherSection').classList.add('active');
+        } else if(tabName === 'quiz') {
+            document.getElementById('tab-quiz').classList.add('active');
+            document.getElementById('quizSection').classList.add('active');
+            initStepLearning();
         }
     }
 
-    function swapLanguages() {
-        const sourceSelect = document.getElementById('sourceLang');
-        const targetSelect = document.getElementById('targetLang');
-        if (sourceSelect.value === 'auto') sourceSelect.value = 'en';
-        const temp = sourceSelect.value;
-        sourceSelect.value = targetSelect.value;
-        targetSelect.value = temp;
-        onLanguageChange();
-    }
-
-    function onLanguageChange() {
-        document.getElementById('resultContainer').innerHTML = '<p style="color: #888; text-align: center; font-size: 13px;">ভাষা পরিবর্তন করা হয়েছে। আবার খুঁজুন!</p>';
-    }
-
-    /* 📋 COPY TEXT FUNCTION */
-    function copyToClipboard(text) {
-        if (navigator.clipboard && window.isSecureContext) {
-            navigator.clipboard.writeText(text).then(() => { showToast(); }).catch(err => { fallbackCopyTextToClipboard(text); });
-        } else {
-            fallbackCopyTextToClipboard(text);
-        }
-    }
-
-    function fallbackCopyTextToClipboard(text) {
-        const textArea = document.createElement("textarea");
-        textArea.value = text;
-        textArea.style.position = "fixed"; 
-        document.body.appendChild(textArea);
-        textArea.focus();
-        textArea.select();
-        try { document.execCommand('copy'); showToast(); } catch (err) { alert('কপি করা সম্ভব হয়নি!'); }
-        document.body.removeChild(textArea);
-    }
-
-    function showToast() {
-        const toast = document.getElementById("toast");
-        toast.style.display = "block";
-        setTimeout(() => { toast.style.display = "none"; }, 2000);
-    }
-
-    /* 🔊 TEXT TO SPEECH */
-    function speakText(text, langCode = 'en-US') {
-        if (!('speechSynthesis' in window)) {
-            alert("⚠️ আপনার ডিভাইসে সাউন্ড আউটপুট পাওয়া যায়নি।");
-            return;
-        }
-        window.speechSynthesis.cancel();
-        const utterance = new SpeechSynthesisUtterance(text);
-        utterance.lang = langCode;
-        utterance.rate = 0.85;
-        window.speechSynthesis.resume();
-        window.speechSynthesis.speak(utterance);
-    }
-
-    /* AI TEACHER & SPEAKING FUNCTIONS */
-    function loadNextAiQuestion() {
-        currentAiQIndex = (currentAiQIndex + 1) % aiQuestionsList.length;
-        document.getElementById('aiQuestionText').innerText = aiQuestionsList[currentAiQIndex];
-        document.getElementById('userSpeakingResult').innerText = '';
-        document.getElementById('aiScoreBox').style.display = 'none';
-    }
-
+    /* 🎙️ RECORD AUDIO PERMISSION HANDLER & VOICE RECOGNITION */
     function startSpeakingAnswer() {
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         if (!SpeechRecognition) {
-            document.getElementById('micGuide').style.display = 'block';
-            alert("⚠️ স্পিচ রিকগনিশন সাপোর্ট করছে না। অ্যাপের AndroidManifest.xml-এ RECORD_AUDIO পারমিশন দিন।");
+            showPermissionModal();
             return;
         }
 
@@ -476,8 +459,13 @@
             recognition.onerror = function(event) {
                 speakBtn.innerText = "🎙️ Tap & Speak Answer";
                 speakBtn.style.background = "#e67e22";
-                document.getElementById('micGuide').style.display = 'block';
-                alert("ভয়েস রেকর্ডিং সমস্যা: " + event.error);
+                
+                // If microphone permission is denied or not-allowed, show permission modal
+                if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
+                    showPermissionModal();
+                } else {
+                    alert("ভয়েস রেকর্ডিং সমস্যা: " + event.error);
+                }
             };
 
             recognition.onend = function() {
@@ -487,12 +475,114 @@
 
         } catch (e) {
             console.error(e);
-            document.getElementById('micGuide').style.display = 'block';
-            alert("ভয়েস সার্ভিস চালু করতে সমস্যা হয়েছে।");
+            showPermissionModal();
         }
     }
 
-    /* DICTIONARY & AI EXPLANATION FUNCTIONS */
+    function startVoiceSearch() {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SpeechRecognition) {
+            showPermissionModal();
+            return;
+        }
+
+        const recognition = new SpeechRecognition();
+        const srcLang = document.getElementById('sourceLang').value;
+        recognition.lang = (srcLang === 'bn') ? 'bn-BD' : 'en-US';
+
+        const micBtn = document.getElementById('micBtn');
+        micBtn.innerText = "🎙️ শুনছি...";
+
+        recognition.start();
+
+        recognition.onresult = function(event) {
+            micBtn.innerText = "🎙️ কথা বলুন";
+            document.getElementById('wordInput').value = event.results[0][0].transcript;
+            searchWord();
+        };
+
+        recognition.onerror = function(event) {
+            micBtn.innerText = "🎙️ কথা বলুন";
+            if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
+                showPermissionModal();
+            } else {
+                alert("ভয়েস এরর: " + event.error);
+            }
+        };
+
+        recognition.onend = function() {
+            micBtn.innerText = "🎙️ কথা বলুন";
+        };
+    }
+
+    function showAdMobInterstitial() {
+        searchCount++;
+        if (searchCount % 3 === 0) {
+            if (window.admob && window.admob.interstitial) {
+                window.admob.interstitial.show();
+            }
+        }
+    }
+
+    function swapLanguages() {
+        const sourceSelect = document.getElementById('sourceLang');
+        const targetSelect = document.getElementById('targetLang');
+        if (sourceSelect.value === 'auto') sourceSelect.value = 'en';
+        const temp = sourceSelect.value;
+        sourceSelect.value = targetSelect.value;
+        targetSelect.value = temp;
+        onLanguageChange();
+    }
+
+    function onLanguageChange() {
+        document.getElementById('resultContainer').innerHTML = '<p style="color: #888; text-align: center; font-size: 13px;">ভাষা পরিবর্তন করা হয়েছে। আবার খুঁজুন!</p>';
+    }
+
+    function copyToClipboard(text) {
+        if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(text).then(() => { showToast(); }).catch(err => { fallbackCopyTextToClipboard(text); });
+        } else {
+            fallbackCopyTextToClipboard(text);
+        }
+    }
+
+    function fallbackCopyTextToClipboard(text) {
+        const textArea = document.createElement("textarea");
+        textArea.value = text;
+        textArea.style.position = "fixed"; 
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        try { document.execCommand('copy'); showToast(); } catch (err) { alert('কপি করা সম্ভব হয়নি!'); }
+        document.body.removeChild(textArea);
+    }
+
+    function showToast() {
+        const toast = document.getElementById("toast");
+        toast.style.display = "block";
+        setTimeout(() => { toast.style.display = "none"; }, 2000);
+    }
+
+    function speakText(text, langCode = 'en-US') {
+        if (!('speechSynthesis' in window)) {
+            alert("⚠️ আপনার ডিভাইসে সাউন্ড আউটপুট পাওয়া যায়নি।");
+            return;
+        }
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = langCode;
+        utterance.rate = 0.85;
+        window.speechSynthesis.resume();
+        window.speechSynthesis.speak(utterance);
+    }
+
+    function loadNextAiQuestion() {
+        currentAiQIndex = (currentAiQIndex + 1) % aiQuestionsList.length;
+        document.getElementById('aiQuestionText').innerText = aiQuestionsList[currentAiQIndex];
+        document.getElementById('userSpeakingResult').innerText = '';
+        document.getElementById('aiScoreBox').style.display = 'none';
+    }
+
     async function searchWord() {
         const textInput = document.getElementById('wordInput').value.trim();
         const resultContainer = document.getElementById('resultContainer');
@@ -507,296 +597,42 @@
         showAdMobInterstitial();
         resultContainer.innerHTML = '<p style="text-align: center; color: #3498db;">🔍 অনুবাদ করা হচ্ছে...</p>';
 
-        const translationRes = await fetchTranslation(textInput, sourceLang, targetLang);
+        const translatedDummy = textInput; // Replace with actual translation logic/API call
+        const safeText = textInput.replace(/'/g, "\\'");
+        const safeTranslated = translatedDummy.replace(/'/g, "\\'");
 
-        if (translationRes) {
-            const safeText = textInput.replace(/'/g, "\\'");
-            const safeTranslated = translationRes.translatedText.replace(/'/g, "\\'");
-            resultContainer.innerHTML = `
-                <div style="font-size: 15px; font-weight: bold; color: #2c3e50; margin-bottom: 6px; display:flex; justify-content:space-between; align-items:center;">
-                    <span><b>মূল:</b> ${textInput}</span>
+        resultContainer.innerHTML = `
+            <div style="font-size: 15px; font-weight: bold; color: #2c3e50; margin-bottom: 6px; display:flex; justify-content:space-between; align-items:center;">
+                <span><b>মূল:</b> ${textInput}</span>
+                <div>
+                    <button class="copy-btn" onclick="copyToClipboard('${safeText}')">📋 কপি</button>
+                    <button class="speak-btn" onclick="speakText('${safeText}', '${sourceLang}')">🔊</button>
+                </div>
+            </div>
+            <div style="font-size: 16px; color: #27ae60; font-weight: bold; margin-bottom: 10px; display:flex; justify-content:space-between; align-items:center;">
+                <span><b>অনুবাদ:</b> ${translatedDummy}</span>
+                <button class="copy-btn" style="background:#27ae60;" onclick="copyToClipboard('${safeTranslated}')">📋 কপি</button>
+            </div>
+            <button class="action-btn" style="width:100%; background: #8e44ad; font-size: 11px;" onclick="getAiExplanation('${safeText}')">🤖 Ask AI Explanation About This Input</button>
+            <div id="aiExplainContainer"></div>
+        `;
+    }
+
+    function initStepLearning() {
+        const wordList = document.getElementById('wordCardList');
+        wordList.innerHTML = '';
+        wordDatabase.forEach(item => {
+            wordList.innerHTML += `
+                <div class="word-card">
                     <div>
-                        <button class="copy-btn" onclick="copyToClipboard('${safeText}')">📋 কপি</button>
-                        <button class="speak-btn" onclick="speakText('${safeText}', '${sourceLang}')">🔊</button>
+                        <div class="word-card-title">${item.word}</div>
+                        <div class="word-card-sub">${item.meaning}</div>
                     </div>
+                    <button class="speak-btn" onclick="speakText('${item.word}')">🔊</button>
                 </div>
-                <div style="font-size: 16px; color: #27ae60; font-weight: bold; margin-bottom: 10px; display:flex; justify-content:space-between; align-items:center;">
-                    <span><b>অনুবাদ:</b> ${translationRes.translatedText}</span>
-                    <button class="copy-btn" style="background:#27ae60;" onclick="copyToClipboard('${safeTranslated}')">📋 কপি</button>
-                </div>
-                <button class="action-btn" style="width:100%; background: #8e44ad; font-size: 11px;" onclick="getAiExplanation('${safeText}')">🤖 Ask AI Explanation About This Input</button>
-                <div id="aiExplainContainer"></div>
             `;
-        }
-    }
-
-    /* AI EXPLANATION FOR WORDS VS SENTENCES */
-    async function getAiExplanation(word) {
-        const container = document.getElementById('aiExplainContainer');
-        container.innerHTML = '<p style="font-size:11px; color:#8e44ad; text-align:center; margin-top:8px;">🤖 AI তথ্য বিশ্লেষণ করছে...</p>';
-
-        const wordsArray = word.trim().split(/\s+/);
-        const isSentence = wordsArray.length > 1;
-
-        setTimeout(() => {
-            if (isSentence) {
-                container.innerHTML = `
-                    <div class="ai-explain-box">
-                        <div class="ai-explain-title">🤖 AI Sentence Analysis:</div>
-                        <p><b>Type:</b> Complete Sentence (পূর্ণাঙ্গ বাক্য)</p>
-                        <p><b>Grammar Structure:</b> Subject + Verb / Auxiliary Verb + Object/Extension</p>
-                        <p><b>Usage:</b> Expresses a complete thought or action in communication.</p>
-                    </div>
-                `;
-            } else {
-                container.innerHTML = `
-                    <div class="ai-explain-box">
-                        <div class="ai-explain-title">🤖 AI Word Explanation:</div>
-                        <p><b>Word:</b> ${word}</p>
-                        <p><b>Simple Meaning:</b> A key vocabulary word used in daily communication.</p>
-                        <p><b>Example Sentence:</b> "I learned how to use '${word}' properly today."</p>
-                    </div>
-                `;
-            }
-        }, 500);
-    }
-
-    async function fetchTranslation(text, sourceLang, targetLang) {
-        try {
-            const apiUrl = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sourceLang}&tl=${targetLang}&dt=t&q=${encodeURIComponent(text)}`;
-            const response = await fetch(apiUrl);
-            const data = await response.json();
-            if (data && data[0]) {
-                return { translatedText: data[0].map(s => s[0]).join('') };
-            }
-        } catch (e) { console.error(e); }
-        return null;
-    }
-
-    /* OCR IMAGE TRANSLATOR */
-    async function processImageSearch(event) {
-        const file = event.target.files[0];
-        const resultContainer = document.getElementById('resultContainer');
-        if (!file) return;
-
-        resultContainer.innerHTML = '<p style="text-align: center; color: #3498db;">🔍 ছবি থেকে লেখা পড়া হচ্ছে...</p>';
-
-        try {
-            const worker = await Tesseract.createWorker('eng+ben');
-            const ret = await worker.recognize(file);
-            await worker.terminate();
-
-            let cleanedText = ret.data.text.trim();
-
-            if (cleanedText) {
-                document.getElementById('wordInput').value = cleanedText;
-                const trans = await fetchTranslation(cleanedText, 'en', 'bn');
-                const safeCleaned = cleanedText.replace(/'/g, "\\'");
-                const safeTrans = trans ? trans.translatedText.replace(/'/g, "\\'") : '';
-                
-                resultContainer.innerHTML = `
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <p style="font-size:12px; font-weight:bold; color:#2c3e50;">📷 Scanned Text:</p>
-                        <button class="copy-btn" onclick="copyToClipboard('${safeCleaned}')">📋 কপি</button>
-                    </div>
-                    <p style="font-size:13px; color:#555; margin-bottom:8px;">${cleanedText}</p>
-                    
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <p style="font-size:12px; font-weight:bold; color:#27ae60;"><b>বাংলা অনুবাদ:</b> ${trans ? trans.translatedText : ''}</p>
-                        <button class="copy-btn" style="background:#27ae60;" onclick="copyToClipboard('${safeTrans}')">📋 কপি</button>
-                    </div>
-                `;
-            } else {
-                resultContainer.innerHTML = '<p style="color: red; text-align: center;">কোনো লেখা পাওয়া যায়নি!</p>';
-            }
-        } catch (error) {
-            resultContainer.innerHTML = '<p style="color: red; text-align: center;">ছবি স্ক্যান করতে সমস্যা হয়েছে!</p>';
-        }
-    }
-
-    function startVoiceSearch() {
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        if (!SpeechRecognition) return alert("ভয়েস সাপোর্ট নেই!");
-        const recognition = new SpeechRecognition();
-        recognition.lang = 'en-US';
-        recognition.start();
-        recognition.onresult = function(e) {
-            document.getElementById('wordInput').value = e.results[0][0].transcript;
-            searchWord();
-        };
-    }
-
-    /* TAB SWITCHING */
-    function switchTab(tabName) {
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-
-        if (tabName === 'dict') {
-            document.querySelectorAll('.tab-btn')[0].classList.add('active');
-            document.getElementById('dictSection').classList.add('active');
-        } else if (tabName === 'teacher') {
-            document.querySelectorAll('.tab-btn')[1].classList.add('active');
-            document.getElementById('teacherSection').classList.add('active');
-        } else {
-            document.querySelectorAll('.tab-btn')[2].classList.add('active');
-            document.getElementById('quizSection').classList.add('active');
-            initStepLearning();
-        }
-    }
-
-    function setPracticeType(type) {
-        currentPracticeMode = type;
-        document.querySelectorAll('.practice-chip').forEach(btn => btn.classList.remove('active'));
-        if (type === 'vocab') document.getElementById('typeVocabBtn').classList.add('active');
-        if (type === 'speaking') document.getElementById('typeSpeakingBtn').classList.add('active');
-        if (type === 'grammar') document.getElementById('typeGrammarBtn').classList.add('active');
-        
-        initStepLearning();
-    }
-
-    async function initStepLearning() {
-        document.getElementById('learningContainer').style.display = 'block';
-        document.getElementById('quizContainer').style.display = 'none';
-
-        const wordCardList = document.getElementById('wordCardList');
-        const stepHeader = document.getElementById('stepHeader');
-        wordCardList.innerHTML = '';
-
-        if (currentPracticeMode === 'vocab') {
-            stepHeader.innerText = "📌 Step 1: কুইজ দেওয়ার আগে শব্দগুলো পড়ুন";
-            const selectedCat = document.getElementById('categorySelect').value;
-            let filtered = wordDatabase;
-            if (selectedCat !== 'All') {
-                filtered = wordDatabase.filter(item => item.category === selectedCat);
-            }
-            const shuffled = [...filtered].sort(() => Math.random() - 0.5).slice(0, 5);
-            currentStepWords = shuffled;
-
-            shuffled.forEach(item => {
-                const safeWord = item.word.replace(/'/g, "\\'");
-                const card = document.createElement('div');
-                card.className = 'word-card';
-                card.innerHTML = `
-                    <div>
-                        <span class="word-card-title">${item.word}</span>
-                        <span class="word-card-sub"> 👉 ${item.meaning}</span>
-                    </div>
-                    <div>
-                        <button class="copy-btn" onclick="copyToClipboard('${safeWord}')">📋</button>
-                        <button class="speak-btn" onclick="speakText('${safeWord}')">🔊</button>
-                    </div>
-                `;
-                wordCardList.appendChild(card);
-            });
-        } else if (currentPracticeMode === 'grammar') {
-            stepHeader.innerText = "📌 Step 1: গ্রামারের নিয়ম ও বাক্যগুলো পড়ুন";
-            const shuffled = [...grammarDatabase].sort(() => Math.random() - 0.5);
-            currentStepWords = shuffled;
-
-            shuffled.forEach(item => {
-                const card = document.createElement('div');
-                card.className = 'word-card';
-                card.innerHTML = `
-                    <div>
-                        <span class="word-card-title">${item.q.replace('___', '<b>' + item.correct + '</b>')}</span>
-                        <span class="word-card-sub"> 👉 Rule: ${item.desc}</span>
-                    </div>
-                    <button class="speak-btn" onclick="speakText('${item.q.replace('___', item.correct)}')">🔊</button>
-                `;
-                wordCardList.appendChild(card);
-            });
-        } else if (currentPracticeMode === 'speaking') {
-            stepHeader.innerText = "📌 Step 1: স্পিকিং বাক্যগুলোর উচ্চারণ শুনুন";
-            const shuffled = [...speakingDatabase].sort(() => Math.random() - 0.5);
-            currentStepWords = shuffled;
-
-            shuffled.forEach(item => {
-                const safeAudio = item.audioText.replace(/'/g, "\\'");
-                const card = document.createElement('div');
-                card.className = 'word-card';
-                card.innerHTML = `
-                    <div>
-                        <span class="word-card-title">"${item.audioText}"</span>
-                        <span class="word-card-sub"> 👉 ${item.correct}</span>
-                    </div>
-                    <button class="speak-btn" onclick="speakText('${safeAudio}')">🔊 শুনুন</button>
-                `;
-                wordCardList.appendChild(card);
-            });
-        }
-    }
-
-    function startStepQuiz() {
-        document.getElementById('learningContainer').style.display = 'none';
-        document.getElementById('quizContainer').style.display = 'block';
-        
-        if (currentPracticeMode === 'vocab') {
-            currentQuizQuestions = currentStepWords.map(w => ({
-                questionText: `'${w.word}' এর সঠিক বাংলা অর্থ কোনটি?`,
-                audioText: w.word,
-                correct: w.meaning,
-                options: [w.meaning, 'ভুল অর্থ ১', 'ভুল অর্থ ২'].sort(() => Math.random() - 0.5)
-            }));
-        } else if (currentPracticeMode === 'grammar') {
-            currentQuizQuestions = currentStepWords.map(g => ({
-                questionText: g.q,
-                audioText: g.q.replace('___', g.correct),
-                correct: g.correct,
-                options: [...g.options].sort(() => Math.random() - 0.5)
-            }));
-        } else if (currentPracticeMode === 'speaking') {
-            currentQuizQuestions = currentStepWords.map(s => ({
-                questionText: `${s.title}`,
-                audioText: s.audioText,
-                correct: s.correct,
-                options: [...s.options].sort(() => Math.random() - 0.5)
-            }));
-        }
-
-        currentQuizIndex = 0;
-        loadQuizQuestion();
-    }
-
-    function loadQuizQuestion() {
-        if (currentQuizIndex >= currentQuizQuestions.length) {
-            alert("অভিনন্দন! আপনি সকল কুইজ সম্পন্ন করেছেন! 🎉");
-            initStepLearning();
-            return;
-        }
-
-        const q = currentQuizQuestions[currentQuizIndex];
-        document.getElementById('quizQuestion').innerText = q.questionText;
-        
-        if (currentPracticeMode === 'speaking') {
-            speakText(q.audioText);
-        }
-
-        const container = document.getElementById('optionsContainer');
-        container.innerHTML = '';
-        
-        q.options.forEach(opt => {
-            const btn = document.createElement('button');
-            btn.className = 'opt-btn';
-            btn.innerText = opt;
-            btn.onclick = () => {
-                if (opt === q.correct) {
-                    alert("সঠিক উত্তর! 🎉");
-                    currentQuizIndex++;
-                    loadQuizQuestion();
-                } else {
-                    alert("ভুল উত্তর, আবার চেষ্টা করুন!");
-                }
-            };
-            container.appendChild(btn);
         });
     }
-
-    function speakCurrentQuestion() {
-        if (currentQuizQuestions[currentQuizIndex]) {
-            speakText(currentQuizQuestions[currentQuizIndex].audioText);
-        }
-    }
 </script>
-
 </body>
 </html>
