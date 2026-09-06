@@ -104,6 +104,8 @@
 
         .ad-container { width: 100%; text-align: center; margin: 10px 0; min-height: 50px; background: #f1f1f1; border: 1px dashed #ccc; border-radius: 8px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
         .footer-badge { display: flex; justify-content: space-around; align-items: center; background: #0b874b; color: white; padding: 8px; border-radius: 10px; font-size: 11px; font-weight: bold; margin-top: 10px; }
+        
+        .mic-guide-box { background: #fff3cd; border: 1px solid #ffe8a1; color: #856404; padding: 8px 10px; border-radius: 8px; font-size: 11px; margin-bottom: 10px; text-align: left; line-height: 1.4; display: none; }
     </style>
 </head>
 <body>
@@ -128,6 +130,13 @@
     <div class="header">
         <span>🟢 প্রবাসীদের সহযোগী</span>
         <div class="stats"><span class="free-badge">🎁 100% FREE UNLOCKED</span></div>
+    </div>
+
+    <!-- Permission Guide Alert Box -->
+    <div id="micGuide" class="mic-guide-box">
+        <strong>⚠️ ভয়েস কাজ করছে না?</strong><br>
+        ১. ফোনের <i>Settings ➔ Apps ➔ REVE AI ➔ Permissions</i> এ গিয়ে Microphone <b>Allow</b> করুন।<br>
+        ২. অ্যাপে ইন্টারনেট কানেকশন চালূ আছে কি না নিশ্চিত করুন।
     </div>
 
     <!-- Quick Features Grid Icons -->
@@ -354,26 +363,21 @@
         document.getElementById('resultContainer').innerHTML = '<p style="color: #888; text-align: center; font-size: 13px;">ভাষা পরিবর্তন করা হয়েছে। আবার খুঁজুন!</p>';
     }
 
-    /* 🔊 TEXT TO SPEECH (উন্নত ও নিরাপদ সলিউশন) */
+    /* 🔊 TEXT TO SPEECH (APK WebView-Safe Version) */
     function speakText(text, langCode = 'en-US') {
         if (!('speechSynthesis' in window)) {
-            alert("⚠️ আপনার ব্রাউজারে স্পিচ সাপোর্ট নেই। অনুগ্রহ করে Google Chrome বা Edge ব্রাউজার ব্যবহার করুন।");
+            alert("⚠️ আপনার ডিভাইসে সাউন্ড আউটপুট পাওয়া যায়নি।");
             return;
         }
 
-        window.speechSynthesis.cancel(); // আগের কোনো অডিও চলতে থাকলে তা বন্ধ করবে
+        window.speechSynthesis.cancel(); // রিসেট অডিও
 
         const utterance = new SpeechSynthesisUtterance(text);
         utterance.lang = langCode;
         utterance.rate = 0.85;
 
-        // ভয়েস সঠিক সময়ে লোড না হলে হ্যান্ডলিং
-        let voices = window.speechSynthesis.getVoices();
-        if (voices.length > 0) {
-            const selectedVoice = voices.find(v => v.lang.includes(langCode.slice(0, 2)));
-            if (selectedVoice) utterance.voice = selectedVoice;
-        }
-
+        // অ্যান্ডয়েডে অ্যান্ড্রয়েড লোকাল ভয়েস আনলক করা
+        window.speechSynthesis.resume();
         window.speechSynthesis.speak(utterance);
     }
 
@@ -385,12 +389,13 @@
         document.getElementById('aiScoreBox').style.display = 'none';
     }
 
-    /* 🎙️ SPEECH TO TEXT (নিরাপদ ও ইউনিভার্সাল) */
+    /* 🎙️ SPEECH TO TEXT (APK Custom Handled) */
     function startSpeakingAnswer() {
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
         if (!SpeechRecognition) {
-            alert("⚠️ আপনার ব্রাউজারে ভয়েস ইনপুট সাপোর্ট করছে না। Google Chrome ব্যবহার করে দেখুন।");
+            document.getElementById('micGuide').style.display = 'block';
+            alert("⚠️ অ্যান্ড্রয়েড স্পিচ সার্ভিস অন করা নেই বা সাপোর্ট করছে না। সেটিংস চেক করুন।");
             return;
         }
 
@@ -422,10 +427,14 @@
             recognition.onerror = function(event) {
                 speakBtn.innerText = "🎙️ Tap & Speak Answer";
                 speakBtn.style.background = "#e67e22";
+                document.getElementById('micGuide').style.display = 'block';
+
                 if (event.error === 'not-allowed') {
-                    alert("⚠️ মাইক্রোফোনের পারমিশন দেওয়া হয়নি। ব্রাউজার সেটিংস থেকে অনুমতি দিন।");
+                    alert("⚠️ মাইক্রোফোনের পারমিশন দেওয়া হয়নি। ফোনের সেটিংসে গিয়ে পারমিশন দিন।");
+                } else if (event.error === 'no-speech') {
+                    alert("কোনো আওয়াজ পাওয়া যায়নি। আবার বলুন।");
                 } else {
-                    alert("কথা স্পষ্ট বোঝা যায়নি, অনুগ্রহ করে আবার বলুন।");
+                    alert("ভয়েস রেকর্ডিংয়ে সমস্যা হয়েছে। ইন্টারনেট চালু আছে কি না পরীক্ষা করুন।");
                 }
             };
 
@@ -436,6 +445,7 @@
 
         } catch (e) {
             console.error(e);
+            document.getElementById('micGuide').style.display = 'block';
             alert("ভয়েস সার্ভিস চালু করতে সমস্যা হয়েছে।");
         }
     }
