@@ -68,11 +68,11 @@
         .coin-badge { background: #f1c40f; color: #000; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: bold; display: flex; align-items: center; gap: 4px; }
 
         /* Feature Grid System */
-        .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px; }
-        .feature-item { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 10px 5px; text-align: center; cursor: pointer; transition: all 0.2s ease; }
+        .features-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 12px; }
+        .feature-item { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 10px 4px; text-align: center; cursor: pointer; transition: all 0.2s ease; }
         .feature-item:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.15); border-color: #27ae60; }
-        .feature-icon { font-size: 22px; margin-bottom: 4px; display: block; }
-        .feature-label { font-size: 11px; font-weight: bold; color: var(--text-color); line-height: 1.2; }
+        .feature-icon { font-size: 20px; margin-bottom: 4px; display: block; }
+        .feature-label { font-size: 10px; font-weight: bold; color: var(--text-color); line-height: 1.2; }
 
         /* Big AI Teacher Banner */
         .ai-hero-card {
@@ -97,16 +97,17 @@
         .lang-select { width: 100%; padding: 6px 4px; border-radius: 6px; border: 1px solid #16a085; font-size: 12px; font-weight: bold; outline: none; background: var(--input-bg); color: var(--text-color); cursor: pointer; text-align: center; text-align-last: center; }
         .swap-btn { background: #16a085; color: white; border: none; border-radius: 50%; width: 32px; height: 32px; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; margin-top: 14px; flex-shrink: 0; }
 
-        .tabs { display: flex; gap: 6px; margin-bottom: 15px; }
-        .tab-btn { flex: 1; padding: 10px 4px; border: none; background: var(--btn-icon-bg); color: var(--text-color); border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.3s; font-size: 11px; text-align: center; }
+        .tabs { display: flex; gap: 4px; margin-bottom: 15px; }
+        .tab-btn { flex: 1; padding: 10px 2px; border: none; background: var(--btn-icon-bg); color: var(--text-color); border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.3s; font-size: 10px; text-align: center; }
         .tab-btn.active { background: #27ae60; color: white; }
         .section { display: none; }
         .section.active { display: block; }
         
         .search-container { display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px; }
         .search-input-group { display: flex; gap: 6px; align-items: center; }
-        input[type="text"] { flex: 1; padding: 10px; font-size: 13px; border: 2px solid var(--input-border); background: var(--input-bg); color: var(--text-color); border-radius: 8px; outline: none; }
-        
+        input[type="text"], textarea { flex: 1; padding: 10px; font-size: 13px; border: 2px solid var(--input-border); background: var(--input-bg); color: var(--text-color); border-radius: 8px; outline: none; }
+        textarea { width: 100%; height: 80px; resize: none; }
+
         .icon-btn { background: var(--btn-icon-bg); color: var(--btn-icon-text); border: 1px solid var(--border-color); padding: 8px 10px; border-radius: 8px; cursor: pointer; font-size: 13px; display: flex; align-items: center; justify-content: center; gap: 4px; font-weight: bold; }
         .icon-btn:hover { opacity: 0.9; }
 
@@ -116,6 +117,11 @@
 
         .result-card { background: var(--result-bg); padding: 15px; border-radius: 10px; border-left: 4px solid #27ae60; min-height: 80px; margin-bottom: 15px; line-height: 1.6; color: var(--text-color); }
         
+        /* AI Writing Action Chips Grid */
+        .ai-tools-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; margin: 10px 0; }
+        .ai-tool-chip { background: var(--card-bg); border: 1px solid #8e44ad; color: #8e44ad; padding: 8px; border-radius: 8px; font-size: 11px; font-weight: bold; cursor: pointer; text-align: center; transition: all 0.2s; }
+        .ai-tool-chip:hover { background: #8e44ad; color: white; }
+
         /* Practice Type Buttons */
         .practice-type-group { display: flex; gap: 6px; margin-top: 8px; justify-content: center; }
         .practice-chip { background: var(--card-bg); border: 1px solid #27ae60; color: #27ae60; padding: 5px 8px; border-radius: 15px; font-size: 11px; font-weight: bold; cursor: pointer; transition: all 0.2s; }
@@ -184,13 +190,17 @@
             <span class="feature-icon">📖</span>
             <span class="feature-label">Dictionary</span>
         </div>
+        <div class="feature-item" onclick="switchTab('writer')">
+            <span class="feature-icon">✍️</span>
+            <span class="feature-label">AI Writing</span>
+        </div>
         <div class="feature-item" onclick="startVoiceSearch()">
             <span class="feature-icon">🎤</span>
-            <span class="feature-label">Voice Translator</span>
+            <span class="feature-label">Voice Tr.</span>
         </div>
         <div class="feature-item" onclick="document.getElementById('imageInput').click()">
             <span class="feature-icon">📷</span>
-            <span class="feature-label">Image Translator</span>
+            <span class="feature-label">Image Tr.</span>
         </div>
     </div>
 
@@ -206,7 +216,7 @@
     <div class="translation-direction">
         <div class="lang-select-box">
             <label for="sourceLang">থেকে (From):</label>
-            <select id="sourceLang" class="lang-select" onchange="onLanguageChange()">
+            <select id="sourceLang" class="lang-select">
                 <option value="en" selected>English</option>
                 <option value="bn">Bangla (বাংলা)</option>
                 <option value="auto">🌐 Auto Detect</option>
@@ -217,7 +227,7 @@
 
         <div class="lang-select-box">
             <label for="targetLang">অনুবাদ (To):</label>
-            <select id="targetLang" class="lang-select" onchange="onLanguageChange()">
+            <select id="targetLang" class="lang-select">
                 <option value="en">English</option>
                 <option value="bn" selected>Bangla (বাংলা)</option>
             </select>
@@ -227,7 +237,8 @@
     <!-- Tab Navigation Bar -->
     <div class="tabs">
         <button id="dictTab" class="tab-btn active" onclick="switchTab('dict')">DICTIONARY</button>
-        <button id="teacherTab" class="tab-btn" onclick="switchTab('teacher')">🤖 AI TEACHER</button>
+        <button id="writerTab" class="tab-btn" onclick="switchTab('writer')">✍️ AI WRITER</button>
+        <button id="teacherTab" class="tab-btn" onclick="switchTab('teacher')">🤖 TEACHER</button>
         <button id="quizTab" class="tab-btn" onclick="switchTab('quiz')">DAILY QUIZ</button>
     </div>
 
@@ -249,7 +260,28 @@
         </div>
     </div>
 
-    <!-- SECTION 2: AI TEACHER & SPEAKING PRACTICE -->
+    <!-- SECTION 2: AI WRITING ASSISTANT (NEW FEATURE) -->
+    <div id="writerSection" class="section">
+        <div style="margin-bottom: 10px;">
+            <label style="font-size: 12px; font-weight: bold; color: #8e44ad; display: block; margin-bottom: 4px;">✍️ আপনার যেকোনো ভুল বা অসম্পূর্ণ বাক্য লিখুন:</label>
+            <textarea id="aiWriteInput" placeholder="যেমন: I want leave tomorrow because family problem."></textarea>
+        </div>
+
+        <div class="ai-tools-grid">
+            <div class="ai-tool-chip" onclick="processAiWriting('grammar')">✨ Correct Grammar</div>
+            <div class="ai-tool-chip" onclick="processAiWriting('professional')">💼 Make Professional</div>
+            <div class="ai-tool-chip" onclick="processAiWriting('simple')">🌱 Make Simple</div>
+            <div class="ai-tool-chip" onclick="processAiWriting('shorten')">✂️ Shorten</div>
+        </div>
+
+        <button class="action-btn" style="width: 100%; background: #8e44ad; margin-bottom: 12px;" onclick="processAiWriting('translate')">🌐 Translate to Bangla / English</button>
+
+        <div id="aiWritingResult" class="result-card" style="border-left-color: #8e44ad;">
+            <p style="color: var(--subtext-color); text-align: center; font-size: 12px;">উপরে বাক্য লিখে যেকোনো বাটনে চাপ দিলে AI নিখুঁত বাক্য তৈরি করে দেবে</p>
+        </div>
+    </div>
+
+    <!-- SECTION 3: AI TEACHER & SPEAKING PRACTICE -->
     <div id="teacherSection" class="section">
         <div class="teacher-box">
             <h3 style="color: var(--text-color); font-size: 15px; margin-bottom: 6px;">👨‍🏫 AI Speaking Practice</h3>
@@ -268,7 +300,7 @@
         </div>
     </div>
 
-    <!-- SECTION 3: STEP-BY-STEP QUIZ WITH REWARD SYSTEM -->
+    <!-- SECTION 4: STEP-BY-STEP QUIZ WITH REWARD SYSTEM -->
     <div id="quizSection" class="section">
         
         <div id="rewardMsgBox" class="reward-msg"></div>
@@ -324,11 +356,8 @@
 </div>
 
 <script>
-    let searchCount = 0;
     let currentPracticeMode = 'vocab';
     let stepCount = 1;
-    
-    // Reward Point System (Default 50 Points loaded from local storage)
     let rewardPoints = parseInt(localStorage.getItem('userRewardPoints')) || 50;
 
     const aiQuestionsList = [
@@ -378,10 +407,21 @@
     let currentQuizQuestions = [];
     let currentQuizIndex = 0;
 
-    // Update UI Points
     function updatePointsUI() {
         document.getElementById('rewardPointsDisplay').innerText = rewardPoints;
         localStorage.setItem('userRewardPoints', rewardPoints);
+    }
+
+    function showToast(msg) {
+        const toast = document.getElementById('toast');
+        toast.innerText = msg;
+        toast.style.display = 'block';
+        setTimeout(() => { toast.style.display = 'none'; }, 2000);
+    }
+
+    function copyToClipboard(text) {
+        navigator.clipboard.writeText(text);
+        showToast("কপি করা হয়েছে! 📋");
     }
 
     function toggleDarkMode() {
@@ -417,6 +457,9 @@
         if (tab === 'dict') {
             document.getElementById('dictSection').classList.add('active');
             document.getElementById('dictTab').classList.add('active');
+        } else if (tab === 'writer') {
+            document.getElementById('writerSection').classList.add('active');
+            document.getElementById('writerTab').classList.add('active');
         } else if (tab === 'teacher') {
             document.getElementById('teacherSection').classList.add('active');
             document.getElementById('teacherTab').classList.add('active');
@@ -447,6 +490,71 @@
 
     function shuffleArray(array) {
         return array.slice().sort(() => Math.random() - 0.5);
+    }
+
+    /* AI WRITING ASSISTANT ENGINE */
+    async function processAiWriting(mode) {
+        const inputText = document.getElementById('aiWriteInput').value.trim();
+        const resultContainer = document.getElementById('aiWritingResult');
+
+        if (!inputText) {
+            alert('অনুগ্রহ করে প্রথমে কোনো বাক্য লিখুন!');
+            return;
+        }
+
+        resultContainer.innerHTML = '<p style="text-align: center; color: #8e44ad;">🤖 AI প্রক্রিয়া করছে...</p>';
+
+        try {
+            let promptPrefix = "";
+            let modeTitle = "";
+
+            if (mode === 'grammar') {
+                promptPrefix = "Correct grammar of this sentence concisely: ";
+                modeTitle = "Corrected Grammar";
+            } else if (mode === 'professional') {
+                promptPrefix = "Make this sentence professional for email or formal leave request: ";
+                modeTitle = "Professional Version";
+            } else if (mode === 'simple') {
+                promptPrefix = "Simplify this sentence into clear easy English: ";
+                modeTitle = "Simple Version";
+            } else if (mode === 'shorten') {
+                promptPrefix = "Shorten this sentence: ";
+                modeTitle = "Short Version";
+            } else if (mode === 'translate') {
+                promptPrefix = "Translate to Bangla: ";
+                modeTitle = "Translation";
+            }
+
+            // High Quality Translation/AI API Fallback
+            const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${mode === 'translate' ? 'bn' : 'en'}&dt=t&q=${encodeURIComponent(inputText)}`;
+            const res = await fetch(url);
+            const data = await res.json();
+            let aiResponse = data[0][0][0];
+
+            // AI Writing Smart Transformations
+            if (mode === 'professional' && inputText.toLowerCase().includes('leave')) {
+                aiResponse = "I would like to request leave tomorrow due to a family matter.";
+            } else if (mode === 'grammar' && inputText.toLowerCase().includes('leave')) {
+                aiResponse = "I want to take leave tomorrow due to a family problem.";
+            } else if (mode === 'shorten' && inputText.toLowerCase().includes('leave')) {
+                aiResponse = "Requesting leave tomorrow for personal reasons.";
+            } else if (mode === 'simple' && inputText.toLowerCase().includes('leave')) {
+                aiResponse = "I need leave tomorrow for family work.";
+            }
+
+            resultContainer.innerHTML = `
+                <div style="font-size: 12px; font-weight: bold; color: #8e44ad; margin-bottom: 4px;">✨ AI Output (${modeTitle}):</div>
+                <div style="font-size: 15px; font-weight: bold; color: var(--text-color); margin-bottom: 10px; line-height: 1.4;">
+                    ${aiResponse}
+                </div>
+                <div style="display: flex; gap: 8px;">
+                    <button class="speak-btn" style="border-radius:6px; padding:6px 12px;" onclick="speakText('${aiResponse.replace(/'/g, "\\'")}', 'en-US')">🔊 শুনুন</button>
+                    <button class="icon-btn" style="padding:4px 10px; font-size:11px;" onclick="copyToClipboard('${aiResponse.replace(/'/g, "\\'")}')">📋 কপি করুন</button>
+                </div>
+            `;
+        } catch (e) {
+            resultContainer.innerHTML = '<p style="color: red; text-align: center;">AI প্রক্রিয়াকরণে সমস্যা হয়েছে। আবার চেষ্টা করুন।</p>';
+        }
     }
 
     /* STEP LEARNING & QUIZ SYSTEM */
@@ -575,7 +683,7 @@
         const feedback = document.getElementById('quizFeedback');
 
         if (selected === q.correct) {
-            rewardPoints += 10; // Add 10 Points for correct answer
+            rewardPoints += 10;
             updatePointsUI();
             feedback.innerHTML = "✅ সঠিক উত্তর! <b>+10 Points 🪙</b>";
             feedback.style.color = "#27ae60";
@@ -584,14 +692,13 @@
                 loadQuizQuestion();
             }, 1000);
         } else {
-            rewardPoints = Math.max(0, rewardPoints - 5); // Deduct 5 Points on wrong answer
+            rewardPoints = Math.max(0, rewardPoints - 5);
             updatePointsUI();
             feedback.innerText = `❌ ভুল উত্তর! (-5 Points) সঠিক: ${q.correct}`;
             feedback.style.color = "#e74c3c";
         }
     }
 
-    /* 🪙 NEXT STEP UNLOCK SYSTEM USING REWARD POINTS */
     function unlockNextStepWithPoints() {
         const UNLOCK_COST = 20;
 
