@@ -142,7 +142,7 @@
         .teacher-box { background: var(--card-bg); border: 1px solid #3498db; border-radius: 12px; padding: 15px; text-align: center; margin-bottom: 15px; }
 
         .ad-container { width: 100%; text-align: center; margin: 10px 0; min-height: 50px; background: var(--card-bg); border: 1px dashed var(--border-color); border-radius: 8px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-        .footer-badge { display: flex; justify-around: font-size: 11px; font-weight: bold; margin-top: 10px; background: #0b874b; color: white; padding: 8px; border-radius: 10px; }
+        .footer-badge { display: flex; justify-content: space-around; font-size: 11px; font-weight: bold; margin-top: 10px; background: #0b874b; color: white; padding: 8px; border-radius: 10px; }
         
         .mic-guide-box { background: #fff3cd; border: 1px solid #ffe8a1; color: #856404; padding: 8px 10px; border-radius: 8px; font-size: 11px; margin-bottom: 10px; text-align: left; line-height: 1.4; display: none; }
         .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); color: white; padding: 8px 16px; border-radius: 20px; font-size: 12px; display: none; z-index: 1000; }
@@ -258,7 +258,7 @@
     <div id="writerSection" class="section">
         <div style="margin-bottom: 10px;">
             <label style="font-size: 12px; font-weight: bold; color: #8e44ad; display: block; margin-bottom: 4px;">✍️ আপনার যেকোনো ভুল বা অসম্পূর্ণ বাক্য লিখুন:</label>
-            <textarea id="aiWriteInput" placeholder="যেমন: I GO DHAKA বা I want leave tomorrow because family problem."></textarea>
+            <textarea id="aiWriteInput" placeholder="যেমন: I NOT GO OFFICE TOMORROW বা I want leave tomorrow because family problem."></textarea>
         </div>
 
         <div class="ai-tools-grid">
@@ -491,21 +491,34 @@
         let text = str.trim();
         if (!text) return "";
 
-        // Common Preposition & Verb Corrections
+        // 1. Negative & Future patterns (e.g., "I NOT GO" -> "I will not go")
+        text = text.replace(/\b([I|you|we|they|he|she])\s+not\s+go\b/gi, "$1 will not go");
+        text = text.replace(/\b([I|you|we|they|he|she])\s+not\s+going\b/gi, (match, p1) => {
+            const verb = p1.toLowerCase() === 'i' ? 'am' : (['he','she'].includes(p1.toLowerCase()) ? 'is' : 'are');
+            return `${p1} ${verb} not going`;
+        });
+
+        // 2. Present/General Movement (e.g., "I GO DHAKA" -> "I go to Dhaka")
         text = text.replace(/\b([I|you|we|they|he|she])\s+go\s+([A-Z][a-z]+|[a-z]+)\b/gi, (match, p1, p2) => {
             const verb = (p1.toLowerCase() === 'he' || p1.toLowerCase() === 'she') ? 'goes' : 'go';
             return `${p1} ${verb} to ${p2.charAt(0).toUpperCase() + p2.slice(1)}`;
         });
 
+        // 3. Add preposition 'to' before common destinations if missing (e.g., "go office", "will not go office")
+        text = text.replace(/\b(go|going|went)\s+(office|work|school|college|university|hospital|market|home)\b/gi, "$1 to $2");
+
+        // 4. Common Phrases & Word Replacements
         text = text.replace(/\bwant\s+leave\b/gi, "want to leave");
         text = text.replace(/\bbecause\s+family\s+problem\b/gi, "due to a family issue");
         text = text.replace(/\bi\b/g, "I");
         text = text.replace(/\b(go|going|went)\s+(dhaka|chittagong|sylhet|london|dubai|qatar)\b/gi, "$1 to $2");
 
-        // Capitalize Place Names
-        text = text.replace(/\b(dhaka|chittagong|sylhet|khulna|rajshahi|barisal|rangpur|comilla)\b/gi, (m) => m.charAt(0).toUpperCase() + m.slice(1));
+        // 5. Capitalize Place Names
+        text = text.replace(/\b(dhaka|chittagong|sylhet|khulna|rajshahi|barisal|rangpur|comilla|office)\b/gi, (m) => {
+            return m.toLowerCase() === 'office' ? 'office' : m.charAt(0).toUpperCase() + m.slice(1);
+        });
 
-        // Capitalize First Letter
+        // 6. Formatting (First letter capital & end period)
         text = text.charAt(0).toUpperCase() + text.slice(1);
         if (!/[.!?]$/.test(text)) text += ".";
 
@@ -547,7 +560,7 @@
                 const data = await res.json();
                 resultText = data[0][0][0];
             } catch(e) {
-                resultText = "আমি ঢাকা যাচ্ছি।";
+                resultText = "আমি আগামীকাল অফিসে যাব না।";
             }
         }
 
