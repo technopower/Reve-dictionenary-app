@@ -131,6 +131,15 @@
 
         .result-card { background: #f9f9f9; padding: 15px; border-radius: 10px; border-left: 4px solid #27ae60; min-height: 80px; margin-bottom: 15px; line-height: 1.6; }
         
+        /* Step-by-Step Learning & Quiz Styles */
+        .step-header { background: #e8f8f5; border: 1px solid #27ae60; padding: 8px 12px; border-radius: 10px; font-weight: bold; color: #16a085; text-align: center; margin-bottom: 12px; font-size: 13px; }
+        
+        .word-card-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px; }
+        .word-card { background: #ffffff; border: 1px solid #dcdde1; border-left: 4px solid #3498db; border-radius: 8px; padding: 10px 12px; display: flex; justify-content: space-between; align-items: center; }
+        .word-card-info { display: flex; flex-direction: column; }
+        .word-card-title { font-size: 15px; font-weight: bold; color: #2c3e50; }
+        .word-card-sub { font-size: 13px; color: #27ae60; font-weight: 600; margin-top: 2px; }
+
         .quiz-card { background: #fff9c4; padding: 15px; border-radius: 10px; margin-bottom: 15px; text-align: center; border: 1px solid #fbc02d; }
         .quiz-title-eng { font-size: 12px; color: #795548; font-weight: bold; margin-bottom: 6px; display: block; }
         .options-grid { display: grid; gap: 10px; }
@@ -252,16 +261,34 @@
         </div>
     </div>
 
+    <!-- Step-by-Step Quiz Section -->
     <div id="quizSection" class="section">
-        <div class="quiz-card">
-            <span id="quizQuestionEng" class="quiz-title-eng">What is the correct meaning?</span>
-            <div style="display: flex; align-items: center; justify-content: center;">
-                <p id="quizQuestion" style="font-weight: bold; font-size: 17px; margin: 0; color: #2c3e50;">লোডিং...</p>
-                <button class="speak-btn" onclick="speakCurrentQuestion()" title="উচ্চারণ শুনুন">🔊</button>
-            </div>
+        <div class="step-header" id="stepHeader">
+            📌 Step 1: কুইজ দেওয়ার আগে নিচের ৫টি শব্দ পড়ুন
         </div>
-        <div class="options-grid" id="optionsContainer"></div>
-        <p id="quizFeedback" style="text-align: center; margin-top: 12px; font-weight: bold; font-size: 15px;"></p>
+
+        <!-- Step 1: Learning Container -->
+        <div id="learningContainer">
+            <div class="word-card-list" id="wordCardList">
+                <p style="text-align: center; color: #888;">শব্দ লোড করা হচ্ছে...</p>
+            </div>
+            <button class="action-btn" style="width: 100%; margin-top: 5px; font-size: 15px;" onclick="startStepQuiz()">
+                পড়া শেষ! কুইজ পরীক্ষা শুরু করুন ➔
+            </button>
+        </div>
+
+        <!-- Step 2: Quiz Container -->
+        <div id="quizContainer" style="display: none;">
+            <div class="quiz-card">
+                <span id="quizQuestionEng" class="quiz-title-eng">What is the correct meaning?</span>
+                <div style="display: flex; align-items: center; justify-content: center;">
+                    <p id="quizQuestion" style="font-weight: bold; font-size: 17px; margin: 0; color: #2c3e50;">লোডিং...</p>
+                    <button class="speak-btn" onclick="speakCurrentQuestion()" title="উচ্চারণ শুনুন">🔊</button>
+                </div>
+            </div>
+            <div class="options-grid" id="optionsContainer"></div>
+            <p id="quizFeedback" style="text-align: center; margin-top: 12px; font-weight: bold; font-size: 15px;"></p>
+        </div>
     </div>
 
     <!-- Bottom Banner Ad (ca-app-pub-9405635367616651/6947097979) -->
@@ -286,9 +313,11 @@
 
 <script>
     let userScore = 0;
-    let currentQuizIndex = 0;
     let wordDatabase = [];
-    let quizQuestions = [];
+    let currentStepWords = [];
+    let currentQuizQuestions = [];
+    let currentQuizIndex = 0;
+    let currentLevel = 1;
     let searchCount = 0;
 
     // Interstitial Ad Unit ID: ca-app-pub-9405635367616651/2391563840
@@ -296,7 +325,6 @@
 
     function showAdMobInterstitial() {
         searchCount++;
-        // Trigger Interstitial Ad every 3 searches
         if (searchCount % 3 === 0) {
             if (window.admob && window.admob.interstitial) {
                 window.admob.interstitial.show();
@@ -324,9 +352,8 @@
     function onLanguageChange() {
         const resultContainer = document.getElementById('resultContainer');
         resultContainer.innerHTML = '<p style="color: #888; text-align: center; font-size: 14px;">ভাষা পরিবর্তন করা হয়েছে। আবার খুঁজুন!</p>';
-        generateQuizFromDatabase();
         if (document.getElementById('quizSection').classList.contains('active')) {
-            loadQuiz();
+            initStepLearning();
         }
     }
 
@@ -343,7 +370,7 @@
     }
 
     function speakCurrentQuestion() {
-        const quiz = quizQuestions[currentQuizIndex];
+        const quiz = currentQuizQuestions[currentQuizIndex];
         if (quiz) {
             const sourceLang = document.getElementById('sourceLang').value;
             speakText(quiz.rawWord, sourceLang === 'auto' ? 'en' : sourceLang);
@@ -458,7 +485,6 @@
         try {
             const response = await fetch('./words.json');
             wordDatabase = await response.json();
-            generateQuizFromDatabase();
         } catch (error) {
             console.error("Data loading error:", error);
         }
@@ -613,27 +639,75 @@
         document.getElementById('score').innerText = userScore;
     }
 
-    async function generateQuizFromDatabase() {
-        if (!wordDatabase || wordDatabase.length < 3) return;
+    /* STEP-BY-STEP LEARNING & QUIZ SYSTEM */
+    async function initStepLearning() {
+        document.getElementById('learningContainer').style.display = 'block';
+        document.getElementById('quizContainer').style.display = 'none';
+        document.getElementById('stepHeader').innerText = `📌 Level ${currentLevel}: আগে নিচের ৫টি শব্দ মুখস্থ করুন`;
 
-        const targetLang = document.getElementById('targetLang').value;
+        const wordCardList = document.getElementById('wordCardList');
+        wordCardList.innerHTML = '<p style="text-align: center; color: #3498db;">শব্দ তৈরি করা হচ্ছে...</p>';
+
+        if (!wordDatabase || wordDatabase.length < 5) {
+            wordCardList.innerHTML = '<p style="text-align: center; color: red;">পর্যাপ্ত শব্দ পাওয়া যায়নি!</p>';
+            return;
+        }
+
         const sourceLang = document.getElementById('sourceLang').value;
+        const targetLang = document.getElementById('targetLang').value;
+
         const shuffled = [...wordDatabase].sort(() => 0.5 - Math.random()).slice(0, 5);
-        
-        quizQuestions = [];
+        currentStepWords = [];
+
         for (let item of shuffled) {
-            let questionWord = item.word;
-            let correctMeaning = item.meaning;
+            let displayWord = item.word;
+            let displayMeaning = item.meaning;
 
             if (sourceLang !== 'en' && sourceLang !== 'auto') {
                 const srcTrans = await fetchUniversalTranslation(item.word, 'en', sourceLang);
-                if (srcTrans) questionWord = srcTrans.translatedText;
+                if (srcTrans) displayWord = srcTrans.translatedText;
             }
 
             const transRes = await fetchUniversalTranslation(item.word, 'en', targetLang);
-            if (transRes) correctMeaning = transRes.translatedText;
+            if (transRes) displayMeaning = transRes.translatedText;
 
-            const otherWords = wordDatabase.filter(w => w.word !== item.word).sort(() => 0.5 - Math.random()).slice(0, 2);
+            currentStepWords.push({
+                word: displayWord,
+                meaning: displayMeaning,
+                rawItem: item
+            });
+        }
+
+        wordCardList.innerHTML = '';
+        currentStepWords.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'word-card';
+
+            const safeWord = item.word.replace(/'/g, "\\'");
+
+            card.innerHTML = `
+                <div class="word-card-info">
+                    <span class="word-card-title">${item.word}</span>
+                    <span class="word-card-sub">👉 ${item.meaning}</span>
+                </div>
+                <button class="speak-btn" onclick="speakText('${safeWord}', '${sourceLang === 'auto' ? 'en' : sourceLang}')" title="উচ্চারণ শুনুন">🔊</button>
+            `;
+            wordCardList.appendChild(card);
+        });
+    }
+
+    async function startStepQuiz() {
+        document.getElementById('learningContainer').style.display = 'none';
+        document.getElementById('quizContainer').style.display = 'block';
+        document.getElementById('stepHeader').innerText = `📝 Level ${currentLevel}: আপনার কুইজ পরীক্ষা চলছে`;
+
+        currentQuizQuestions = [];
+        currentQuizIndex = 0;
+
+        const targetLang = document.getElementById('targetLang').value;
+
+        for (let item of currentStepWords) {
+            const otherWords = wordDatabase.filter(w => w.word !== item.rawItem.word).sort(() => 0.5 - Math.random()).slice(0, 2);
             let wrongOption1 = otherWords[0].meaning;
             let wrongOption2 = otherWords[1].meaning;
 
@@ -642,40 +716,32 @@
             if (trans1) wrongOption1 = trans1.translatedText;
             if (trans2) wrongOption2 = trans2.translatedText;
 
-            const options = [correctMeaning, wrongOption1, wrongOption2].sort(() => 0.5 - Math.random());
+            const options = [item.meaning, wrongOption1, wrongOption2].sort(() => 0.5 - Math.random());
 
-            quizQuestions.push({
-                rawWord: questionWord,
-                questionEng: `What is the correct meaning of '${questionWord.toUpperCase()}'?`,
-                questionBn: `'${questionWord}' - এর সঠিক অর্থ কোনটি?`,
+            currentQuizQuestions.push({
+                rawWord: item.word,
+                questionEng: `What is the correct meaning of '${item.word.toUpperCase()}'?`,
+                questionBn: `'${item.word}' - এর সঠিক অর্থ কোনটি?`,
                 options: options,
-                correct: correctMeaning
+                correct: item.meaning
             });
         }
+
+        loadStepQuizQuestion();
     }
 
-    function switchTab(tabName) {
-        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-        document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
-
-        if (tabName === 'dict') {
-            document.querySelectorAll('.tab-btn')[0].classList.add('active');
-            document.getElementById('dictSection').classList.add('active');
-        } else {
-            document.querySelectorAll('.tab-btn')[1].classList.add('active');
-            document.getElementById('quizSection').classList.add('active');
-            loadQuiz();
-        }
-    }
-
-    function loadQuiz() {
-        if (quizQuestions.length === 0) {
-            document.getElementById('quizQuestion').innerText = "কুইজ প্রস্তুত হচ্ছে...";
-            generateQuizFromDatabase().then(() => loadQuiz());
+    function loadStepQuizQuestion() {
+        if (currentQuizIndex >= currentQuizQuestions.length) {
+            // Level Completed
+            playSound('correct');
+            showAdMobInterstitial(); // Show Interstitial Ad upon Level Complete
+            currentLevel++;
+            alert(`অভিনন্দন! 🎉 আপনি লেভেল ${currentLevel - 1} সফলভাবে শেষ করেছেন। আগামী লেভেলে প্রবেশ করছেন!`);
+            initStepLearning();
             return;
         }
 
-        const quiz = quizQuestions[currentQuizIndex];
+        const quiz = currentQuizQuestions[currentQuizIndex];
         document.getElementById('quizQuestionEng').innerText = quiz.questionEng;
         document.getElementById('quizQuestion').innerText = quiz.questionBn;
         document.getElementById('quizFeedback').innerText = '';
@@ -692,7 +758,7 @@
             const btn = document.createElement('button');
             btn.className = 'opt-btn';
             btn.innerText = opt;
-            btn.onclick = () => checkAnswer(opt);
+            btn.onclick = () => checkStepAnswer(opt);
 
             const audioBtn = document.createElement('button');
             audioBtn.className = 'speak-btn';
@@ -709,9 +775,9 @@
         });
     }
 
-    function checkAnswer(selectedOption) {
+    function checkStepAnswer(selectedOption) {
         const feedback = document.getElementById('quizFeedback');
-        const currentCorrect = quizQuestions[currentQuizIndex].correct;
+        const currentCorrect = currentQuizQuestions[currentQuizIndex].correct;
 
         if (selectedOption === currentCorrect) {
             playSound('correct');
@@ -721,13 +787,27 @@
             document.getElementById('score').innerText = userScore;
 
             setTimeout(() => {
-                currentQuizIndex = (currentQuizIndex + 1) % quizQuestions.length;
-                loadQuiz();
+                currentQuizIndex++;
+                loadStepQuizQuestion();
             }, 1000);
         } else {
             playSound('wrong');
             feedback.style.color = 'red';
             feedback.innerText = 'Wrong Answer! / ভুল উত্তর! আবার চেষ্টা করুন।';
+        }
+    }
+
+    function switchTab(tabName) {
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+
+        if (tabName === 'dict') {
+            document.querySelectorAll('.tab-btn')[0].classList.add('active');
+            document.getElementById('dictSection').classList.add('active');
+        } else {
+            document.querySelectorAll('.tab-btn')[1].classList.add('active');
+            document.getElementById('quizSection').classList.add('active');
+            initStepLearning();
         }
     }
 
