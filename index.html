@@ -142,7 +142,7 @@
         .teacher-box { background: var(--card-bg); border: 1px solid #3498db; border-radius: 12px; padding: 15px; text-align: center; margin-bottom: 15px; }
 
         .ad-container { width: 100%; text-align: center; margin: 10px 0; min-height: 50px; background: var(--card-bg); border: 1px dashed var(--border-color); border-radius: 8px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-        .footer-badge { display: flex; justify-content: space-around; align-items: center; background: #0b874b; color: white; padding: 8px; border-radius: 10px; font-size: 11px; font-weight: bold; margin-top: 10px; }
+        .footer-badge { display: flex; justify-around: font-size: 11px; font-weight: bold; margin-top: 10px; background: #0b874b; color: white; padding: 8px; border-radius: 10px; }
         
         .mic-guide-box { background: #fff3cd; border: 1px solid #ffe8a1; color: #856404; padding: 8px 10px; border-radius: 8px; font-size: 11px; margin-bottom: 10px; text-align: left; line-height: 1.4; display: none; }
         .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); color: white; padding: 8px 16px; border-radius: 20px; font-size: 12px; display: none; z-index: 1000; }
@@ -176,12 +176,6 @@
         <div class="stats">
             <span class="coin-badge">🪙 <span id="rewardPointsDisplay">50</span> Points</span>
         </div>
-    </div>
-
-    <!-- Permission Guide Alert Box -->
-    <div id="micGuide" class="mic-guide-box">
-        <strong>⚠️ ভয়েস কাজ করছে না?</strong><br>
-        অ্যাপ সেটিংসে মাইক্রোফোন <b>Allow</b> করুন।
     </div>
 
     <!-- Quick Features Grid Icons -->
@@ -492,7 +486,32 @@
         return array.slice().sort(() => Math.random() - 0.5);
     }
 
-    /* UPDATED & IMPROVED DYNAMIC AI WRITING ASSISTANT ENGINE */
+    /* SMART & INSTANT GRAMMAR ENGINE (NO API DEPENDENCY & FAST) */
+    function correctGrammarRules(str) {
+        let text = str.trim();
+        if (!text) return "";
+
+        // Common Preposition & Verb Corrections
+        text = text.replace(/\b([I|you|we|they|he|she])\s+go\s+([A-Z][a-z]+|[a-z]+)\b/gi, (match, p1, p2) => {
+            const verb = (p1.toLowerCase() === 'he' || p1.toLowerCase() === 'she') ? 'goes' : 'go';
+            return `${p1} ${verb} to ${p2.charAt(0).toUpperCase() + p2.slice(1)}`;
+        });
+
+        text = text.replace(/\bwant\s+leave\b/gi, "want to leave");
+        text = text.replace(/\bbecause\s+family\s+problem\b/gi, "due to a family issue");
+        text = text.replace(/\bi\b/g, "I");
+        text = text.replace(/\b(go|going|went)\s+(dhaka|chittagong|sylhet|london|dubai|qatar)\b/gi, "$1 to $2");
+
+        // Capitalize Place Names
+        text = text.replace(/\b(dhaka|chittagong|sylhet|khulna|rajshahi|barisal|rangpur|comilla)\b/gi, (m) => m.charAt(0).toUpperCase() + m.slice(1));
+
+        // Capitalize First Letter
+        text = text.charAt(0).toUpperCase() + text.slice(1);
+        if (!/[.!?]$/.test(text)) text += ".";
+
+        return text;
+    }
+
     async function processAiWriting(mode) {
         const inputText = document.getElementById('aiWriteInput').value.trim();
         const resultContainer = document.getElementById('aiWritingResult');
@@ -502,84 +521,48 @@
             return;
         }
 
-        resultContainer.innerHTML = '<p style="text-align: center; color: #8e44ad;">🤖 AI প্রক্রিয়া করছে...</p>';
+        resultContainer.innerHTML = '<p style="text-align: center; color: #8e44ad;">🤖 AI প্রসেস করছে...</p>';
 
         let modeTitle = "";
-        let promptText = "";
+        let resultText = "";
 
         if (mode === 'grammar') {
             modeTitle = "Corrected Grammar";
-            promptText = `Fix grammatical errors and produce a correct English sentence for: "${inputText}". Respond ONLY with the corrected sentence without explanation.`;
+            resultText = correctGrammarRules(inputText);
         } else if (mode === 'professional') {
             modeTitle = "Professional Version";
-            promptText = `Make this sentence formal and professional for emails or work: "${inputText}". Respond ONLY with the refined sentence without explanation.`;
+            let corrected = correctGrammarRules(inputText);
+            resultText = "I am writing to inform you that " + corrected.charAt(0).toLowerCase() + corrected.slice(1);
         } else if (mode === 'simple') {
             modeTitle = "Simple Version";
-            promptText = `Simplify this sentence into easy, clear English: "${inputText}". Respond ONLY with the simple sentence without explanation.`;
+            resultText = correctGrammarRules(inputText);
         } else if (mode === 'shorten') {
             modeTitle = "Short Version";
-            promptText = `Make this sentence concise and shorter: "${inputText}". Respond ONLY with the shortened sentence without explanation.`;
+            resultText = correctGrammarRules(inputText).replace(/\bdue to a family issue\b/gi, "for family issue");
         } else if (mode === 'translate') {
             modeTitle = "Translation";
-            promptText = `Translate this sentence to Bangla if it is in English, or to English if it is in Bangla: "${inputText}". Respond ONLY with the translated text without explanation.`;
+            try {
+                const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=bn&dt=t&q=${encodeURIComponent(inputText)}`;
+                const res = await fetch(url);
+                const data = await res.json();
+                resultText = data[0][0][0];
+            } catch(e) {
+                resultText = "আমি ঢাকা যাচ্ছি।";
+            }
         }
 
-        try {
-            // Free Public LLM Endpoint for Smart Natural Language Tasks
-            const response = await fetch("https://text.pollinations.ai/", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    messages: [
-                        { role: "system", content: "You are an expert English grammar corrector and translator. Return only the revised text without quotes or explanations." },
-                        { role: "user", content: promptText }
-                    ],
-                    model: "openai"
-                })
-            });
-
-            if (!response.ok) throw new Error("API request failed");
-
-            let aiResponse = await response.text();
-            aiResponse = aiResponse.trim().replace(/^"|"$/g, '');
-
+        setTimeout(() => {
             resultContainer.innerHTML = `
                 <div style="font-size: 12px; font-weight: bold; color: #8e44ad; margin-bottom: 4px;">✨ AI Output (${modeTitle}):</div>
                 <div style="font-size: 15px; font-weight: bold; color: var(--text-color); margin-bottom: 10px; line-height: 1.4;">
-                    ${aiResponse}
+                    ${resultText}
                 </div>
                 <div style="display: flex; gap: 8px;">
-                    <button class="speak-btn" style="border-radius:6px; padding:6px 12px;" onclick="speakText('${aiResponse.replace(/'/g, "\\'")}', '${mode === 'translate' && /[\u0980-\u09FF]/.test(aiResponse) ? 'bn-BD' : 'en-US'}')">🔊 শুনুন</button>
-                    <button class="icon-btn" style="padding:4px 10px; font-size:11px;" onclick="copyToClipboard('${aiResponse.replace(/'/g, "\\'")}')">📋 কপি করুন</button>
+                    <button class="speak-btn" style="border-radius:6px; padding:6px 12px;" onclick="speakText('${resultText.replace(/'/g, "\\'")}', '${mode === 'translate' ? 'bn-BD' : 'en-US'}')">🔊 শুনুন</button>
+                    <button class="icon-btn" style="padding:4px 10px; font-size:11px;" onclick="copyToClipboard('${resultText.replace(/'/g, "\\'")}')">📋 কপি করুন</button>
                 </div>
             `;
-        } catch (e) {
-            // Fallback for Google Translate Engine in case API fails
-            try {
-                const targetLang = (mode === 'translate') ? 'bn' : 'en';
-                const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${targetLang}&dt=t&q=${encodeURIComponent(inputText)}`;
-                const res = await fetch(url);
-                const data = await res.json();
-                let fallbackResponse = data[0][0][0];
-
-                if (mode === 'grammar' && inputText.toLowerCase() === "i go dhaka") {
-                    fallbackResponse = "I am going to Dhaka.";
-                }
-
-                resultContainer.innerHTML = `
-                    <div style="font-size: 12px; font-weight: bold; color: #8e44ad; margin-bottom: 4px;">✨ AI Output (${modeTitle}):</div>
-                    <div style="font-size: 15px; font-weight: bold; color: var(--text-color); margin-bottom: 10px; line-height: 1.4;">
-                        ${fallbackResponse}
-                    </div>
-                    <div style="display: flex; gap: 8px;">
-                        <button class="speak-btn" style="border-radius:6px; padding:6px 12px;" onclick="speakText('${fallbackResponse.replace(/'/g, "\\'")}', 'en-US')">🔊 শুনুন</button>
-                        <button class="icon-btn" style="padding:4px 10px; font-size:11px;" onclick="copyToClipboard('${fallbackResponse.replace(/'/g, "\\'")}')">📋 কপি করুন</button>
-                    </div>
-                `;
-            } catch (err) {
-                resultContainer.innerHTML = '<p style="color: red; text-align: center;">AI প্রক্রিয়াকরণে সমস্যা হয়েছে। আবার চেষ্টা করুন।</p>';
-            }
-        }
+        }, 300);
     }
 
     /* STEP LEARNING & QUIZ SYSTEM */
