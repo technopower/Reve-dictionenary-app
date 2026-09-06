@@ -407,7 +407,7 @@
     let currentQuizQuestions = [];
     let currentQuizIndex = 0;
 
-    /* Updated Interstitial Test ID */
+    /* Interstitial Test ID */
     const INTERSTITIAL_AD_ID = "ca-app-pub-3940256099942544/1033173712";
 
     /* EULA Modal Function */
@@ -793,19 +793,32 @@
     }
 
     function loadQuizQuestion() {
+        const quizContainer = document.getElementById('quizContainer');
+
         if (currentQuizIndex >= currentQuizQuestions.length) {
-            document.getElementById('quizContainer').innerHTML = `
+            quizContainer.innerHTML = `
                 <div style="text-align:center; padding:20px;">
-                    <h3>🎉 অভিনন্দন! আজকের অনুশীলনী সম্পন্ন হয়েছে!</h3>
-                    <button class="action-btn" style="margin-top:15px;" onclick="initStepLearning()">পুনরায় শুরু করুন</button>
+                    <h3 style="color: #27ae60; margin-bottom: 10px;">🎉 অভিনন্দন! আজকের অনুশীলনী সম্পন্ন হয়েছে!</h3>
+                    <p style="font-size: 12px; color: var(--subtext-color); margin-bottom: 15px;">আপনি সফলভাবে সবগুলো প্রশ্নের উত্তর দিয়েছেন।</p>
+                    <button class="action-btn" style="width:100%; background: #27ae60;" onclick="resetQuizView()">আবার নতুন করে অনুশীলন করুন 🔄</button>
                 </div>
             `;
             return;
         }
 
         const q = currentQuizQuestions[currentQuizIndex];
-        document.getElementById('quizQuestion').innerText = q.qText;
-        document.getElementById('quizFeedback').innerText = '';
+        
+        quizContainer.innerHTML = `
+            <div class="quiz-card">
+                <span id="quizQuestionEng" style="font-size: 11px; color: #e67e22; font-weight: bold; display: block; margin-bottom: 4px;">Practice Quiz (${currentQuizIndex + 1}/${currentQuizQuestions.length})</span>
+                <div style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+                    <p id="quizQuestion" style="font-weight: bold; font-size: 16px; margin: 0; color: var(--text-color);">${q.qText}</p>
+                    <button id="quizAudioBtn" class="speak-btn" onclick="speakCurrentQuestion()">🔊</button>
+                </div>
+            </div>
+            <div class="options-grid" id="optionsContainer"></div>
+            <p id="quizFeedback" style="text-align: center; margin-top: 10px; font-weight: bold; font-size: 13px;"></p>
+        `;
 
         if (q.type === 'speaking') {
             speakText(q.audio, 'en-US');
@@ -837,6 +850,11 @@
             feedback.innerText = `❌ ভুল উত্তর! সঠিক উত্তর: ${q.correct}`;
             feedback.style.color = "#e74c3c";
         }
+    }
+
+    function resetQuizView() {
+        currentQuizIndex = 0;
+        initStepLearning();
     }
 </script>
 
