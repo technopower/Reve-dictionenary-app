@@ -263,6 +263,17 @@
 
     <!-- Step-by-Step Quiz Section -->
     <div id="quizSection" class="section">
+        <!-- Category Selection -->
+        <div style="margin-bottom: 12px;">
+            <label for="categorySelect" style="font-size: 12px; font-weight: bold; color: #16a085;">বিষয়বস্তু (Category) বেছে নিন:</label>
+            <select id="categorySelect" class="lang-select" style="width: 100%; margin-top: 4px;" onchange="initStepLearning()">
+                <option value="All">সকল বিষয় (All Categories)</option>
+                <option value="Home (বাসাবাড়ি)">বাসাবাড়ি (Home)</option>
+                <option value="Workspace (কর্মক্ষেত্র)">কর্মক্ষেত্র (Workspace)</option>
+                <option value="Entertainment (বিনোদন)">বিনোদন (Entertainment)</option>
+            </select>
+        </div>
+
         <div class="step-header" id="stepHeader">
             📌 Step 1: কুইজ দেওয়ার আগে নিচের ৫টি শব্দ পড়ুন
         </div>
@@ -313,7 +324,43 @@
 
 <script>
     let userScore = 0;
-    let wordDatabase = [];
+    
+    // Default Category Word Database embedded directly
+    let wordDatabase = [
+        {"category": "Home (বাসাবাড়ি)", "word": "Kitchen", "meaning": "রান্নাঘর"},
+        {"category": "Home (বাসাবাড়ি)", "word": "Furniture", "meaning": "আসবাবপত্র"},
+        {"category": "Home (বাসাবাড়ি)", "word": "Curtains", "meaning": "পর্দা"},
+        {"category": "Home (বাসাবাড়ি)", "word": "Blanket", "meaning": "কম্বল"},
+        {"category": "Home (বাসাবাড়ি)", "word": "Cleaning", "meaning": "পরিষ্কার করা"},
+        {"category": "Home (বাসাবাড়ি)", "word": "Bedroom", "meaning": "শয়নকক্ষ"},
+        {"category": "Home (বাসাবাড়ি)", "word": "Balcony", "meaning": "বারান্দা"},
+        {"category": "Home (বাসাবাড়ি)", "word": "Mirror", "meaning": "আয়না"},
+        {"category": "Home (বাসাবাড়ি)", "word": "Roof", "meaning": "ছাদ"},
+        {"category": "Home (বাসাবাড়ি)", "word": "Key", "meaning": "চাবি"},
+
+        {"category": "Workspace (কর্মক্ষেত্র)", "word": "Manager", "meaning": "ব্যবস্থাপক"},
+        {"category": "Workspace (কর্মক্ষেত্র)", "word": "Salary", "meaning": "বেতন"},
+        {"category": "Workspace (কর্মক্ষেত্র)", "word": "Contract", "meaning": "চুক্তিপত্র"},
+        {"category": "Workspace (কর্মক্ষেত্র)", "word": "Overtime", "meaning": "অতিরিক্ত কাজ"},
+        {"category": "Workspace (কর্মক্ষেত্র)", "word": "Safety", "meaning": "নিরাপত্তা"},
+        {"category": "Workspace (কর্মক্ষেত্র)", "word": "Office", "meaning": "কার্যালয়"},
+        {"category": "Workspace (কর্মক্ষেত্র)", "word": "Worker", "meaning": "কর্মী"},
+        {"category": "Workspace (কর্মক্ষেত্র)", "word": "Permission", "meaning": "অনুমতি"},
+        {"category": "Workspace (কর্মক্ষেত্র)", "word": "Holiday", "meaning": "ছুটির দিন"},
+        {"category": "Workspace (কর্মক্ষেত্র)", "word": "Signature", "meaning": "স্বাক্ষর"},
+
+        {"category": "Entertainment (বিনোদন)", "word": "Music", "meaning": "গান/সঙ্গীত"},
+        {"category": "Entertainment (বিনোদন)", "word": "Movie", "meaning": "চলচ্চিত্র"},
+        {"category": "Entertainment (বিনোদন)", "word": "Game", "meaning": "খেলাধুলা"},
+        {"category": "Entertainment (বিনোদন)", "word": "Festival", "meaning": "উৎসব"},
+        {"category": "Entertainment (বিনোদন)", "word": "Travel", "meaning": "ভ্রমণ"},
+        {"category": "Entertainment (বিনোদন)", "word": "Ticket", "meaning": "টিকিট"},
+        {"category": "Entertainment (বিনোদন)", "word": "Park", "meaning": "পার্ক"},
+        {"category": "Entertainment (বিনোদন)", "word": "Camera", "meaning": "ক্যামেরা"},
+        {"category": "Entertainment (বিনোদন)", "word": "Party", "meaning": "অনুষ্ঠান"},
+        {"category": "Entertainment (বিনোদন)", "word": "Sports", "meaning": "ক্রীড়া"}
+    ];
+
     let currentStepWords = [];
     let currentQuizQuestions = [];
     let currentQuizIndex = 0;
@@ -481,15 +528,6 @@
         }
     }
 
-    async function loadWordsData() {
-        try {
-            const response = await fetch('./words.json');
-            wordDatabase = await response.json();
-        } catch (error) {
-            console.error("Data loading error:", error);
-        }
-    }
-
     async function fetchUniversalTranslation(text, sourceLang, targetLang) {
         try {
             const apiUrl = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sourceLang}&tl=${targetLang}&dt=t&dt=rm&dj=1&q=${encodeURIComponent(text)}`;
@@ -529,8 +567,7 @@
         const exactWordMap = {
             'I': 'আই', 'WILL': 'উইল', 'GO': 'গো', 'TO': 'টু', 'DHAKA': 'ঢাকা',
             'YOU': 'ইউ', 'HE': 'হি', 'SHE': 'শি', 'THEY': 'দে', 'WE': 'উই',
-            'AM': 'এম', 'IS': 'ইজ', 'ARE': 'আর', 'WAS': 'ওয়াজ', 'WERE': 'ওয়ার',
-            'SA-AZHABU': 'সা-আজহাবূ', 'ILA': 'ইলা', 'MARHABAN': 'মারহাবান', 'SHUKRAN': 'শুকরান'
+            'AM': 'এম', 'IS': 'ইজ', 'ARE': 'আর', 'WAS': 'ওয়াজ', 'WERE': 'ওয়ার'
         };
 
         const words = text.trim().split(/\s+/);
@@ -639,24 +676,31 @@
         document.getElementById('score').innerText = userScore;
     }
 
-    /* STEP-BY-STEP LEARNING & QUIZ SYSTEM */
+    /* STEP-BY-STEP LEARNING & CATEGORY QUIZ SYSTEM */
     async function initStepLearning() {
         document.getElementById('learningContainer').style.display = 'block';
         document.getElementById('quizContainer').style.display = 'none';
-        document.getElementById('stepHeader').innerText = `📌 Level ${currentLevel}: আগে নিচের ৫টি শব্দ মুখস্থ করুন`;
+
+        const selectedCategory = document.getElementById('categorySelect') ? document.getElementById('categorySelect').value : 'All';
+        document.getElementById('stepHeader').innerText = `📌 Level ${currentLevel}: আগে নিচের ৫টি শব্দ পড়ুন`;
 
         const wordCardList = document.getElementById('wordCardList');
         wordCardList.innerHTML = '<p style="text-align: center; color: #3498db;">শব্দ তৈরি করা হচ্ছে...</p>';
 
-        if (!wordDatabase || wordDatabase.length < 5) {
-            wordCardList.innerHTML = '<p style="text-align: center; color: red;">পর্যাপ্ত শব্দ পাওয়া যায়নি!</p>';
+        let filteredWords = wordDatabase;
+        if (selectedCategory !== 'All') {
+            filteredWords = wordDatabase.filter(w => w.category === selectedCategory);
+        }
+
+        if (!filteredWords || filteredWords.length < 5) {
+            wordCardList.innerHTML = '<p style="text-align: center; color: red;">এই ক্যাটাগরিতে পর্যাপ্ত শব্দ পাওয়া যায়নি!</p>';
             return;
         }
 
         const sourceLang = document.getElementById('sourceLang').value;
         const targetLang = document.getElementById('targetLang').value;
 
-        const shuffled = [...wordDatabase].sort(() => 0.5 - Math.random()).slice(0, 5);
+        const shuffled = [...filteredWords].sort(() => 0.5 - Math.random()).slice(0, 5);
         currentStepWords = [];
 
         for (let item of shuffled) {
@@ -682,7 +726,6 @@
         currentStepWords.forEach(item => {
             const card = document.createElement('div');
             card.className = 'word-card';
-
             const safeWord = item.word.replace(/'/g, "\\'");
 
             card.innerHTML = `
@@ -732,11 +775,10 @@
 
     function loadStepQuizQuestion() {
         if (currentQuizIndex >= currentQuizQuestions.length) {
-            // Level Completed
             playSound('correct');
-            showAdMobInterstitial(); // Show Interstitial Ad upon Level Complete
+            showAdMobInterstitial();
             currentLevel++;
-            alert(`অভিনন্দন! 🎉 আপনি লেভেল ${currentLevel - 1} সফলভাবে শেষ করেছেন। আগামী লেভেলে প্রবেশ করছেন!`);
+            alert(`অভিনন্দন! 🎉 আপনি সফলভাবে কুইজ শেষ করেছেন। আগামী লেভেলে প্রবেশ করছেন!`);
             initStepLearning();
             return;
         }
@@ -810,8 +852,6 @@
             initStepLearning();
         }
     }
-
-    window.addEventListener('DOMContentLoaded', loadWordsData);
 
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
