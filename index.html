@@ -2,7 +2,7 @@
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>REVE AI English Learning & Dictionary App</title>
 
     <link rel="manifest" href="manifest.json">
@@ -10,7 +10,7 @@
     <link rel="apple-touch-icon" href="assets/logos/index_logo.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="REVE AI">
+    <meta name="apple-mobile-web-app-title" content="প্রবাসী সেবা">
     <link rel="icon" type="image/png" href="assets/logos/index_logo.png">
 
     <!-- Fast OCR Engine for Image Text Reading -->
@@ -20,101 +20,103 @@
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9405635367616651" crossorigin="anonymous"></script>
 
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background-color: #eef2f5; color: #333; padding: 12px; display: flex; justify-content: center; align-items: center; min-height: 100vh; flex-direction: column; }
-        .app-container { background: #fff; padding: 18px; border-radius: 20px; box-shadow: 0 8px 25px rgba(0,0,0,0.12); width: 100%; max-width: 440px; overflow: hidden; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #eef2f5; color: #333; padding: 15px; display: flex; justify-content: center; align-items: center; min-height: 100vh; flex-direction: column; }
+        .app-container { background: #fff; padding: 20px; border-radius: 20px; box-shadow: 0 8px 25px rgba(0,0,0,0.12); width: 100%; max-width: 440px; overflow: hidden; }
         
         /* Banner Header */
-        .hero-banner { text-align: center; background: linear-gradient(135deg, #0b874b, #16a085); color: white; padding: 16px 12px; border-radius: 16px; margin-bottom: 12px; }
-        .hero-banner h1 { font-size: 22px; font-weight: 800; letter-spacing: 0.5px; margin-bottom: 2px; }
-        .hero-banner h1 span { font-size: 15px; color: #f1c40f; font-style: italic; }
-        .hero-banner p { font-size: 12px; opacity: 0.95; font-weight: 500; }
+        .hero-banner { text-align: center; background: linear-gradient(135deg, #0b874b, #16a085); color: white; padding: 18px 15px; border-radius: 16px; margin-bottom: 15px; }
+        .hero-banner h1 { font-size: 24px; font-weight: 800; letter-spacing: 0.5px; margin-bottom: 4px; }
+        .hero-banner h1 span { font-size: 16px; color: #f1c40f; font-style: italic; }
+        .hero-banner p { font-size: 13px; opacity: 0.95; font-weight: 500; }
 
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; background: #27ae60; color: white; padding: 8px 12px; border-radius: 10px; }
-        .stats { font-size: 12px; font-weight: bold; }
-        .free-badge { background: #f1c40f; color: #000; padding: 2px 6px; border-radius: 6px; font-size: 10px; font-weight: bold; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; background: #27ae60; color: white; padding: 10px 15px; border-radius: 10px; }
+        .stats { font-size: 13px; font-weight: bold; }
+        .free-badge { background: #f1c40f; color: #000; padding: 3px 8px; border-radius: 6px; font-size: 11px; font-weight: bold; }
 
         /* Feature Grid System */
         .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px; }
         .feature-item { background: #f8f9fa; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 5px; text-align: center; cursor: pointer; transition: all 0.2s ease; }
-        .feature-item:active { transform: scale(0.96); background: #e8f8f5; }
-        .feature-icon { font-size: 22px; margin-bottom: 2px; display: block; }
+        .feature-item:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.08); background: #f0fdf4; border-color: #27ae60; }
+        .feature-icon { font-size: 22px; margin-bottom: 4px; display: block; }
         .feature-label { font-size: 11px; font-weight: bold; color: #2c3e50; line-height: 1.2; }
 
-        /* AI Teacher Banner */
+        /* Big AI Teacher Banner */
         .ai-hero-card {
             background: linear-gradient(135deg, #8e44ad, #3498db);
-            color: white; border-radius: 14px; padding: 12px 14px;
-            margin-bottom: 12px; cursor: pointer; transition: transform 0.2s;
+            color: white; border-radius: 14px; padding: 14px 16px;
+            margin-bottom: 15px; cursor: pointer; transition: transform 0.2s;
             box-shadow: 0 4px 12px rgba(142, 68, 173, 0.25); display: flex;
             align-items: center; justify-content: space-between;
         }
-        .ai-hero-card:active { transform: scale(0.98); }
-        .ai-hero-text h3 { font-size: 15px; font-weight: 800; display: flex; align-items: center; gap: 6px; }
-        .ai-hero-text p { font-size: 11px; opacity: 0.9; margin-top: 2px; }
-        .ai-hero-btn { background: #f1c40f; color: #2c3e50; padding: 5px 10px; border-radius: 20px; font-size: 10px; font-weight: bold; }
+        .ai-hero-card:hover { transform: scale(1.02); }
+        .ai-hero-text h3 { font-size: 16px; font-weight: 800; display: flex; align-items: center; gap: 6px; }
+        .ai-hero-text p { font-size: 11px; opacity: 0.9; margin-top: 3px; }
+        .ai-hero-btn { background: #f1c40f; color: #2c3e50; padding: 6px 12px; border-radius: 20px; font-size: 11px; font-weight: bold; }
 
         .translation-direction { 
             display: flex; align-items: center; justify-content: center; 
-            background: #e8f8f5; padding: 8px; border-radius: 12px; 
-            margin-bottom: 12px; border: 1px solid #a3e4d7; gap: 6px; width: 100%;
+            background: #e8f8f5; padding: 10px; border-radius: 12px; 
+            margin-bottom: 15px; border: 1px solid #a3e4d7; gap: 8px; width: 100%;
         }
         .lang-select-box { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; min-width: 0; }
-        .lang-select-box label { font-size: 10px; font-weight: bold; color: #16a085; margin-bottom: 2px; text-align: center; white-space: nowrap; }
-        .lang-select { width: 100%; padding: 6px 2px; border-radius: 6px; border: 1px solid #16a085; font-size: 11px; font-weight: bold; outline: none; background: white; cursor: pointer; text-align: center; text-align-last: center; }
-        .swap-btn { background: #16a085; color: white; border: none; border-radius: 50%; width: 30px; height: 30px; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; margin-top: 12px; flex-shrink: 0; }
-        .swap-btn:active { transform: rotate(180deg); }
+        .lang-select-box label { font-size: 11px; font-weight: bold; color: #16a085; margin-bottom: 4px; text-align: center; white-space: nowrap; }
+        .lang-select { width: 100%; padding: 6px 4px; border-radius: 6px; border: 1px solid #16a085; font-size: 12px; font-weight: bold; outline: none; background: white; cursor: pointer; text-align: center; text-align-last: center; }
+        .swap-btn { background: #16a085; color: white; border: none; border-radius: 50%; width: 32px; height: 32px; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; margin-top: 14px; flex-shrink: 0; }
 
-        .tabs { display: flex; gap: 6px; margin-bottom: 12px; }
-        .tab-btn { flex: 1; padding: 8px 2px; border: none; background: #e0e0e0; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.3s; font-size: 11px; text-align: center; }
+        .tabs { display: flex; gap: 6px; margin-bottom: 15px; }
+        .tab-btn { flex: 1; padding: 10px 4px; border: none; background: #e0e0e0; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.3s; font-size: 11px; text-align: center; }
         .tab-btn.active { background: #27ae60; color: white; }
         .section { display: none; }
         .section.active { display: block; }
         
-        .search-container { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+        .search-container { display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px; }
         .search-input-group { display: flex; gap: 6px; align-items: center; }
-        input[type="text"] { flex: 1; padding: 10px; font-size: 13px; border: 2px solid #ddd; border-radius: 8px; outline: none; transition: border-color 0.2s; }
-        input[type="text"]:focus { border-color: #27ae60; }
+        input { flex: 1; padding: 10px; font-size: 13px; border: 2px solid #ddd; border-radius: 8px; outline: none; }
         
-        .icon-btn { background: #f0f0f0; border: 1px solid #ccc; padding: 8px 10px; border-radius: 8px; cursor: pointer; font-size: 12px; display: flex; align-items: center; justify-content: center; gap: 4px; font-weight: bold; }
-        .icon-btn:active { background: #d0d0d0; }
+        .icon-btn { background: #f0f0f0; border: 1px solid #ccc; padding: 8px 10px; border-radius: 8px; cursor: pointer; font-size: 13px; display: flex; align-items: center; justify-content: center; gap: 4px; font-weight: bold; }
+        .icon-btn:hover { background: #e0e0e0; }
 
         button.action-btn { background: #27ae60; color: white; border: none; padding: 10px 12px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 13px; }
-        button.action-btn:active { opacity: 0.9; }
-        .speak-btn { background: #e74c3c; color: white; border: none; padding: 4px 8px; border-radius: 50%; cursor: pointer; font-size: 11px; margin-left: 6px; display: inline-flex; align-items: center; justify-content: center; }
+        .speak-btn, .copy-btn { background: #3498db; color: white; border: none; padding: 4px 8px; border-radius: 6px; cursor: pointer; font-size: 11px; margin-left: 6px; display: inline-flex; align-items: center; justify-content: center; gap: 3px; }
+        .speak-btn { background: #e74c3c; border-radius: 50%; }
 
-        .result-card { background: #f9f9f9; padding: 12px; border-radius: 10px; border-left: 4px solid #27ae60; min-height: 70px; margin-bottom: 12px; line-height: 1.5; }
+        .result-card { background: #f9f9f9; padding: 15px; border-radius: 10px; border-left: 4px solid #27ae60; min-height: 80px; margin-bottom: 15px; line-height: 1.6; }
         
         /* AI Explanation Box */
         .ai-explain-box { background: #f4ecf7; border: 1px solid #9b59b6; border-radius: 8px; padding: 10px; margin-top: 10px; font-size: 12px; }
-        .ai-explain-title { font-weight: bold; color: #8e44ad; font-size: 12px; margin-bottom: 4px; display: flex; align-items: center; gap: 4px; }
+        .ai-explain-title { font-weight: bold; color: #8e44ad; font-size: 13px; margin-bottom: 4px; display: flex; align-items: center; gap: 4px; }
 
         /* Step-by-Step Learning & Quiz Styles */
-        .step-header { background: #e8f8f5; border: 1px solid #27ae60; padding: 8px; border-radius: 8px; font-weight: bold; color: #16a085; text-align: center; margin-bottom: 10px; font-size: 12px; }
-        .word-card-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
-        .word-card { background: #ffffff; border: 1px solid #dcdde1; border-left: 4px solid #3498db; border-radius: 8px; padding: 8px 10px; display: flex; justify-content: space-between; align-items: center; }
-        .word-card-title { font-size: 13px; font-weight: bold; color: #2c3e50; }
-        .word-card-sub { font-size: 11px; color: #27ae60; font-weight: 600; margin-top: 2px; }
+        .step-header { background: #e8f8f5; border: 1px solid #27ae60; padding: 8px 12px; border-radius: 10px; font-weight: bold; color: #16a085; text-align: center; margin-bottom: 12px; font-size: 12px; }
+        .word-card-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px; }
+        .word-card { background: #ffffff; border: 1px solid #dcdde1; border-left: 4px solid #3498db; border-radius: 8px; padding: 10px 12px; display: flex; justify-content: space-between; align-items: center; }
+        .word-card-title { font-size: 14px; font-weight: bold; color: #2c3e50; }
+        .word-card-sub { font-size: 12px; color: #27ae60; font-weight: 600; margin-top: 2px; }
 
-        .quiz-card { background: #fff9c4; padding: 12px; border-radius: 10px; margin-bottom: 12px; text-align: center; border: 1px solid #fbc02d; }
+        .quiz-card { background: #fff9c4; padding: 15px; border-radius: 10px; margin-bottom: 15px; text-align: center; border: 1px solid #fbc02d; }
         .options-grid { display: grid; gap: 8px; }
-        .opt-btn { flex: 1; padding: 10px; background: white; border: 2px solid #fbc02d; border-radius: 8px; cursor: pointer; font-size: 13px; text-align: center; font-weight: bold; color: #333; }
-        .opt-btn:active { background: #fff59d; }
+        .opt-btn { flex: 1; padding: 10px; background: white; border: 2px solid #fbc02d; border-radius: 8px; cursor: pointer; font-size: 14px; text-align: center; font-weight: bold; color: #333; }
 
         /* AI Speaking Practice UI */
-        .teacher-box { background: #eef9ff; border: 1px solid #3498db; border-radius: 12px; padding: 12px; text-align: center; margin-bottom: 12px; }
+        .teacher-box { background: #eef9ff; border: 1px solid #3498db; border-radius: 12px; padding: 15px; text-align: center; margin-bottom: 15px; }
         .score-pill-group { display: flex; justify-content: space-around; margin-top: 10px; }
-        .score-pill { background: #fff; border: 1px solid #3498db; border-radius: 12px; padding: 4px 8px; font-size: 10px; font-weight: bold; color: #2980b9; }
+        .score-pill { background: #fff; border: 1px solid #3498db; border-radius: 12px; padding: 6px 10px; font-size: 11px; font-weight: bold; color: #2980b9; }
 
-        .ad-container { width: 100%; text-align: center; margin: 8px 0; min-height: 50px; background: #f1f1f1; border: 1px dashed #ccc; border-radius: 8px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-        .footer-badge { display: flex; justify-content: space-around; align-items: center; background: #0b874b; color: white; padding: 8px; border-radius: 10px; font-size: 10px; font-weight: bold; margin-top: 8px; }
+        .ad-container { width: 100%; text-align: center; margin: 10px 0; min-height: 50px; background: #f1f1f1; border: 1px dashed #ccc; border-radius: 8px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .footer-badge { display: flex; justify-content: space-around; align-items: center; background: #0b874b; color: white; padding: 8px; border-radius: 10px; font-size: 11px; font-weight: bold; margin-top: 10px; }
         
         .mic-guide-box { background: #fff3cd; border: 1px solid #ffe8a1; color: #856404; padding: 8px 10px; border-radius: 8px; font-size: 11px; margin-bottom: 10px; text-align: left; line-height: 1.4; display: none; }
+        
+        .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); color: white; padding: 8px 16px; border-radius: 20px; font-size: 12px; display: none; z-index: 1000; }
     </style>
 </head>
 <body>
 
 <div class="app-container">
+
+    <!-- Toast Message for Copy Notification -->
+    <div id="toast" class="toast">অনুবাদ কপি করা হয়েছে! 📋</div>
 
     <!-- Top Header Banner -->
     <div class="hero-banner">
@@ -136,11 +138,11 @@
         <div class="stats"><span class="free-badge">🎁 100% FREE UNLOCKED</span></div>
     </div>
 
-    <!-- Dynamic Permission & Microphone Alert Guide -->
+    <!-- Permission Guide Alert Box -->
     <div id="micGuide" class="mic-guide-box">
-        <strong>⚠️ মাইক্রোফোনের অনুমতি প্রয়োজন!</strong><br>
-        ১. পপ-আপ মেসেজে <b>Allow</b> বাটনে ট্যাপ করুন।<br>
-        ২. অনুমতি না চাইলে ফোনের <i>Settings ➔ Apps ➔ REVE AI ➔ Permissions</i> এ গিয়ে Microphone <b>Allow</b> করে দিন।
+        <strong>⚠️ ভয়েস কাজ করছে না?</strong><br>
+        ১. ফোনের <i>Settings ➔ Apps ➔ REVE AI ➔ Permissions</i> এ গিয়ে Microphone <b>Allow</b> করুন।<br>
+        ২. অ্যাপে ইন্টারনেট কানেকশন চালু আছে কি না নিশ্চিত করুন।
     </div>
 
     <!-- Quick Features Grid Icons -->
@@ -159,7 +161,7 @@
         </div>
     </div>
 
-    <!-- AI Teacher Card -->
+    <!-- Big Prominent AI Teacher Card -->
     <div class="ai-hero-card" onclick="switchTab('teacher')">
         <div class="ai-hero-text">
             <h3>🤖 AI ENGLISH TEACHER</h3>
@@ -227,17 +229,17 @@
     <!-- SECTION 2: AI TEACHER & SPEAKING PRACTICE -->
     <div id="teacherSection" class="section">
         <div class="teacher-box">
-            <h3 style="color: #2c3e50; font-size: 14px; margin-bottom: 4px;">👨‍🏫 AI Speaking Practice</h3>
-            <p style="font-size: 11px; color: #555; margin-bottom: 8px;">AI-এর প্রশ্নের ইংরেজিতে উত্তর দিয়ে স্পিকিং স্কিল যাচাই করুন:</p>
+            <h3 style="color: #2c3e50; font-size: 15px; margin-bottom: 6px;">👨‍🏫 AI Speaking Practice</h3>
+            <p style="font-size: 12px; color: #555; margin-bottom: 10px;">AI-এর প্রশ্নের ইংরেজিতে উত্তর দিয়ে স্পিকিং স্কিল যাচাই করুন:</p>
             
-            <div style="background: #fff; padding: 10px; border-radius: 8px; border: 1px solid #bcd; margin-bottom: 8px;">
-                <span style="font-size: 10px; font-weight: bold; color: #e67e22; display: block; margin-bottom: 2px;">AI Question:</span>
-                <p id="aiQuestionText" style="font-size: 13px; font-weight: bold; color: #2c3e50;">Where do you live and what do you do?</p>
-                <button class="speak-btn" style="margin-top: 4px;" onclick="speakText(document.getElementById('aiQuestionText').innerText, 'en-US')">🔊 প্রশ্ন শুনুন</button>
+            <div style="background: #fff; padding: 12px; border-radius: 8px; border: 1px solid #bcd; margin-bottom: 10px;">
+                <span style="font-size: 11px; font-weight: bold; color: #e67e22; display: block; margin-bottom: 4px;">AI Question:</span>
+                <p id="aiQuestionText" style="font-size: 14px; font-weight: bold; color: #2c3e50;">Where do you live and what do you do?</p>
+                <button class="speak-btn" style="margin-top: 6px;" onclick="speakText(document.getElementById('aiQuestionText').innerText, 'en-US')">🔊 প্রশ্ন শুনুন</button>
             </div>
 
             <button id="speakAnswerBtn" class="action-btn" style="width: 100%; background: #e67e22;" onclick="startSpeakingAnswer()">🎙️ Tap & Speak Answer</button>
-            <p id="userSpeakingResult" style="font-size: 11px; color: #333; margin-top: 6px; font-style: italic;"></p>
+            <p id="userSpeakingResult" style="font-size: 12px; color: #333; margin-top: 8px; font-style: italic;"></p>
 
             <div id="aiScoreBox" style="display: none;" class="score-pill-group">
                 <div class="score-pill">Grammar: <span id="scoreGrammar">10/10</span></div>
@@ -245,20 +247,20 @@
                 <div class="score-pill">Fluency: <span id="scoreFluency">9/10</span></div>
             </div>
             
-            <button class="action-btn" style="width: 100%; margin-top: 10px; background: #3498db;" onclick="loadNextAiQuestion()">Next Question ➔</button>
+            <button class="action-btn" style="width: 100%; margin-top: 12px; background: #3498db;" onclick="loadNextAiQuestion()">Next Question ➔</button>
         </div>
     </div>
 
     <!-- SECTION 3: STEP-BY-STEP QUIZ -->
     <div id="quizSection" class="section">
-        <div style="background: #eef9f1; border: 1px solid #27ae60; border-radius: 10px; padding: 8px; margin-bottom: 10px; text-align: center;">
-            <h4 style="color: #27ae60; font-size: 12px;">🔥 আজকের AI Practice</h4>
-            <p style="font-size: 10px; color: #555;">🗣️ Speaking (5) • 📚 Vocabulary (10) • 📝 Grammar (5)</p>
+        <div style="background: #eef9f1; border: 1px solid #27ae60; border-radius: 10px; padding: 10px; margin-bottom: 12px; text-align: center;">
+            <h4 style="color: #27ae60; font-size: 13px;">🔥 আজকের AI Practice</h4>
+            <p style="font-size: 11px; color: #555;">🗣️ Speaking (5) • 📚 Vocabulary (10) • 📝 Grammar (5)</p>
         </div>
 
-        <div style="margin-bottom: 10px;">
-            <label for="categorySelect" style="font-size: 10px; font-weight: bold; color: #16a085;">বিষয়বস্তু বেছে নিন:</label>
-            <select id="categorySelect" class="lang-select" style="width: 100%; margin-top: 2px;" onchange="initStepLearning()">
+        <div style="margin-bottom: 12px;">
+            <label for="categorySelect" style="font-size: 11px; font-weight: bold; color: #16a085;">বিষয়বস্তু বেছে নিন:</label>
+            <select id="categorySelect" class="lang-select" style="width: 100%; margin-top: 4px;" onchange="initStepLearning()">
                 <option value="All">সকল বিষয় (All Categories)</option>
                 <option value="Home (বাসাবাড়ি)">বাসাবাড়ি (Home)</option>
                 <option value="Workspace (কর্মক্ষেত্র)">কর্মক্ষেত্র (Workspace)</option>
@@ -277,14 +279,14 @@
 
         <div id="quizContainer" style="display: none;">
             <div class="quiz-card">
-                <span id="quizQuestionEng" style="font-size: 10px; color: #795548; font-weight: bold; display: block; margin-bottom: 2px;">Meaning Check</span>
+                <span id="quizQuestionEng" style="font-size: 11px; color: #795548; font-weight: bold; display: block; margin-bottom: 4px;">Meaning Check</span>
                 <div style="display: flex; align-items: center; justify-content: center;">
-                    <p id="quizQuestion" style="font-weight: bold; font-size: 15px; margin: 0; color: #2c3e50;">লোডিং...</p>
+                    <p id="quizQuestion" style="font-weight: bold; font-size: 16px; margin: 0; color: #2c3e50;">লোডিং...</p>
                     <button class="speak-btn" onclick="speakCurrentQuestion()">🔊</button>
                 </div>
             </div>
             <div class="options-grid" id="optionsContainer"></div>
-            <p id="quizFeedback" style="text-align: center; margin-top: 8px; font-weight: bold; font-size: 12px;"></p>
+            <p id="quizFeedback" style="text-align: center; margin-top: 10px; font-weight: bold; font-size: 13px;"></p>
         </div>
     </div>
 
@@ -353,31 +355,6 @@
         }
     }
 
-    /* 🔑 EXPLICIT MICROPHONE PERMISSION REQUEST FOR ANDROID WEBVIEW */
-    async function checkAndRequestMicPermission() {
-        const guideBox = document.getElementById('micGuide');
-        guideBox.style.display = 'none';
-
-        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-            try {
-                // Triggers native WebView / Android OS Permission Dialog prompt
-                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                // Stop audio tracks immediately after permission check
-                stream.getTracks().forEach(track => track.stop());
-                return true;
-            } catch (err) {
-                console.error("Microphone Permission Denied or Failed:", err);
-                guideBox.style.display = 'block';
-                alert("⚠️ মাইক্রোফোনের অনুমিত পাওয়া যায়নি! অনুগ্রহ করে অ্যাপ সেটিংসে গিয়ে অনুমতি দিন।");
-                return false;
-            }
-        } else {
-            guideBox.style.display = 'block';
-            alert("⚠️ আপনার ডিভাইসে বা ব্রাউজারে মাইক্রোফোন সার্ভিস পাওয়া যায়নি।");
-            return false;
-        }
-    }
-
     function swapLanguages() {
         const sourceSelect = document.getElementById('sourceLang');
         const targetSelect = document.getElementById('targetLang');
@@ -389,23 +366,59 @@
     }
 
     function onLanguageChange() {
-        document.getElementById('resultContainer').innerHTML = '<p style="color: #888; text-align: center; font-size: 12px;">ভাষা পরিবর্তন করা হয়েছে। আবার খুঁজুন!</p>';
+        document.getElementById('resultContainer').innerHTML = '<p style="color: #888; text-align: center; font-size: 13px;">ভাষা পরিবর্তন করা হয়েছে। আবার খুঁজুন!</p>';
     }
 
-    /* 🔊 TEXT TO SPEECH (WebView Safe Engine) */
+    /* 📋 COPY TEXT FUNCTION */
+    function copyToClipboard(text) {
+        if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(text).then(() => {
+                showToast();
+            }).catch(err => {
+                fallbackCopyTextToClipboard(text);
+            });
+        } else {
+            fallbackCopyTextToClipboard(text);
+        }
+    }
+
+    function fallbackCopyTextToClipboard(text) {
+        const textArea = document.createElement("textarea");
+        textArea.value = text;
+        textArea.style.position = "fixed"; 
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        try {
+            document.execCommand('copy');
+            showToast();
+        } catch (err) {
+            alert('কপি করা সম্ভব হয়নি!');
+        }
+        document.body.removeChild(textArea);
+    }
+
+    function showToast() {
+        const toast = document.getElementById("toast");
+        toast.style.display = "block";
+        setTimeout(() => {
+            toast.style.display = "none";
+        }, 2000);
+    }
+
+    /* 🔊 TEXT TO SPEECH (APK WebView-Safe Version) */
     function speakText(text, langCode = 'en-US') {
         if (!('speechSynthesis' in window)) {
             alert("⚠️ আপনার ডিভাইসে সাউন্ড আউটপুট পাওয়া যায়নি।");
             return;
         }
 
-        window.speechSynthesis.cancel();
+        window.speechSynthesis.cancel(); // রিসেট অডিও
 
         const utterance = new SpeechSynthesisUtterance(text);
         utterance.lang = langCode;
         utterance.rate = 0.85;
 
-        // Force resume engine state for Android WebViews
         window.speechSynthesis.resume();
         window.speechSynthesis.speak(utterance);
     }
@@ -418,92 +431,86 @@
         document.getElementById('aiScoreBox').style.display = 'none';
     }
 
-    /* 🎙️ SPEECH TO TEXT WITH PERMISSION CHECK */
-    async function startSpeakingAnswer() {
-        const hasPermission = await checkAndRequestMicPermission();
-        if (!hasPermission) return;
+    /* 🎙️ SPEECH TO TEXT WITH RUNTIME PERMISSION */
+    function startSpeakingAnswer() {
+        requestMicPermissionThen(() => {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-
-        if (!SpeechRecognition) {
-            alert("⚠️ অ্যান্ড্রয়েড স্পিচ সার্ভিস রেডি নেই। Google App আপডেট আছে কি না পরীক্ষা করুন।");
-            return;
-        }
-
-        try {
-            const recognition = new SpeechRecognition();
-            recognition.lang = 'en-US';
-            recognition.continuous = false;
-            recognition.interimResults = false;
-
-            const speakBtn = document.getElementById('speakAnswerBtn');
-            speakBtn.innerText = "🎙️ শুনছি... এখন বলুন...";
-            speakBtn.style.background = "#e74c3c";
-
-            recognition.start();
-
-            recognition.onresult = function(event) {
-                speakBtn.innerText = "🎙️ Tap & Speak Answer";
-                speakBtn.style.background = "#e67e22";
-
-                const transcript = event.results[0][0].transcript;
-                document.getElementById('userSpeakingResult').innerText = `You said: "${transcript}"`;
-
-                document.getElementById('aiScoreBox').style.display = 'flex';
-                document.getElementById('scoreGrammar').innerText = `${Math.floor(Math.random() * 3) + 8}/10`;
-                document.getElementById('scorePron').innerText = `${Math.floor(Math.random() * 3) + 7}/10`;
-                document.getElementById('scoreFluency').innerText = `${Math.floor(Math.random() * 3) + 8}/10`;
-            };
-
-            recognition.onerror = function(event) {
-                speakBtn.innerText = "🎙️ Tap & Speak Answer";
-                speakBtn.style.background = "#e67e22";
+            if (!SpeechRecognition) {
                 document.getElementById('micGuide').style.display = 'block';
+                alert("⚠️ অ্যান্ড্রয়েড স্পিচ সার্ভিস অন করা নেই বা সাপোর্ট করছে না। সেটিংস চেক করুন।");
+                return;
+            }
 
-                if (event.error === 'not-allowed') {
-                    alert("⚠️ মাইক্রোফোনের পারমিশন দেওয়া হয়নি। সেটিংসে গিয়ে Allow দিন।");
-                } else if (event.error === 'no-speech') {
-                    alert("কোনো শব্দ পাওয়া যায়নি। আবার বলুন।");
-                } else {
-                    alert("ভয়েস সিস্টেমে সমস্যা দেখা দিয়েছে। ইন্টারনেট চালু আছে কি না পরীক্ষা করুন।");
-                }
-            };
+            try {
+                const recognition = new SpeechRecognition();
+                recognition.lang = 'en-US';
+                recognition.continuous = false;
+                recognition.interimResults = false;
 
-            recognition.onend = function() {
-                speakBtn.innerText = "🎙️ Tap & Speak Answer";
-                speakBtn.style.background = "#e67e22";
-            };
+                const speakBtn = document.getElementById('speakAnswerBtn');
+                speakBtn.innerText = "🎙️ শুনছি... এখন বলুন...";
+                speakBtn.style.background = "#e74c3c";
 
-        } catch (e) {
-            console.error(e);
-            alert("ভয়েস সার্ভিস চালু করতে সমস্যা হয়েছে।");
+                recognition.start();
+
+                recognition.onresult = function(event) {
+                    speakBtn.innerText = "🎙️ Tap & Speak Answer";
+                    speakBtn.style.background = "#e67e22";
+
+                    const transcript = event.results[0][0].transcript;
+                    document.getElementById('userSpeakingResult').innerText = `You said: "${transcript}"`;
+
+                    document.getElementById('aiScoreBox').style.display = 'flex';
+                    document.getElementById('scoreGrammar').innerText = `${Math.floor(Math.random() * 3) + 8}/10`;
+                    document.getElementById('scorePron').innerText = `${Math.floor(Math.random() * 3) + 7}/10`;
+                    document.getElementById('scoreFluency').innerText = `${Math.floor(Math.random() * 3) + 8}/10`;
+                };
+
+                recognition.onerror = function(event) {
+                    speakBtn.innerText = "🎙️ Tap & Speak Answer";
+                    speakBtn.style.background = "#e67e22";
+                    document.getElementById('micGuide').style.display = 'block';
+
+                    if (event.error === 'not-allowed') {
+                        alert("⚠️ মাইক্রোফোনের পারমিশন দেওয়া হয়নি। ফোনের সেটিংসে গিয়ে পারমিশন দিন।");
+                    } else if (event.error === 'no-speech') {
+                        alert("কোনো আওয়াজ পাওয়া যায়নি। আবার বলুন।");
+                    } else {
+                        alert("ভয়েস রেকর্ডিংয়ে সমস্যা হয়েছে। ইন্টারনেট চালু আছে কি না পরীক্ষা করুন।");
+                    }
+                };
+
+                recognition.onend = function() {
+                    speakBtn.innerText = "🎙️ Tap & Speak Answer";
+                    speakBtn.style.background = "#e67e22";
+                };
+
+            } catch (e) {
+                console.error(e);
+                document.getElementById('micGuide').style.display = 'block';
+                alert("ভয়েস সার্ভিস চালু করতে সমস্যা হয়েছে।");
+            }
+        });
+    }
+
+    function requestMicPermissionThen(callback) {
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            navigator.mediaDevices.getUserMedia({ audio: true })
+                .then(function(stream) {
+                    stream.getTracks().forEach(track => track.stop());
+                    callback();
+                })
+                .catch(function(err) {
+                    document.getElementById('micGuide').style.display = 'block';
+                    alert("মাইক্রোফোনের অনুমতি প্রয়োজন। অনুগ্রহ করে পারমিশন Allow করুন।");
+                });
+        } else {
+            callback();
         }
     }
 
-    async function startVoiceSearch() {
-        const hasPermission = await checkAndRequestMicPermission();
-        if (!hasPermission) return;
-
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        if (!SpeechRecognition) return alert("ভয়েস সাপোর্ট পাওয়া যায়নি!");
-
-        const recognition = new SpeechRecognition();
-        recognition.lang = document.getElementById('sourceLang').value === 'bn' ? 'bn-BD' : 'en-US';
-        
-        recognition.start();
-
-        recognition.onresult = function(e) {
-            document.getElementById('wordInput').value = e.results[0][0].transcript;
-            searchWord();
-        };
-
-        recognition.onerror = function(e) {
-            console.error(e);
-            document.getElementById('micGuide').style.display = 'block';
-        };
-    }
-
-    /* DICTIONARY & AI EXPLANATION FUNCTIONS */
+    /* DICTIONARY & AI EXPLANATION FUNCTIONS WITH COPY OPTION */
     async function searchWord() {
         const textInput = document.getElementById('wordInput').value.trim();
         const resultContainer = document.getElementById('resultContainer');
@@ -522,13 +529,18 @@
 
         if (translationRes) {
             const safeText = textInput.replace(/'/g, "\\'");
+            const safeTranslated = translationRes.translatedText.replace(/'/g, "\\'");
             resultContainer.innerHTML = `
-                <div style="font-size: 14px; font-weight: bold; color: #2c3e50; margin-bottom: 4px;">
+                <div style="font-size: 15px; font-weight: bold; color: #2c3e50; margin-bottom: 6px; display:flex; justify-content:space-between; align-items:center;">
                     <span><b>মূল:</b> ${textInput}</span>
-                    <button class="speak-btn" onclick="speakText('${safeText}', '${sourceLang}')">🔊</button>
+                    <div>
+                        <button class="copy-btn" onclick="copyToClipboard('${safeText}')">📋 কপি</button>
+                        <button class="speak-btn" onclick="speakText('${safeText}', '${sourceLang}')">🔊</button>
+                    </div>
                 </div>
-                <div style="font-size: 15px; color: #27ae60; font-weight: bold; margin-bottom: 8px;">
-                    <b>অনুবাদ:</b> ${translationRes.translatedText}
+                <div style="font-size: 16px; color: #27ae60; font-weight: bold; margin-bottom: 10px; display:flex; justify-content:space-between; align-items:center;">
+                    <span><b>অনুবাদ:</b> ${translationRes.translatedText}</span>
+                    <button class="copy-btn" style="background:#27ae60;" onclick="copyToClipboard('${safeTranslated}')">📋 কপি</button>
                 </div>
                 <button class="action-btn" style="width:100%; background: #8e44ad; font-size: 11px;" onclick="getAiExplanation('${safeText}')">🤖 Ask AI Explanation About This Word</button>
                 <div id="aiExplainContainer"></div>
@@ -538,7 +550,7 @@
 
     async function getAiExplanation(word) {
         const container = document.getElementById('aiExplainContainer');
-        container.innerHTML = '<p style="font-size:11px; color:#8e44ad; text-align:center; margin-top:6px;">🤖 AI তথ্য তৈরি করছে...</p>';
+        container.innerHTML = '<p style="font-size:11px; color:#8e44ad; text-align:center; margin-top:8px;">🤖 AI তথ্য তৈরি করছে...</p>';
 
         setTimeout(() => {
             container.innerHTML = `
@@ -549,7 +561,7 @@
                     <p><b>Parts of Speech:</b> Noun / Verb</p>
                 </div>
             `;
-        }, 800);
+        }, 1000);
     }
 
     async function fetchTranslation(text, sourceLang, targetLang) {
@@ -564,7 +576,7 @@
         return null;
     }
 
-    /* OCR IMAGE TRANSLATOR WITH AI ANALYSIS */
+    /* OCR IMAGE TRANSLATOR WITH COPY OPTION */
     async function processImageSearch(event) {
         const file = event.target.files[0];
         const resultContainer = document.getElementById('resultContainer');
@@ -582,13 +594,22 @@
             if (cleanedText) {
                 document.getElementById('wordInput').value = cleanedText;
                 const trans = await fetchTranslation(cleanedText, 'en', 'bn');
+                const safeCleaned = cleanedText.replace(/'/g, "\\'");
+                const safeTrans = trans ? trans.translatedText.replace(/'/g, "\\'") : '';
                 
                 resultContainer.innerHTML = `
-                    <p style="font-size:11px; font-weight:bold; color:#2c3e50;">📷 Scanned Text:</p>
-                    <p style="font-size:12px; color:#555; margin-bottom:6px;">${cleanedText}</p>
-                    <p style="font-size:12px; font-weight:bold; color:#27ae60;"><b>বাংলা অনুবাদ:</b> ${trans ? trans.translatedText : ''}</p>
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <p style="font-size:12px; font-weight:bold; color:#2c3e50;">📷 Scanned Text:</p>
+                        <button class="copy-btn" onclick="copyToClipboard('${safeCleaned}')">📋 কপি</button>
+                    </div>
+                    <p style="font-size:13px; color:#555; margin-bottom:8px;">${cleanedText}</p>
                     
-                    <div class="ai-explain-box" style="margin-top:8px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <p style="font-size:12px; font-weight:bold; color:#27ae60;"><b>বাংলা অনুবাদ:</b> ${trans ? trans.translatedText : ''}</p>
+                        <button class="copy-btn" style="background:#27ae60;" onclick="copyToClipboard('${safeTrans}')">📋 কপি</button>
+                    </div>
+                    
+                    <div class="ai-explain-box" style="margin-top:10px;">
                         <div class="ai-explain-title">📌 Important Words (AI Analysis):</div>
                         <p>• <b>Submit:</b> জমা দেওয়া</p>
                         <p>• <b>Document:</b> কাগজপত্র</p>
@@ -602,7 +623,21 @@
         }
     }
 
-    /* STEP QUIZ & TAB SWITCHING LOGIC */
+    function startVoiceSearch() {
+        requestMicPermissionThen(() => {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SpeechRecognition) return alert("ভয়েস সাপোর্ট নেই!");
+            const recognition = new SpeechRecognition();
+            recognition.lang = 'en-US';
+            recognition.start();
+            recognition.onresult = function(e) {
+                document.getElementById('wordInput').value = e.results[0][0].transcript;
+                searchWord();
+            };
+        });
+    }
+
+    /* STEP QUIZ & TAB SWITCHING logic */
     function switchTab(tabName) {
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
@@ -627,10 +662,11 @@
         const wordCardList = document.getElementById('wordCardList');
         wordCardList.innerHTML = '';
 
-        const shuffled = [...wordDatabase].sort(() => Math.random() - 0.5).slice(0, 5);
+        const shuffled = [...wordDatabase].slice(0, 5);
         currentStepWords = shuffled;
 
         shuffled.forEach(item => {
+            const safeWord = item.word.replace(/'/g, "\\'");
             const card = document.createElement('div');
             card.className = 'word-card';
             card.innerHTML = `
@@ -638,7 +674,10 @@
                     <span class="word-card-title">${item.word}</span>
                     <span class="word-card-sub"> 👉 ${item.meaning}</span>
                 </div>
-                <button class="speak-btn" onclick="speakText('${item.word}')">🔊</button>
+                <div>
+                    <button class="copy-btn" onclick="copyToClipboard('${safeWord}')">📋</button>
+                    <button class="speak-btn" onclick="speakText('${safeWord}')">🔊</button>
+                </div>
             `;
             wordCardList.appendChild(card);
         });
@@ -685,3 +724,12 @@
             };
             container.appendChild(btn);
         });
+    }
+
+    function speakCurrentQuestion() {
+        speakText(currentQuizQuestions[currentQuizIndex].word);
+    }
+</script>
+
+</body>
+</html>
