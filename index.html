@@ -126,7 +126,7 @@
 
         button.action-btn { background: #27ae60; color: white; border: none; padding: 10px 12px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 13px; }
         .speak-btn, .copy-btn { background: #3498db; color: white; border: none; padding: 4px 8px; border-radius: 6px; cursor: pointer; font-size: 11px; margin-left: 6px; display: inline-flex; align-items: center; justify-content: center; gap: 3px; }
-        .speak-btn { background: #e74c3c; border-radius: 50%; }
+        .speak-btn { background: #e74c3c; border-radius: 50%; width: 28px; height: 28px; }
 
         .result-card { background: var(--result-bg); padding: 15px; border-radius: 10px; border-left: 4px solid #27ae60; min-height: 80px; margin-bottom: 15px; line-height: 1.6; color: var(--text-color); }
         
@@ -173,7 +173,7 @@
     <div class="hero-banner">
         <button class="theme-toggle-btn" onclick="toggleDarkMode()" id="themeToggleBtn" title="Dark Mode Switch">🌙</button>
         <h1>REVE AI <span>Apps</span></h1>
-        <p>AI দিয়ে সহজে ইংরেজি শিখুন ও IELTS প্রস্তুতি নিন</p>
+        <p>AI দিয়ে সহজে ইংরেজি শিখুন ও IELTS প্রস্তুতি নিন</p>
     </div>
 
     <!-- Top Banner Ad -->
@@ -234,9 +234,9 @@
         <div class="lang-select-box">
             <label for="sourceLang">থেকে (From):</label>
             <select id="sourceLang" class="lang-select">
-                <option value="en" selected>English</option>
+                <option value="auto" selected>🌐 Auto Detect</option>
+                <option value="en">English</option>
                 <option value="bn">Bangla (বাংলা)</option>
-                <option value="auto">🌐 Auto Detect</option>
             </select>
         </div>
 
@@ -245,8 +245,8 @@
         <div class="lang-select-box">
             <label for="targetLang">অনুবাদ (To):</label>
             <select id="targetLang" class="lang-select">
-                <option value="en">English</option>
                 <option value="bn" selected>Bangla (বাংলা)</option>
+                <option value="en">English</option>
             </select>
         </div>
     </div>
@@ -264,7 +264,7 @@
     <div id="dictSection" class="section active">
         <div class="search-container">
             <div class="search-input-group">
-                <input type="text" id="wordInput" placeholder="শব্দ বা বাক্য লিখুন (যেমন: Crucial বা Resilient)">
+                <input type="text" id="wordInput" placeholder="শব্দ বা বাক্য লিখুন (যেমন: Crucial বা AMI DHAKA JABO)" onkeypress="if(event.key==='Enter') searchWord()">
             </div>
             <div class="search-input-group">
                 <button id="micBtn" class="icon-btn" onclick="startVoiceSearch()">🎙️ কথা বলুন</button>
@@ -274,7 +274,7 @@
             </div>
         </div>
         <div id="resultContainer" class="result-card">
-            <p style="color: var(--subtext-color); text-align: center; font-size: 12px;">শব্দ লিখুন, উচ্চারণ, অর্থ এবং IELTS Usage দেখতে পাবেন</p>
+            <p style="color: var(--subtext-color); text-align: center; font-size: 12px;">শব্দ লিখুন, উচ্চারণ, সঠিক অর্থ এবং IELTS Usage দেখতে পাবেন</p>
         </div>
     </div>
 
@@ -319,7 +319,7 @@
     <div id="teacherSection" class="section">
         <div style="background: var(--card-bg); border: 1px solid #3498db; border-radius: 12px; padding: 15px; text-align: center;">
             <h3 style="color: var(--text-color); font-size: 15px; margin-bottom: 6px;">👨‍🏫 AI Speaking Practice</h3>
-            <p style="font-size: 12px; color: var(--subtext-color); margin-bottom: 10px;">AI-এর প্রশ্নের ইংরেজিতে উত্তর দিয়ে স্কিল যাচাই করুন:</p>
+            <p style="font-size: 12px; color: var(--subtext-color); margin-bottom: 10px;">AI-এর প্রশ্নের ইংরেজিতে উত্তর দিয়ে স্কিল যাচাই করুন:</p>
             
             <div style="background: var(--input-bg); padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 10px;">
                 <span style="font-size: 11px; font-weight: bold; color: #e67e22; display: block; margin-bottom: 4px;">AI Question:</span>
@@ -348,23 +348,23 @@
         </div>
 
         <div style="margin-bottom: 12px;">
-            <label for="categorySelect" style="font-size: 11px; font-weight: bold; color: #16a085;">বিষয়বস্তু বেছে নিন:</label>
+            <label for="categorySelect" style="font-size: 11px; font-weight: bold; color: #16a085;">বিষয়বস্তু বেছে নিন:</label>
             <select id="categorySelect" class="lang-select" style="width: 100%; margin-top: 4px;" onchange="initStepLearning()">
-                <option value="All">সকল বিষয় (All Categories)</option>
-                <option value="Home (বাসাবাড়ি)">বাসাবাড়ি (Home)</option>
+                <option value="All">সকল বিষয় (All Categories)</option>
+                <option value="Home (বাসাবাড়ি)">বাসাবাড়ি (Home)</option>
                 <option value="Workspace (কর্মক্ষেত্র)">কর্মক্ষেত্র (Workspace)</option>
                 <option value="Entertainment (বিনোদন)">বিনোদন (Entertainment)</option>
                 <option value="Shopping (কেনাকাটা)">কেনাকাটা (Shopping)</option>
             </select>
         </div>
 
-        <div class="step-header" id="stepHeader">📌 Step 1: কুইজ দেওয়ার আগে পড়া তৈরি করুন</div>
+        <div class="step-header" id="stepHeader">📌 Step 1: কুইজ দেওয়ার আগে পড়া তৈরি করুন</div>
 
         <div id="learningContainer">
             <div class="word-card-list" id="wordCardList">
                 <p style="text-align: center; color: var(--subtext-color);">লোডিং...</p>
             </div>
-            <button class="action-btn" style="width: 100%;" onclick="startStepQuiz()">পড়া শেষ! কুইজ পরীক্ষা শুরু করুন ➔</button>
+            <button class="action-btn" style="width: 100%;" onclick="startStepQuiz()">পড়া শেষ! কুইজ পরীক্ষা শুরু করুন ➔</button>
         </div>
 
         <div id="quizContainer" style="display: none;"></div>
@@ -382,7 +382,7 @@
     <!-- Bottom Feature Badges -->
     <div class="footer-badge">
         <span>✓ ১০০% ফ্রি AI শিক্ষা</span>
-        <span>• রিওয়ার্ড পয়েন্ট</span>
+        <span>• রিওয়ার্ড পয়েন্ট</span>
         <span>• সঠিক উচ্চারণ</span>
     </div>
 
@@ -402,35 +402,17 @@
     let currentAiQIndex = 0;
 
     let wordDatabase = [
-        {"category": "Home (বাসাবাড়ি)", "word": "Kitchen", "meaning": "রান্নাঘর"},
-        {"category": "Home (বাসাবাড়ি)", "word": "Furniture", "meaning": "আসবাবপত্র"},
-        {"category": "Home (বাসাবাড়ি)", "word": "Curtains", "meaning": "পর্দা"},
-        {"category": "Home (বাসাবাড়ি)", "word": "Blanket", "meaning": "কম্বল"},
+        {"category": "Home (বাসাবাড়ি)", "word": "Kitchen", "meaning": "রান্নাঘর"},
+        {"category": "Home (বাসাবাড়ি)", "word": "Furniture", "meaning": "আসবাবপত্র"},
+        {"category": "Home (বাসাবাড়ি)", "word": "Curtains", "meaning": "পর্দা"},
+        {"category": "Home (বাসাবাড়ি)", "word": "Blanket", "meaning": "কম্বল"},
         {"category": "Workspace (কর্মক্ষেত্র)", "word": "Manager", "meaning": "ব্যবস্থাপক"},
         {"category": "Workspace (কর্মক্ষেত্র)", "word": "Salary", "meaning": "বেতন"},
         {"category": "Entertainment (বিনোদন)", "word": "Music", "meaning": "গান/সঙ্গীত"},
-        {"category": "Shopping (কেনাকাটা)", "word": "Discount", "meaning": "ছাড়"}
-    ];
-
-    let grammarDatabase = [
-        { q: "She ___ to the market yesterday.", options: ["go", "went", "gone", "going"], correct: "went" },
-        { q: "I have been working here ___ 2020.", options: ["since", "for", "from", "at"], correct: "since" },
-        { q: "He is ___ honest man.", options: ["a", "an", "the", "no article"], correct: "an" }
-    ];
-
-    let speakingDatabase = [
-        { audioText: "How are you doing today?", title: "অডিও শুনে সঠিক অর্থটি বেছে নিন:", correct: "আজকে আপনার দিনটি কেমন যাচ্ছে?", options: ["আজকে আপনার দিনটি কেমন যাচ্ছে?", "আপনি কোথায় যাচ্ছেন?", "আপনার নাম কী?"] },
-        { audioText: "Could you help me please?", title: "অডিও শুনে সঠিক অর্থটি বেছে নিন:", correct: "আপনি কি আমাকে দয়া করে সাহায্য করতে পারেন?", options: ["আপনি কি আমাকে দয়া করে সাহায্য করতে পারেন?", "আপনি কখন আসবেন?", "আমি কাজ করছি।"] }
-    ];
-
-    const ieltsVocabList = [
-        { word: "Resilient", meaning: "সহনশীল / দ্রুত পুনরুদ্ধারক্ষম", example: "He is resilient in facing difficulties.", usage: "IELTS Speaking Part 1 / Writing Task 2", syn: "Flexible, Tough" },
-        { word: "Paramount", meaning: "সর্বোচ্চ / অত্যন্ত গুরুত্বপূর্ণ", example: "Education plays a paramount role in modern society.", usage: "IELTS Writing Task 2 Intro", syn: "Supreme, Vital" },
-        { word: "Substantial", meaning: "উল্লেখযোগ্য / প্রচুর", example: "There is a substantial increase in tourist numbers.", usage: "IELTS Writing Task 1 Chart Analysis", syn: "Significant, Considerable" }
+        {"category": "Shopping (কেনাকাটা)", "word": "Discount", "meaning": "ছাড়"}
     ];
 
     let currentStepWords = [];
-    let currentQuizQuestions = [];
     let currentQuizIndex = 0;
 
     function updatePointsUI() {
@@ -447,7 +429,7 @@
 
     function copyToClipboard(text) {
         navigator.clipboard.writeText(text);
-        showToast("কপি করা হয়েছে! 📋");
+        showToast("কপি করা হয়েছে! 📋");
     }
 
     function toggleDarkMode() {
@@ -505,7 +487,6 @@
     function swapLanguages() {
         const sourceSelect = document.getElementById('sourceLang');
         const targetSelect = document.getElementById('targetLang');
-        if (sourceSelect.value === 'auto') sourceSelect.value = 'en';
         const temp = sourceSelect.value;
         sourceSelect.value = targetSelect.value;
         targetSelect.value = temp;
@@ -522,6 +503,146 @@
 
     function shuffleArray(array) {
         return array.slice().sort(() => Math.random() - 0.5);
+    }
+
+    /* 🟢 REAL-TIME TRANSLATION ENGINE FOR DICTIONARY (Supports Banglish & Standard English/Bangla) */
+    async function searchWord() {
+        const inputField = document.getElementById('wordInput');
+        const query = inputField.value.trim();
+        const resultBox = document.getElementById('resultContainer');
+
+        if (!query) {
+            resultBox.innerHTML = `<p style="text-align: center; color: var(--subtext-color);">অনুগ্রহ করে কোনো শব্দ বা বাক্য লিখুন</p>`;
+            return;
+        }
+
+        resultBox.innerHTML = `<p style="text-align: center; color: var(--subtext-color);">AI দিয়ে খোঁজা হচ্ছে...</p>`;
+
+        try {
+            const sourceLang = document.getElementById('sourceLang').value;
+            const targetLang = document.getElementById('targetLang').value;
+
+            // Free translation API handling standard + auto detect/banglish
+            const apiUrl = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(query)}&langpair=${sourceLang === 'auto' ? 'autodetect' : sourceLang}|${targetLang}`;
+
+            const response = await fetch(apiUrl);
+            const data = await response.json();
+
+            if (data && data.responseData && data.responseData.translatedText) {
+                let translatedText = data.responseData.translatedText;
+
+                resultBox.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <h3 style="color: #27ae60; font-size: 16px;">${query}</h3>
+                        <button class="speak-btn" onclick="speakText('${query}', 'en-US')">🔊</button>
+                    </div>
+                    <p style="margin-top: 8px; font-weight: bold; font-size: 15px;">অর্থ: ${translatedText}</p>
+                    <hr style="margin: 10px 0; border: none; border-top: 1px solid var(--border-color);">
+                    <p style="font-size: 12px; color: var(--subtext-color);">🎯 <b>IELTS Usage:</b> Effective in Speaking & Task Writing</p>
+                    <button class="copy-btn" style="margin-top: 10px; padding: 6px 12px; background: #27ae60;" onclick="copyToClipboard('${query} - ${translatedText}')">📋 Copy Meaning</button>
+                `;
+            } else {
+                resultBox.innerHTML = `<p style="color: red; text-align: center;">অর্থ পাওয়া যায়নি। আবার চেষ্টা করুন।</p>`;
+            }
+        } catch (error) {
+            resultBox.innerHTML = `<p style="color: red; text-align: center;">নেটওয়ার্ক সমস্যা। আবার চেষ্টা করুন।</p>`;
+        }
+    }
+
+    /* Voice Recognition */
+    function startVoiceSearch() {
+        if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+            alert("আপনার ব্রাউজারে ভয়েস সার্চ সাপোর্ট করে না।");
+            return;
+        }
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        const recognition = new SpeechRecognition();
+        recognition.lang = 'en-US';
+        recognition.onstart = () => showToast("শুনছি... কথা বলুন 🎤");
+        recognition.onresult = (e) => {
+            document.getElementById('wordInput').value = e.results[0][0].transcript;
+            searchWord();
+        };
+        recognition.start();
+    }
+
+    /* OCR Image Reader */
+    function processImageSearch(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        const resultBox = document.getElementById('resultContainer');
+        resultBox.innerHTML = `<p style="text-align: center; color: var(--subtext-color);">ছবি থেকে লেখা পড়া হচ্ছে...</p>`;
+        
+        Tesseract.recognize(file, 'eng').then(({ data: { text } }) => {
+            document.getElementById('wordInput').value = text.trim();
+            searchWord();
+        }).catch(() => {
+            resultBox.innerHTML = `<p style="color: red; text-align: center;">ছবি স্পষ্ট নয়। আবার চেষ্টা করুন।</p>`;
+        });
+    }
+
+    /* IELTS Tools Display */
+    function openIeltsTool(tool) {
+        const display = document.getElementById('ieltsToolDisplay');
+        if(tool === 'speaking') {
+            display.innerHTML = `<h4>🗣️ IELTS Speaking Assistant</h4><p style="font-size:12px; margin-top:5px;">AI এর সাথে পার্ট ১, ২ ও ৩ টপিক নিয়ে প্র্যাকটিস করুন।</p>`;
+        } else if(tool === 'writing') {
+            display.innerHTML = `<h4>✍️ IELTS Writing Correction</h4><p style="font-size:12px; margin-top:5px;">Task 1 & Task 2 এর জন্য Essay লিখুন ও Band Score জেনে নিন।</p>`;
+        } else {
+            display.innerHTML = `<h4>🎯 IELTS AI Module</h4><p style="font-size:12px; margin-top:5px;">এই মডিউল সিলেক্ট করা হয়েছে। অনুশীলন শুরু করুন।</p>`;
+        }
+    }
+
+    /* AI Writer Logic */
+    async function processAiWriting(action) {
+        const text = document.getElementById('aiWriteInput').value.trim();
+        const resBox = document.getElementById('aiWritingResult');
+        if(!text) {
+            resBox.innerHTML = `<p style="text-align:center; color:red;">অনুগ্রহ করে একটি বাক্য লিখুন</p>`;
+            return;
+        }
+        resBox.innerHTML = `<p style="text-align:center; color:var(--subtext-color);">AI প্রসেসিং করছে...</p>`;
+
+        // API Translation and Grammar fix simulation
+        const apiUrl = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=autodetect|en`;
+        try {
+            const res = await fetch(apiUrl);
+            const data = await res.json();
+            const corrected = data.responseData.translatedText;
+
+            resBox.innerHTML = `
+                <p style="font-size:12px; color:#8e44ad; font-weight:bold;">✨ AI Result (${action.toUpperCase()}):</p>
+                <p style="font-size:14px; font-weight:bold; margin-top:4px;">${corrected}</p>
+                <button class="copy-btn" style="margin-top:8px; background:#8e44ad;" onclick="copyToClipboard('${corrected}')">📋 Copy Result</button>
+            `;
+        } catch(e) {
+            resBox.innerHTML = `<p style="color:red; text-align:center;">প্রসেস করতে সমস্যা হয়েছে।</p>`;
+        }
+    }
+
+    /* AI Teacher Speaking Practice */
+    function loadNextAiQuestion() {
+        currentAiQIndex = (currentAiQIndex + 1) % aiQuestionsList.length;
+        document.getElementById('aiQuestionText').innerText = aiQuestionsList[currentAiQIndex];
+        document.getElementById('userSpeakingResult').innerText = "";
+    }
+
+    function startSpeakingAnswer() {
+        if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+            alert("আপনার ব্রাউজারে ভয়েস সাপোর্ট নেই।");
+            return;
+        }
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        const recognition = new SpeechRecognition();
+        recognition.lang = 'en-US';
+        recognition.onstart = () => showToast("বলুন, AI শুনছে... 🎙️");
+        recognition.onresult = (e) => {
+            const userSaid = e.results[0][0].transcript;
+            document.getElementById('userSpeakingResult').innerText = `You said: "${userSaid}" (Great job! 🎉)`;
+            rewardPoints += 5;
+            updatePointsUI();
+        };
+        recognition.start();
     }
 
     /* STEP LEARNING & QUIZ SYSTEM */
@@ -543,12 +664,12 @@
         document.getElementById('currentStepLevel').innerText = `Step ${stepCount}`;
 
         if (currentPracticeMode === 'vocab') {
-            document.getElementById('stepHeader').innerText = `📌 Step ${stepCount}: কুইজ দেওয়ার আগে শব্দগুলো মুখস্থ করুন`;
+            document.getElementById('stepHeader').innerText = `📌 Step ${stepCount}: কুইজ দেওয়ার আগে শব্দগুলো মুখস্থ করুন`;
             let filtered = cat === 'All' ? wordDatabase : wordDatabase.filter(w => w.category === cat);
             currentStepWords = shuffleArray(filtered).slice(0, 3);
 
             if (currentStepWords.length === 0) {
-                container.innerHTML = `<p style="text-align:center; padding:10px;">এই ক্যাটাগরিতে কোনো শব্দ পাওয়া যায়নি।</p>`;
+                container.innerHTML = `<p style="text-align:center; padding:10px;">এই ক্যাটাগরিতে কোনো শব্দ পাওয়া যায়নি।</p>`;
                 return;
             }
 
@@ -558,359 +679,69 @@
                     <div class="word-card">
                         <div>
                             <div class="word-card-title">${w.word}</div>
-                            <div class="word-card-sub">${w.meaning}</div>
+                            <div class="word-card-sub">অর্থ: ${w.meaning}</div>
                         </div>
                         <button class="speak-btn" onclick="speakText('${w.word}', 'en-US')">🔊</button>
                     </div>
                 `;
             });
             container.innerHTML = html;
-        } else if (currentPracticeMode === 'grammar') {
-            document.getElementById('stepHeader').innerText = `📌 Step ${stepCount}: ব্যাকরণ নিয়মগুলি দেখুন`;
-            container.innerHTML = `<p style="font-size:12px; color:var(--text-color); text-align:center;">সঠিক উত্তর বাছাই করে আপনার ব্যাকরণ পরোক্ষ করুন। কুইজে এগিয়ে যান।</p>`;
-        } else if (currentPracticeMode === 'speaking') {
-            document.getElementById('stepHeader').innerText = `📌 Step ${stepCount}: স্পিকিং প্র্যাকটিস শুনুন`;
-            container.innerHTML = `<p style="font-size:12px; color:var(--text-color); text-align:center;">অডিও শুনে সঠিক অর্থ বাছাই করুন। টেস্ট নিতে প্রস্তুত থাকুন।</p>`;
+        } else {
+            container.innerHTML = `<p style="text-align:center; padding:10px;">অনুশীলন রেডি হচ্ছে...</p>`;
         }
     }
 
     function startStepQuiz() {
+        if(currentStepWords.length === 0) return;
         document.getElementById('learningContainer').style.display = 'none';
-        const qContainer = document.getElementById('quizContainer');
-        qContainer.style.display = 'block';
+        const quizContainer = document.getElementById('quizContainer');
+        quizContainer.style.display = 'block';
+
         currentQuizIndex = 0;
-
-        if (currentPracticeMode === 'vocab') {
-            currentQuizQuestions = currentStepWords.map(item => {
-                let options = [item.meaning];
-                let otherWords = wordDatabase.filter(w => w.meaning !== item.meaning);
-                let randomOthers = shuffleArray(otherWords).slice(0, 2);
-                randomOthers.forEach(r => options.push(r.meaning));
-                return {
-                    title: `"${item.word}" শব্দের সঠিক বাংলা অর্থ কোনটি?`,
-                    correct: item.meaning,
-                    options: shuffleArray(options)
-                };
-            });
-        } else if (currentPracticeMode === 'grammar') {
-            currentQuizQuestions = shuffleArray(grammarDatabase).slice(0, 2).map(g => ({
-                title: g.q,
-                correct: g.correct,
-                options: shuffleArray(g.options)
-            }));
-        } else if (currentPracticeMode === 'speaking') {
-            currentQuizQuestions = shuffleArray(speakingDatabase);
-        }
-
         renderQuizQuestion();
     }
 
     function renderQuizQuestion() {
-        const qContainer = document.getElementById('quizContainer');
-        if (currentQuizIndex >= currentQuizQuestions.length) {
-            rewardPoints += 10;
-            updatePointsUI();
-            stepCount++;
-            
-            const msgBox = document.getElementById('rewardMsgBox');
-            msgBox.style.display = 'block';
-            msgBox.innerText = `🎉 অভিনন্দন! Step সফলভাবে সম্পন্ন করেছেন এবং ১০ পয়েন্ট উপহার পেয়েছেন!`;
-            setTimeout(() => { msgBox.style.display = 'none'; }, 4000);
+        const quizContainer = document.getElementById('quizContainer');
+        const q = currentStepWords[currentQuizIndex];
+        
+        let options = shuffleArray([q.meaning, "ভুল উত্তর ১", "ভুল উত্তর ২", "ভুল উত্তর ৩"]);
 
-            initStepLearning();
-            return;
-        }
-
-        const q = currentQuizQuestions[currentQuizIndex];
-        let audioBtnHtml = q.audioText ? `<button class="speak-btn" style="margin-bottom:10px;" onclick="speakText('${q.audioText}', 'en-US')">🔊 অডিও শুনুন</button>` : '';
-
-        let optionsHtml = '';
-        q.options.forEach(opt => {
-            optionsHtml += `<button class="opt-btn" onclick="checkQuizAnswer('${opt.replace(/'/g, "\\'")}', '${q.correct.replace(/'/g, "\\'")}')">${opt}</button>`;
+        let optsHtml = '';
+        options.forEach(opt => {
+            optsHtml += `<button class="opt-btn" onclick="checkQuizAnswer('${opt}', '${q.meaning}')">${opt}</button>`;
         });
 
-        qContainer.innerHTML = `
+        quizContainer.innerHTML = `
             <div class="quiz-card">
-                <p style="font-size:11px; font-weight:bold; color:#f39c12; margin-bottom:6px;">প্রশ্ন ${currentQuizIndex + 1} / ${currentQuizQuestions.length}</p>
-                ${audioBtnHtml}
-                <h3 style="font-size:14px; color:var(--text-color); margin-bottom:12px;">${q.title}</h3>
-                <div class="options-grid">${optionsHtml}</div>
+                <h3 style="margin-bottom: 12px; color: var(--text-color);">'${q.word}' শব্দের সঠিক অর্থ কোনটি?</h3>
+                <div class="options-grid">${optsHtml}</div>
             </div>
         `;
     }
 
     function checkQuizAnswer(selected, correct) {
         if (selected === correct) {
-            showToast("✨ সঠিক উত্তর!");
-            currentQuizIndex++;
-            setTimeout(renderQuizQuestion, 500);
+            rewardPoints += 10;
+            updatePointsUI();
+            showToast("সঠিক উত্তর! +১০ পয়েন্ট 🪙");
         } else {
-            alert("❌ ভুল উত্তর! আবার চেষ্টা করুন।");
-        }
-    }
-
-    /* DICTIONARY SEARCH WITH IELTS USAGE */
-    async function searchWord() {
-        const word = document.getElementById('wordInput').value.trim();
-        const resCard = document.getElementById('resultContainer');
-        if (!word) {
-            alert('একটি শব্দ বা বাক্য লিখুন!');
-            return;
+            showToast("ভুল উত্তর, সঠিক ছিল: " + correct);
         }
 
-        resCard.innerHTML = '<p style="text-align: center; color: #16a085;">🔍 অর্থ অনুসন্ধান করা হচ্ছে...</p>';
-
-        try {
-            const res = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=bn&dt=t&q=${encodeURIComponent(word)}`);
-            const data = await res.json();
-            const translatedText = data[0][0][0];
-
-            let ieltsInfo = ieltsVocabList.find(v => v.word.toLowerCase() === word.toLowerCase());
-            let usageHtml = ieltsInfo ? `<p>🎯 <b>IELTS Usage:</b> ${ieltsInfo.usage}</p><p>🔄 <b>Synonyms:</b> ${ieltsInfo.syn}</p>` : `<p>🎯 <b>IELTS Usage:</b> Writing Task 1/2 and Speaking Topic Context</p>`;
-
-            resCard.innerHTML = `
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <h3 style="color:#16a085; font-size:16px;">${word}</h3>
-                    <button class="speak-btn" onclick="speakText('${word}', 'en-US')">🔊</button>
-                </div>
-                <p style="font-size: 14px; font-weight: bold; margin-top: 4px;"><b>অর্থ:</b> ${translatedText}</p>
-                <hr style="margin: 8px 0; border: 0; border-top: 1px solid var(--border-color);">
-                ${usageHtml}
-                <button class="icon-btn" style="margin-top:8px; font-size:11px;" onclick="copyToClipboard('${word} : ${translatedText}')">📋 Copy Word & Meaning</button>
-            `;
-        } catch(e) {
-            resCard.innerHTML = '<p style="color:red; text-align:center;">অনুসন্ধান ব্যর্থ হয়েছে। ইন্টারনেট সংযোগ পরীক্ষা করুন।</p>';
-        }
-    }
-
-    function startVoiceSearch() {
-        if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-            alert('আপনার ব্রাউজারে ভয়েস সাপোর্ট নেই!');
-            return;
-        }
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        const recognition = new SpeechRecognition();
-        recognition.lang = 'en-US';
-        recognition.start();
-
-        showToast("🎙️ বলুন...");
-
-        recognition.onresult = function(event) {
-            document.getElementById('wordInput').value = event.results[0][0].transcript;
-            searchWord();
-        };
-    }
-
-    function processImageSearch(event) {
-        const file = event.target.files[0];
-        if (!file) return;
-
-        const resCard = document.getElementById('resultContainer');
-        resCard.innerHTML = '<p style="text-align: center; color: #16a085;">📷 ছবি থেকে টেক্সট পড়া হচ্ছে (OCR)...</p>';
-
-        Tesseract.recognize(file, 'eng').then(({ data: { text } }) => {
-            document.getElementById('wordInput').value = text.trim();
-            searchWord();
-        }).catch(() => {
-            resCard.innerHTML = '<p style="color:red; text-align:center;">ছবি থেকে টেক্সট পড়া সম্ভব হয়নি।</p>';
-        });
-    }
-
-    /* IELTS TOOLS DISPLAY FUNCTION */
-    function openIeltsTool(tool) {
-        const display = document.getElementById('ieltsToolDisplay');
-        if (tool === 'speaking') {
-            display.innerHTML = `
-                <h4 style="color:var(--ielts-primary); font-size:14px; margin-bottom:6px;">🗣️ IELTS Speaking AI Coach</h4>
-                <p style="font-size:12px; margin-bottom:8px;"><b>Part 2 Topic:</b> Describe a memorable journey you took.</p>
-                <textarea id="ieltsSpeakText" placeholder="এখানে আপনার বক্তব্য লিখুন অথবা স্পিক বোতামে চেপে কথা বলুন..."></textarea>
-                <div style="display:flex; gap:6px; margin-top:8px;">
-                    <button class="action-btn" style="flex:1; background:var(--ielts-primary);" onclick="evaluateIeltsSpeaking()">🎯 Band Score মূল্যায়ণ করুন</button>
-                </div>
-                <div id="speakingScoreResult" style="margin-top:10px; font-size:12px;"></div>
-            `;
-        } else if (tool === 'writing') {
-            display.innerHTML = `
-                <h4 style="color:var(--ielts-primary); font-size:14px; margin-bottom:6px;">✍️ IELTS Writing AI Checker</h4>
-                <p style="font-size:12px; margin-bottom:8px;"><b>Task 2 Essay Write-up:</b></p>
-                <textarea id="ieltsEssayText" placeholder="আপনার IELTS Essay লিখুন..."></textarea>
-                <button class="action-btn" style="width:100%; margin-top:8px; background:var(--ielts-primary);" onclick="evaluateIeltsWriting()">📊 Evaluate Essay & Get Score</button>
-                <div id="writingScoreResult" style="margin-top:10px; font-size:12px;"></div>
-            `;
-        } else if (tool === 'vocab') {
-            let html = '<h4 style="color:var(--ielts-primary); font-size:14px; margin-bottom:8px;">📚 IELTS Band 8+ Vocabulary</h4>';
-            ieltsVocabList.forEach(v => {
-                html += `
-                    <div style="background:var(--input-bg); border:1px solid var(--border-color); padding:8px; border-radius:6px; margin-bottom:6px;">
-                        <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <strong style="color:#27ae60;">${v.word}</strong>
-                            <button class="speak-btn" onclick="speakText('${v.word}')">🔊</button>
-                        </div>
-                        <p style="font-size:11px;"><b>অর্থ:</b> ${v.meaning}</p>
-                        <p style="font-size:11px;"><b>উদাহরণ:</b> ${v.example}</p>
-                        <p style="font-size:11px; color:#d35400;"><b>IELTS Use:</b> ${v.usage}</p>
-                    </div>
-                `;
-            });
-            display.innerHTML = html;
-        } else if (tool === 'calc') {
-            display.innerHTML = `
-                <h4 style="color:var(--ielts-primary); font-size:14px; margin-bottom:8px;">🎯 IELTS Band Score Calculator</h4>
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; font-size:11px;">
-                    <div>Listening: <input type="number" id="lScore" placeholder="0-9" max="9" step="0.5"></div>
-                    <div>Reading: <input type="number" id="rScore" placeholder="0-9" max="9" step="0.5"></div>
-                    <div>Writing: <input type="number" id="wScore" placeholder="0-9" max="9" step="0.5"></div>
-                    <div>Speaking: <input type="number" id="sScore" placeholder="0-9" max="9" step="0.5"></div>
-                </div>
-                <button class="action-btn" style="width:100%; margin-top:10px; background:var(--ielts-primary);" onclick="calculateBand()">হিসাব করুন</button>
-                <p id="overallBandResult" style="text-align:center; margin-top:8px; font-size:14px; font-weight:bold; color:#27ae60;"></p>
-            `;
-        } else if (tool === 'plan') {
-            display.innerHTML = `
-                <h4 style="color:var(--ielts-primary); font-size:14px; margin-bottom:8px;">📅 30-Day IELTS Study Plan</h4>
-                <ul style="font-size:12px; line-height:1.8; padding-left:18px;">
-                    <li><b>Day 1-7:</b> Core Vocabulary & Grammar Basics</li>
-                    <li><b>Day 8-15:</b> Writing Task 1 & Listening Practice</li>
-                    <li><b>Day 16-22:</b> Writing Task 2 & Reading Passage Strategies</li>
-                    <li><b>Day 23-30:</b> Full Mock Tests & Speaking Cards</li>
-                </ul>
-            `;
+        currentQuizIndex++;
+        if (currentQuizIndex < currentStepWords.length) {
+            renderQuizQuestion();
         } else {
-            display.innerHTML = `<h4 style="color:var(--ielts-primary); font-size:14px;">📖 Reading Practice</h4><p style="font-size:12px; margin-top:6px;">Daily passages with auto AI comprehension check coming in next sync.</p>`;
+            stepCount++;
+            document.getElementById('quizContainer').innerHTML = `
+                <div style="text-align:center; padding: 20px;">
+                    <h3>🎉 কুইজ সম্পন্ন হয়েছে!</h3>
+                    <p style="margin-top: 5px; font-size:13px;">আপনি ১০ পয়েন্ট জিতেছেন!</p>
+                    <button class="action-btn" style="margin-top: 15px; width:100%;" onclick="initStepLearning()">পরবর্তী লেভেল (Step ${stepCount}) ➔</button>
+                </div>
+            `;
         }
-    }
-
-    function evaluateIeltsSpeaking() {
-        const text = document.getElementById('ieltsSpeakText').value.trim();
-        const res = document.getElementById('speakingScoreResult');
-        if(!text) { alert('অনুগ্রহ করে বক্তব্য লিখুন!'); return; }
-        res.innerHTML = `
-            <p style="color:#27ae60; font-weight:bold;">✨ Estimated Band: 6.5 - 7.0</p>
-            <p><b>Fluency:</b> Good pace</p>
-            <p><b>Grammar Correction:</b> Sentence structures look balanced.</p>
-        `;
-    }
-
-    function evaluateIeltsWriting() {
-        const text = document.getElementById('ieltsEssayText').value.trim();
-        const res = document.getElementById('writingScoreResult');
-        if(!text) { alert('অনুগ্রহ করে Essay লিখুন!'); return; }
-        res.innerHTML = `
-            <p style="color:#27ae60; font-weight:bold;">📊 Estimated Band: 6.5</p>
-            <p><b>Task Achievement:</b> Add more supporting arguments.</p>
-            <p><b>Vocabulary:</b> Advanced vocabulary count: Good.</p>
-        `;
-    }
-
-    function calculateBand() {
-        const l = parseFloat(document.getElementById('lScore').value) || 0;
-        const r = parseFloat(document.getElementById('rScore').value) || 0;
-        const w = parseFloat(document.getElementById('wScore').value) || 0;
-        const s = parseFloat(document.getElementById('sScore').value) || 0;
-        const avg = (l + r + w + s) / 4;
-        const rounded = (Math.round(avg * 2) / 2).toFixed(1);
-        document.getElementById('overallBandResult').innerText = `Overall Band Score: ${rounded}`;
-    }
-
-    /* REAL AI UNIVERSAL GRAMMAR CORRECTION ENGINE */
-    async function correctGrammarRules(str) {
-        let text = str.trim();
-        if (!text) return "";
-
-        try {
-            const res1 = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=bn&dt=t&q=${encodeURIComponent(text)}`);
-            const data1 = await res1.json();
-            const bnMeaning = data1[0][0][0];
-
-            const res2 = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=bn&tl=en&dt=t&q=${encodeURIComponent(bnMeaning)}`);
-            const data2 = await res2.json();
-            let correctedText = data2[0][0][0];
-
-            correctedText = correctedText.charAt(0).toUpperCase() + correctedText.slice(1);
-            if (!/[.!?]$/.test(correctedText)) correctedText += ".";
-
-            return correctedText;
-        } catch (e) {
-            text = text.replace(/\bi no\b/gi, "I know");
-            text = text.replace(/\bi not go\b/gi, "I will not go");
-            text = text.replace(/\bgo office\b/gi, "go to office");
-            return text.charAt(0).toUpperCase() + text.slice(1) + ".";
-        }
-    }
-
-    async function processAiWriting(mode) {
-        const inputText = document.getElementById('aiWriteInput').value.trim();
-        const resultContainer = document.getElementById('aiWritingResult');
-
-        if (!inputText) {
-            alert('অনুগ্রহ করে প্রথমে কোনো বাক্য লিখুন!');
-            return;
-        }
-
-        resultContainer.innerHTML = '<p style="text-align: center; color: #8e44ad;">🤖 AI বাক্যটি বিশ্লেষণ করছে...</p>';
-
-        let modeTitle = "";
-        let resultText = "";
-
-        if (mode === 'grammar') {
-            modeTitle = "Corrected Grammar";
-            resultText = await correctGrammarRules(inputText);
-        } else if (mode === 'professional') {
-            modeTitle = "Professional Version";
-            let corrected = await correctGrammarRules(inputText);
-            resultText = "I am writing to inform you that " + corrected.charAt(0).toLowerCase() + corrected.slice(1);
-        } else if (mode === 'simple') {
-            modeTitle = "Simple Version";
-            resultText = await correctGrammarRules(inputText);
-        } else if (mode === 'shorten') {
-            modeTitle = "Short Version";
-            resultText = await correctGrammarRules(inputText);
-        } else if (mode === 'translate') {
-            modeTitle = "Translation";
-            try {
-                const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=bn&dt=t&q=${encodeURIComponent(inputText)}`;
-                const res = await fetch(url);
-                const data = await res.json();
-                resultText = data[0][0][0];
-            } catch(e) {
-                resultText = "অনুবাদ করা সম্ভব হয়নি।";
-            }
-        }
-
-        resultContainer.innerHTML = `
-            <div style="font-size: 12px; font-weight: bold; color: #8e44ad; margin-bottom: 4px;">✨ AI Output (${modeTitle}):</div>
-            <div style="font-size: 15px; font-weight: bold; color: var(--text-color); margin-bottom: 10px; line-height: 1.4;">
-                ${resultText}
-            </div>
-            <div style="display: flex; gap: 8px;">
-                <button class="speak-btn" style="border-radius:6px; padding:6px 12px;" onclick="speakText('${resultText.replace(/'/g, "\\'")}', '${mode === 'translate' ? 'bn-BD' : 'en-US'}')">🔊 শুনুন</button>
-                <button class="icon-btn" style="padding:4px 10px; font-size:11px;" onclick="copyToClipboard('${resultText.replace(/'/g, "\\'")}')">📋 কপি করুন</button>
-            </div>
-        `;
-    }
-
-    function loadNextAiQuestion() {
-        currentAiQIndex = (currentAiQIndex + 1) % aiQuestionsList.length;
-        document.getElementById('aiQuestionText').innerText = aiQuestionsList[currentAiQIndex];
-        document.getElementById('userSpeakingResult').innerText = "";
-    }
-
-    function startSpeakingAnswer() {
-        if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-            alert('আপনার ব্রাউজারে ভয়েস রেকর্ডার সাপোর্ট করছে না!');
-            return;
-        }
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        const recognition = new SpeechRecognition();
-        recognition.lang = 'en-US';
-        recognition.start();
-
-        showToast("🎙️ উত্তর দিন...");
-
-        recognition.onresult = function(event) {
-            const userSaid = event.results[0][0].transcript;
-            document.getElementById('userSpeakingResult').innerText = `আপনার উত্তর: "${userSaid}"`;
-        };
     }
 </script>
 
