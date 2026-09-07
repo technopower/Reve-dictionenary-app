@@ -477,7 +477,7 @@
         if (!text) return "";
 
         try {
-            // Step 1: Translate broken English to Bengali first to understand context
+            // Step 1: Translate broken English or Banglish to Bengali
             const res1 = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=bn&dt=t&q=${encodeURIComponent(text)}`);
             const data1 = await res1.json();
             const bnMeaning = data1[0][0][0];
@@ -702,11 +702,10 @@
         }
     }
 
-    /* DICTIONARY SEARCH ENGINE */
+    /* DICTIONARY SEARCH ENGINE (FIXED FOR BANGLISH INPUT) */
     async function searchWord() {
         const input = document.getElementById('wordInput').value.trim();
         const resultContainer = document.getElementById('resultContainer');
-        const sourceLang = document.getElementById('sourceLang').value;
         const targetLang = document.getElementById('targetLang').value;
 
         if (!input) {
@@ -717,7 +716,8 @@
         resultContainer.innerHTML = `<p style="text-align: center; color: var(--subtext-color);">খোঁজা হচ্ছে...</p>`;
 
         try {
-            const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sourceLang}&tl=${targetLang}&dt=t&q=${encodeURIComponent(input)}`;
+            // sl=auto ব্যবহার করলে Banglish বা যেকোনো ভাষার ইনপুট স্বয়ংক্রিয়ভাবে ডিটেক্ট করে অনুবাদ করবে
+            const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${targetLang}&dt=t&q=${encodeURIComponent(input)}`;
             const response = await fetch(url);
             const data = await response.json();
             const translatedText = data[0][0][0];
@@ -729,7 +729,7 @@
                         <div style="font-size: 16px; font-weight: bold; color: #27ae60; margin-top: 4px;">${translatedText}</div>
                     </div>
                     <div>
-                        <button class="speak-btn" onclick="speakText('${input.replace(/'/g, "\\'")}', '${sourceLang === 'bn' ? 'bn-BD' : 'en-US'}')">🔊</button>
+                        <button class="speak-btn" onclick="speakText('${translatedText.replace(/'/g, "\\'")}', '${targetLang === 'bn' ? 'bn-BD' : 'en-US'}')">🔊</button>
                         <button class="icon-btn" style="padding: 4px 8px; font-size: 11px; display: inline-flex;" onclick="copyToClipboard('${translatedText.replace(/'/g, "\\'")}')">📋</button>
                     </div>
                 </div>
