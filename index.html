@@ -110,7 +110,7 @@
         .swap-btn { background: #16a085; color: white; border: none; border-radius: 50%; width: 32px; height: 32px; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; margin-top: 14px; flex-shrink: 0; }
 
         .tabs { display: flex; gap: 4px; margin-bottom: 15px; overflow-x: auto; padding-bottom: 4px; }
-        .tab-btn { flex: 1; min-width: 70px; padding: 10px 2px; border: none; background: var(--btn-icon-bg); color: var(--text-color); border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.3s; font-size: 10px; text-align: center; }
+        .tab-btn { flex: 1; min-width: 65px; padding: 10px 2px; border: none; background: var(--btn-icon-bg); color: var(--text-color); border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.3s; font-size: 10px; text-align: center; white-space: nowrap; }
         .tab-btn.active { background: #27ae60; color: white; }
         .tab-btn.ielts-active { background: var(--ielts-primary); color: white; }
         .section { display: none; }
@@ -135,7 +135,23 @@
         .ai-tool-chip { background: var(--card-bg); border: 1px solid #8e44ad; color: #8e44ad; padding: 8px; border-radius: 8px; font-size: 11px; font-weight: bold; cursor: pointer; text-align: center; transition: all 0.2s; }
         .ai-tool-chip:hover { background: #8e44ad; color: white; }
 
-        /* IELTS Sub-navigation */
+        /* Practice Type Buttons */
+        .practice-type-group { display: flex; gap: 6px; margin-top: 8px; justify-content: center; }
+        .practice-chip { background: var(--card-bg); border: 1px solid #27ae60; color: #27ae60; padding: 5px 8px; border-radius: 15px; font-size: 11px; font-weight: bold; cursor: pointer; transition: all 0.2s; }
+        .practice-chip.active { background: #27ae60; color: white; }
+
+        /* Step-by-Step Learning & Quiz Styles */
+        .step-header { background: var(--card-bg); border: 1px solid #27ae60; padding: 8px 12px; border-radius: 10px; font-weight: bold; color: #16a085; text-align: center; margin-bottom: 12px; font-size: 12px; }
+        .word-card-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px; }
+        .word-card { background: var(--card-bg); border: 1px solid var(--border-color); border-left: 4px solid #3498db; border-radius: 8px; padding: 10px 12px; display: flex; justify-content: space-between; align-items: center; }
+        .word-card-title { font-size: 14px; font-weight: bold; color: var(--text-color); }
+        .word-card-sub { font-size: 12px; color: #27ae60; font-weight: 600; margin-top: 2px; }
+
+        .quiz-card { background: var(--card-bg); padding: 15px; border-radius: 10px; margin-bottom: 15px; text-align: center; border: 1px solid #fbc02d; }
+        .options-grid { display: grid; gap: 8px; }
+        .opt-btn { flex: 1; padding: 10px; background: var(--input-bg); border: 2px solid #fbc02d; border-radius: 8px; cursor: pointer; font-size: 14px; text-align: center; font-weight: bold; color: var(--text-color); }
+
+        /* IELTS Sub-navigation System */
         .ielts-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 15px; }
         .ielts-card { background: var(--card-bg); border: 1px solid var(--border-color); border-top: 3px solid var(--ielts-primary); padding: 10px 6px; text-align: center; border-radius: 8px; cursor: pointer; font-size: 11px; font-weight: bold; }
         .ielts-card:hover { transform: translateY(-2px); border-color: var(--ielts-primary); }
@@ -241,9 +257,10 @@
         <button id="ieltsTab" class="tab-btn" onclick="switchTab('ielts')">🎯 IELTS AI</button>
         <button id="writerTab" class="tab-btn" onclick="switchTab('writer')">✍️ WRITER</button>
         <button id="teacherTab" class="tab-btn" onclick="switchTab('teacher')">🤖 TEACHER</button>
+        <button id="quizTab" class="tab-btn" onclick="switchTab('quiz')">DAILY QUIZ</button>
     </div>
 
-    <!-- SECTION 1: DICTIONARY WITH IELTS USAGE -->
+    <!-- SECTION 1: DICTIONARY -->
     <div id="dictSection" class="section active">
         <div class="search-container">
             <div class="search-input-group">
@@ -317,6 +334,42 @@
         </div>
     </div>
 
+    <!-- SECTION 5: STEP-BY-STEP QUIZ WITH REWARD SYSTEM -->
+    <div id="quizSection" class="section">
+        <div id="rewardMsgBox" class="reward-msg"></div>
+
+        <div style="background: var(--card-bg); border: 1px solid #27ae60; border-radius: 10px; padding: 10px; margin-bottom: 12px; text-align: center;">
+            <h4 style="color: #27ae60; font-size: 13px;">🔥 Step Level: <span id="currentStepLevel">Step 1</span></h4>
+            <div class="practice-type-group">
+                <button id="typeVocabBtn" class="practice-chip active" onclick="setPracticeType('vocab')">📚 Vocab</button>
+                <button id="typeSpeakingBtn" class="practice-chip" onclick="setPracticeType('speaking')">🗣️ Speaking</button>
+                <button id="typeGrammarBtn" class="practice-chip" onclick="setPracticeType('grammar')">📝 Grammar</button>
+            </div>
+        </div>
+
+        <div style="margin-bottom: 12px;">
+            <label for="categorySelect" style="font-size: 11px; font-weight: bold; color: #16a085;">বিষয়বস্তু বেছে নিন:</label>
+            <select id="categorySelect" class="lang-select" style="width: 100%; margin-top: 4px;" onchange="initStepLearning()">
+                <option value="All">সকল বিষয় (All Categories)</option>
+                <option value="Home (বাসাবাড়ি)">বাসাবাড়ি (Home)</option>
+                <option value="Workspace (কর্মক্ষেত্র)">কর্মক্ষেত্র (Workspace)</option>
+                <option value="Entertainment (বিনোদন)">বিনোদন (Entertainment)</option>
+                <option value="Shopping (কেনাকাটা)">কেনাকাটা (Shopping)</option>
+            </select>
+        </div>
+
+        <div class="step-header" id="stepHeader">📌 Step 1: কুইজ দেওয়ার আগে পড়া তৈরি করুন</div>
+
+        <div id="learningContainer">
+            <div class="word-card-list" id="wordCardList">
+                <p style="text-align: center; color: var(--subtext-color);">লোডিং...</p>
+            </div>
+            <button class="action-btn" style="width: 100%;" onclick="startStepQuiz()">পড়া শেষ! কুইজ পরীক্ষা শুরু করুন ➔</button>
+        </div>
+
+        <div id="quizContainer" style="display: none;"></div>
+    </div>
+
     <!-- Bottom Banner Ad -->
     <div class="ad-container">
         <ins class="adsbygoogle"
@@ -329,13 +382,15 @@
     <!-- Bottom Feature Badges -->
     <div class="footer-badge">
         <span>✓ ১০০% ফ্রি AI শিক্ষা</span>
-        <span>• IELTS Band Score</span>
+        <span>• রিওয়ার্ড পয়েন্ট</span>
         <span>• সঠিক উচ্চারণ</span>
     </div>
 
 </div>
 
 <script>
+    let currentPracticeMode = 'vocab';
+    let stepCount = 1;
     let rewardPoints = parseInt(localStorage.getItem('userRewardPoints')) || 50;
 
     const aiQuestionsList = [
@@ -346,11 +401,37 @@
     ];
     let currentAiQIndex = 0;
 
+    let wordDatabase = [
+        {"category": "Home (বাসাবাড়ি)", "word": "Kitchen", "meaning": "রান্নাঘর"},
+        {"category": "Home (বাসাবাড়ি)", "word": "Furniture", "meaning": "আসবাবপত্র"},
+        {"category": "Home (বাসাবাড়ি)", "word": "Curtains", "meaning": "পর্দা"},
+        {"category": "Home (বাসাবাড়ি)", "word": "Blanket", "meaning": "কম্বল"},
+        {"category": "Workspace (কর্মক্ষেত্র)", "word": "Manager", "meaning": "ব্যবস্থাপক"},
+        {"category": "Workspace (কর্মক্ষেত্র)", "word": "Salary", "meaning": "বেতন"},
+        {"category": "Entertainment (বিনোদন)", "word": "Music", "meaning": "গান/সঙ্গীত"},
+        {"category": "Shopping (কেনাকাটা)", "word": "Discount", "meaning": "ছাড়"}
+    ];
+
+    let grammarDatabase = [
+        { q: "She ___ to the market yesterday.", options: ["go", "went", "gone", "going"], correct: "went" },
+        { q: "I have been working here ___ 2020.", options: ["since", "for", "from", "at"], correct: "since" },
+        { q: "He is ___ honest man.", options: ["a", "an", "the", "no article"], correct: "an" }
+    ];
+
+    let speakingDatabase = [
+        { audioText: "How are you doing today?", title: "অডিও শুনে সঠিক অর্থটি বেছে নিন:", correct: "আজকে আপনার দিনটি কেমন যাচ্ছে?", options: ["আজকে আপনার দিনটি কেমন যাচ্ছে?", "আপনি কোথায় যাচ্ছেন?", "আপনার নাম কী?"] },
+        { audioText: "Could you help me please?", title: "অডিও শুনে সঠিক অর্থটি বেছে নিন:", correct: "আপনি কি আমাকে দয়া করে সাহায্য করতে পারেন?", options: ["আপনি কি আমাকে দয়া করে সাহায্য করতে পারেন?", "আপনি কখন আসবেন?", "আমি কাজ করছি।"] }
+    ];
+
     const ieltsVocabList = [
         { word: "Resilient", meaning: "সহনশীল / দ্রুত পুনরুদ্ধারক্ষম", example: "He is resilient in facing difficulties.", usage: "IELTS Speaking Part 1 / Writing Task 2", syn: "Flexible, Tough" },
         { word: "Paramount", meaning: "সর্বোচ্চ / অত্যন্ত গুরুত্বপূর্ণ", example: "Education plays a paramount role in modern society.", usage: "IELTS Writing Task 2 Intro", syn: "Supreme, Vital" },
         { word: "Substantial", meaning: "উল্লেখযোগ্য / প্রচুর", example: "There is a substantial increase in tourist numbers.", usage: "IELTS Writing Task 1 Chart Analysis", syn: "Significant, Considerable" }
     ];
+
+    let currentStepWords = [];
+    let currentQuizQuestions = [];
+    let currentQuizIndex = 0;
 
     function updatePointsUI() {
         document.getElementById('rewardPointsDisplay').innerText = rewardPoints;
@@ -414,6 +495,10 @@
         } else if (tab === 'teacher') {
             document.getElementById('teacherSection').classList.add('active');
             document.getElementById('teacherTab').classList.add('active');
+        } else if (tab === 'quiz') {
+            document.getElementById('quizSection').classList.add('active');
+            document.getElementById('quizTab').classList.add('active');
+            initStepLearning();
         }
     }
 
@@ -433,6 +518,135 @@
         utterance.lang = langCode;
         utterance.rate = 0.85;
         window.speechSynthesis.speak(utterance);
+    }
+
+    function shuffleArray(array) {
+        return array.slice().sort(() => Math.random() - 0.5);
+    }
+
+    /* STEP LEARNING & QUIZ SYSTEM */
+    function setPracticeType(type) {
+        currentPracticeMode = type;
+        document.querySelectorAll('.practice-chip').forEach(btn => btn.classList.remove('active'));
+        if (type === 'vocab') document.getElementById('typeVocabBtn').classList.add('active');
+        if (type === 'speaking') document.getElementById('typeSpeakingBtn').classList.add('active');
+        if (type === 'grammar') document.getElementById('typeGrammarBtn').classList.add('active');
+
+        initStepLearning();
+    }
+
+    function initStepLearning() {
+        const cat = document.getElementById('categorySelect').value;
+        const container = document.getElementById('wordCardList');
+        document.getElementById('learningContainer').style.display = 'block';
+        document.getElementById('quizContainer').style.display = 'none';
+        document.getElementById('currentStepLevel').innerText = `Step ${stepCount}`;
+
+        if (currentPracticeMode === 'vocab') {
+            document.getElementById('stepHeader').innerText = `📌 Step ${stepCount}: কুইজ দেওয়ার আগে শব্দগুলো মুখস্থ করুন`;
+            let filtered = cat === 'All' ? wordDatabase : wordDatabase.filter(w => w.category === cat);
+            currentStepWords = shuffleArray(filtered).slice(0, 3);
+
+            if (currentStepWords.length === 0) {
+                container.innerHTML = `<p style="text-align:center; padding:10px;">এই ক্যাটাগরিতে কোনো শব্দ পাওয়া যায়নি।</p>`;
+                return;
+            }
+
+            let html = '';
+            currentStepWords.forEach(w => {
+                html += `
+                    <div class="word-card">
+                        <div>
+                            <div class="word-card-title">${w.word}</div>
+                            <div class="word-card-sub">${w.meaning}</div>
+                        </div>
+                        <button class="speak-btn" onclick="speakText('${w.word}', 'en-US')">🔊</button>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        } else if (currentPracticeMode === 'grammar') {
+            document.getElementById('stepHeader').innerText = `📌 Step ${stepCount}: ব্যাকরণ নিয়মগুলি দেখুন`;
+            container.innerHTML = `<p style="font-size:12px; color:var(--text-color); text-align:center;">সঠিক উত্তর বাছাই করে আপনার ব্যাকরণ পরোক্ষ করুন। কুইজে এগিয়ে যান।</p>`;
+        } else if (currentPracticeMode === 'speaking') {
+            document.getElementById('stepHeader').innerText = `📌 Step ${stepCount}: স্পিকিং প্র্যাকটিস শুনুন`;
+            container.innerHTML = `<p style="font-size:12px; color:var(--text-color); text-align:center;">অডিও শুনে সঠিক অর্থ বাছাই করুন। টেস্ট নিতে প্রস্তুত থাকুন।</p>`;
+        }
+    }
+
+    function startStepQuiz() {
+        document.getElementById('learningContainer').style.display = 'none';
+        const qContainer = document.getElementById('quizContainer');
+        qContainer.style.display = 'block';
+        currentQuizIndex = 0;
+
+        if (currentPracticeMode === 'vocab') {
+            currentQuizQuestions = currentStepWords.map(item => {
+                let options = [item.meaning];
+                let otherWords = wordDatabase.filter(w => w.meaning !== item.meaning);
+                let randomOthers = shuffleArray(otherWords).slice(0, 2);
+                randomOthers.forEach(r => options.push(r.meaning));
+                return {
+                    title: `"${item.word}" শব্দের সঠিক বাংলা অর্থ কোনটি?`,
+                    correct: item.meaning,
+                    options: shuffleArray(options)
+                };
+            });
+        } else if (currentPracticeMode === 'grammar') {
+            currentQuizQuestions = shuffleArray(grammarDatabase).slice(0, 2).map(g => ({
+                title: g.q,
+                correct: g.correct,
+                options: shuffleArray(g.options)
+            }));
+        } else if (currentPracticeMode === 'speaking') {
+            currentQuizQuestions = shuffleArray(speakingDatabase);
+        }
+
+        renderQuizQuestion();
+    }
+
+    function renderQuizQuestion() {
+        const qContainer = document.getElementById('quizContainer');
+        if (currentQuizIndex >= currentQuizQuestions.length) {
+            rewardPoints += 10;
+            updatePointsUI();
+            stepCount++;
+            
+            const msgBox = document.getElementById('rewardMsgBox');
+            msgBox.style.display = 'block';
+            msgBox.innerText = `🎉 অভিনন্দন! Step সফলভাবে সম্পন্ন করেছেন এবং ১০ পয়েন্ট উপহার পেয়েছেন!`;
+            setTimeout(() => { msgBox.style.display = 'none'; }, 4000);
+
+            initStepLearning();
+            return;
+        }
+
+        const q = currentQuizQuestions[currentQuizIndex];
+        let audioBtnHtml = q.audioText ? `<button class="speak-btn" style="margin-bottom:10px;" onclick="speakText('${q.audioText}', 'en-US')">🔊 অডিও শুনুন</button>` : '';
+
+        let optionsHtml = '';
+        q.options.forEach(opt => {
+            optionsHtml += `<button class="opt-btn" onclick="checkQuizAnswer('${opt.replace(/'/g, "\\'")}', '${q.correct.replace(/'/g, "\\'")}')">${opt}</button>`;
+        });
+
+        qContainer.innerHTML = `
+            <div class="quiz-card">
+                <p style="font-size:11px; font-weight:bold; color:#f39c12; margin-bottom:6px;">প্রশ্ন ${currentQuizIndex + 1} / ${currentQuizQuestions.length}</p>
+                ${audioBtnHtml}
+                <h3 style="font-size:14px; color:var(--text-color); margin-bottom:12px;">${q.title}</h3>
+                <div class="options-grid">${optionsHtml}</div>
+            </div>
+        `;
+    }
+
+    function checkQuizAnswer(selected, correct) {
+        if (selected === correct) {
+            showToast("✨ সঠিক উত্তর!");
+            currentQuizIndex++;
+            setTimeout(renderQuizQuestion, 500);
+        } else {
+            alert("❌ ভুল উত্তর! আবার চেষ্টা করুন।");
+        }
     }
 
     /* DICTIONARY SEARCH WITH IELTS USAGE */
@@ -511,7 +725,7 @@
                 <p style="font-size:12px; margin-bottom:8px;"><b>Part 2 Topic:</b> Describe a memorable journey you took.</p>
                 <textarea id="ieltsSpeakText" placeholder="এখানে আপনার বক্তব্য লিখুন অথবা স্পিক বোতামে চেপে কথা বলুন..."></textarea>
                 <div style="display:flex; gap:6px; margin-top:8px;">
-                    <button class="action-btn" style="flex:1; background:var(--ielts-primary);" onclick="evaluateIeltsSpeaking()">🎯 Band Score оцінка করুন</button>
+                    <button class="action-btn" style="flex:1; background:var(--ielts-primary);" onclick="evaluateIeltsSpeaking()">🎯 Band Score মূল্যায়ণ করুন</button>
                 </div>
                 <div id="speakingScoreResult" style="margin-top:10px; font-size:12px;"></div>
             `;
