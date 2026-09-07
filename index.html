@@ -239,7 +239,7 @@
     <div id="dictSection" class="section active">
         <div class="search-container">
             <div class="search-input-group">
-                <input type="text" id="wordInput" placeholder="শব্দ বা বাক্য লিখুন...">
+                <input type="text" id="wordInput" placeholder="শব্দ বা বাক্য লিখুন (যেমন: AMI DHAKA JABO)">
             </div>
             <div class="search-input-group">
                 <button id="micBtn" class="icon-btn" onclick="startVoiceSearch()">🎙️ কথা বলুন</button>
@@ -477,23 +477,19 @@
         if (!text) return "";
 
         try {
-            // Step 1: Translate broken English or Banglish to Bengali
             const res1 = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=bn&dt=t&q=${encodeURIComponent(text)}`);
             const data1 = await res1.json();
             const bnMeaning = data1[0][0][0];
 
-            // Step 2: Re-translate Bengali meaning to Natural Correct English
             const res2 = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=bn&tl=en&dt=t&q=${encodeURIComponent(bnMeaning)}`);
             const data2 = await res2.json();
             let correctedText = data2[0][0][0];
 
-            // Format output sentence
             correctedText = correctedText.charAt(0).toUpperCase() + correctedText.slice(1);
             if (!/[.!?]$/.test(correctedText)) correctedText += ".";
 
             return correctedText;
         } catch (e) {
-            // Fallback manual fixes
             text = text.replace(/\bi no\b/gi, "I know");
             text = text.replace(/\bi not go\b/gi, "I will not go");
             text = text.replace(/\bgo office\b/gi, "go to office");
@@ -702,10 +698,11 @@
         }
     }
 
-    /* DICTIONARY SEARCH ENGINE (FIXED FOR BANGLISH INPUT) */
+    /* DICTIONARY SEARCH ENGINE (FIXED FOR BANGLISH TO BANGLA & ENGLISH) */
     async function searchWord() {
-        const input = document.getElementById('wordInput').value.trim();
+        let input = document.getElementById('wordInput').value.trim();
         const resultContainer = document.getElementById('resultContainer');
+        const sourceLang = document.getElementById('sourceLang').value;
         const targetLang = document.getElementById('targetLang').value;
 
         if (!input) {
@@ -716,8 +713,27 @@
         resultContainer.innerHTML = `<p style="text-align: center; color: var(--subtext-color);">খোঁজা হচ্ছে...</p>`;
 
         try {
-            // sl=auto ব্যবহার করলে Banglish বা যেকোনো ভাষার ইনপুট স্বয়ংক্রিয়ভাবে ডিটেক্ট করে অনুবাদ করবে
-            const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${targetLang}&dt=t&q=${encodeURIComponent(input)}`;
+            let finalInput = input;
+            const isEnglishLetter = /^[A-Za-z0-9\s.,?!]+$/.test(input);
+
+            // বাংলিশ ইনপুটকে প্রথমে ফোনেটিকালি সঠিক বাংলায় রূপান্তর
+            if (isEnglishLetter && targetLang === 'bn') {
+                try {
+                    const transUrl = `https://inputtools.google.com/request?text=${encodeURIComponent(input)}&itc=bn-t-i0-und&num=1`;
+                    const transRes = await fetch(transUrl);
+                    const transData = await transRes.json();
+                    if (transData[0] === 'SUCCESS' && transData[1][0][1][0]) {
+                        finalInput = transData[1][0][1][0];
+                    }
+                } catch (e) {
+                    console.log("Transliteration failed");
+                }
+            }
+
+            // Translation API Execution
+            const slParam = (sourceLang === 'auto') ? 'auto' : (isEnglishLetter ? 'en' : sourceLang);
+            const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${slParam}&tl=${targetLang}&dt=t&q=${encodeURIComponent(finalInput)}`;
+            
             const response = await fetch(url);
             const data = await response.json();
             const translatedText = data[0][0][0];
@@ -725,7 +741,7 @@
             resultContainer.innerHTML = `
                 <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
                     <div>
-                        <div style="font-size: 18px; font-weight: bold; color: var(--text-color);">${input}</div>
+                        <div style="font-size: 18px; font-weight: bold; color: var(--text-color);">${finalInput}</div>
                         <div style="font-size: 16px; font-weight: bold; color: #27ae60; margin-top: 4px;">${translatedText}</div>
                     </div>
                     <div>
