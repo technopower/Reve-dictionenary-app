@@ -698,7 +698,7 @@
         }
     }
 
-    /* DICTIONARY SEARCH ENGINE (FIXED FOR BANGLISH TO BANGLA & ENGLISH) */
+    /* DICTIONARY SEARCH ENGINE (FIXED FOR ALL BANGLISH CASES) */
     async function searchWord() {
         let input = document.getElementById('wordInput').value.trim();
         const resultContainer = document.getElementById('resultContainer');
@@ -716,28 +716,35 @@
             let finalInput = input;
             const isEnglishLetter = /^[A-Za-z0-9\s.,?!]+$/.test(input);
 
-            // বাংলিশ ইনপুটকে প্রথমে ফোনেটিকালি সঠিক বাংলায় রূপান্তর
-            if (isEnglishLetter && targetLang === 'bn') {
+            // ১. বাংলিশ ডিটেকশন: যদি ইংরেজি অক্ষরে টাইপ করা হয় এবং Source বা Target যেকোনো একটি Bangla হয়
+            if (isEnglishLetter && (sourceLang === 'bn' || targetLang === 'bn' || sourceLang === 'auto')) {
                 try {
                     const transUrl = `https://inputtools.google.com/request?text=${encodeURIComponent(input)}&itc=bn-t-i0-und&num=1`;
                     const transRes = await fetch(transUrl);
                     const transData = await transRes.json();
-                    if (transData[0] === 'SUCCESS' && transData[1][0][1][0]) {
-                        finalInput = transData[1][0][1][0];
+                    if (transData[0] === 'SUCCESS' && transData[1]?.[0]?.[1]?.[0]) {
+                        finalInput = transData[1][0][1][0]; // "AMI DHAKA JABO" রূপান্তরিত হবে "আমি ঢাকা যাবো" তে
                     }
                 } catch (e) {
                     console.log("Transliteration failed");
                 }
             }
 
-            // Translation API Execution
-            const slParam = (sourceLang === 'auto') ? 'auto' : (isEnglishLetter ? 'en' : sourceLang);
-            const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${slParam}&tl=${targetLang}&dt=t&q=${encodeURIComponent(finalInput)}`;
+            // ২. Google Translation API প্রস্তুত করা
+            let actualSl = sourceLang;
+            if (sourceLang === 'auto') {
+                actualSl = 'auto';
+            } else if (isEnglishLetter && sourceLang === 'bn') {
+                actualSl = 'bn'; // কারণ বাংলিশকে ইতিমধ্যেই বাংলা হরফে কনভার্ট করা হয়েছে
+            }
+
+            const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${actualSl}&tl=${targetLang}&dt=t&q=${encodeURIComponent(finalInput)}`;
             
             const response = await fetch(url);
             const data = await response.json();
             const translatedText = data[0][0][0];
 
+            // ৩. রেজাল্ট ডিসপ্লে
             resultContainer.innerHTML = `
                 <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
                     <div>
