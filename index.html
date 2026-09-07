@@ -342,43 +342,31 @@
     <div class="footer-badge">
         <span>✓ ১০০% ফ্রি AI শিক্ষা</span>
         <span>• রিওয়ার্ড পয়েন্ট সিস্টেম</span>
-       async function searchWord() {
-        const textInput = document.getElementById('wordInput').value.trim();
-        const resultContainer = document.getElementById('resultContainer');
-        let sourceLang = document.getElementById('sourceLang').value;
-        const targetLang = document.getElementById('targetLang').value;
+        <span>• সঠিক উচ্চারন</span>
+    </div>
 
-        if (!textInput) return;
+</div>
 
-        resultContainer.innerHTML = '<p style="text-align: center; color: #3498db;">🔍 অনুবাদ করা হচ্ছে...</p>';
+<script>
+    let currentPracticeMode = 'vocab';
+    let stepCount = 1;
+    let rewardPoints = parseInt(localStorage.getItem('userRewardPoints')) || 50;
 
-        try {
-            // বাংলিশ লেখার জন্য অটো ডিটেক্ট বা একাধিক উৎস চেক করা
-            let url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${targetLang}&dt=t&q=${encodeURIComponent(textInput)}`;
-            let res = await fetch(url);
-            let data = await res.json();
-            let translatedText = data[0][0][0];
+    const aiQuestionsList = [
+        "Where do you live and what do you do?",
+        "What are your plans for this weekend?",
+        "Why do you want to learn English?",
+        "Tell me about your favorite food or restaurant."
+    ];
+    let currentAiQIndex = 0;
 
-            // যদি অনুবাদ আর ইনপুট একই এসে যায় (বাংলিশ ডিটেক্ট না করতে পারলে)
-            if (translatedText.toLowerCase().trim() === textInput.toLowerCase().trim()) {
-                // AI Writing Engine ব্যবহার করে অর্থ বের করবে
-                translatedText = await correctGrammarRules(textInput);
-            }
-
-            resultContainer.innerHTML = `
-                <div style="font-size: 15px; font-weight: bold; margin-bottom: 6px; display:flex; justify-content:space-between;">
-                    <span><b>মূল:</b> ${textInput}</span>
-                    <button class="speak-btn" onclick="speakText('${textInput}', '${sourceLang}')">🔊</button>
-                </div>
-                <div style="font-size: 16px; color: #27ae60; font-weight: bold; display:flex; justify-content:space-between; align-items:center;">
-                    <span><b>অনুবাদ:</b> ${translatedText}</span>
-                    <button class="speak-btn" onclick="speakText('${translatedText.replace(/'/g, "\\'")}', '${targetLang}')">🔊</button>
-                </div>
-            `;
-        } catch (e) {
-            resultContainer.innerHTML = '<p style="color: red; text-align: center;">অনুবাদ ব্যর্থ হয়েছে।</p>';
-        }
-    }
+    let wordDatabase = [
+        {"category": "Home (বাসাবাড়ি)", "word": "Kitchen", "meaning": "রান্নাঘর"},
+        {"category": "Home (বাসাবাড়ি)", "word": "Furniture", "meaning": "আসবাবপত্র"},
+        {"category": "Home (বাসাবাড়ি)", "word": "Curtains", "meaning": "পর্দা"},
+        {"category": "Home (বাসাবাড়ি)", "word": "Blanket", "meaning": "কম্বল"},
+        {"category": "Workspace (কর্মক্ষেত্র)", "word": "Manager", "meaning": "ব্যবস্থাপক"},
+        {"category": "Workspace (কর্মক্ষেত্র)", "word": "Salary", "meaning": "বেতন"},
         {"category": "Entertainment (বিনোদন)", "word": "Music", "meaning": "গান/সঙ্গীত"},
         {"category": "Shopping (কেনাকাটা)", "word": "Discount", "meaning": "ছাড়"}
     ];
