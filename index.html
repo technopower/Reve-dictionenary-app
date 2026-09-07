@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>REVE AI Dictionary & Translator</title>
+    <title>REVE AI Apps</title>
 
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#16a085">
@@ -17,17 +17,16 @@
 
     <style>
         :root {
-            --bg-color: #eef2f5;
+            --bg-color: #f0f2f5;
             --container-bg: #ffffff;
             --text-color: #333333;
-            --subtext-color: #555555;
-            --border-color: #e2e8f0;
-            --card-bg: #f8f9fa;
+            --subtext-color: #666666;
+            --border-color: #e4e6eb;
+            --card-bg: #f7f9fa;
             --input-bg: #ffffff;
-            --input-border: #dddddd;
-            --result-bg: #f9f9f9;
-            --btn-icon-bg: #f0f0f0;
-            --btn-icon-text: #333333;
+            --input-border: #cccccc;
+            --primary-color: #10915c;
+            --primary-hover: #0d7a4d;
         }
 
         [data-theme="dark"] {
@@ -39,45 +38,271 @@
             --card-bg: #2a2a2a;
             --input-bg: #2d2d2d;
             --input-border: #444444;
-            --result-bg: #252525;
-            --btn-icon-bg: #333333;
-            --btn-icon-text: #ffffff;
+            --primary-color: #10915c;
+            --primary-hover: #0d7a4d;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; transition: background-color 0.2s ease, color 0.2s ease; }
-        body { background-color: var(--bg-color); color: var(--text-color); padding: 15px; display: flex; justify-content: center; align-items: center; min-height: 100vh; flex-direction: column; }
-        .app-container { background: var(--container-bg); padding: 20px; border-radius: 20px; box-shadow: 0 8px 25px rgba(0,0,0,0.2); width: 100%; max-width: 440px; overflow: hidden; }
-        
-        .hero-banner { text-align: center; background: linear-gradient(135deg, #0b874b, #16a085); color: white; padding: 18px 15px; border-radius: 16px; margin-bottom: 15px; position: relative; }
-        .hero-banner h1 { font-size: 24px; font-weight: 800; letter-spacing: 0.5px; margin-bottom: 4px; }
-        .hero-banner h1 span { font-size: 16px; color: #f1c40f; font-style: italic; }
-        .hero-banner p { font-size: 13px; opacity: 0.95; font-weight: 500; }
-        .theme-toggle-btn { position: absolute; top: 12px; right: 12px; background: rgba(255,255,255,0.2); border: none; color: white; font-size: 16px; border-radius: 50%; width: 32px; height: 32px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-
-        .translation-direction { 
-            display: flex; align-items: center; justify-content: center; 
-            background: var(--card-bg); padding: 10px; border-radius: 12px; 
-            margin-bottom: 15px; border: 1px solid var(--border-color); gap: 8px; width: 100%;
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            transition: background-color 0.2s ease, color 0.2s ease;
         }
-        .lang-select-box { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; min-width: 0; }
-        .lang-select-box label { font-size: 11px; font-weight: bold; color: #16a085; margin-bottom: 4px; text-align: center; white-space: nowrap; }
-        .lang-select { width: 100%; padding: 6px 4px; border-radius: 6px; border: 1px solid #16a085; font-size: 12px; font-weight: bold; outline: none; background: var(--input-bg); color: var(--text-color); cursor: pointer; text-align: center; text-align-last: center; }
-        .swap-btn { background: #16a085; color: white; border: none; border-radius: 50%; width: 32px; height: 32px; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; margin-top: 14px; flex-shrink: 0; }
 
-        .search-container { display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px; }
-        .search-input-group { display: flex; gap: 6px; align-items: center; }
-        input[type="text"] { flex: 1; padding: 10px; font-size: 13px; border: 2px solid var(--input-border); background: var(--input-bg); color: var(--text-color); border-radius: 8px; outline: none; }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
 
-        .icon-btn { background: var(--btn-icon-bg); color: var(--btn-icon-text); border: 1px solid var(--border-color); padding: 8px 10px; border-radius: 8px; cursor: pointer; font-size: 13px; display: flex; align-items: center; justify-content: center; gap: 4px; font-weight: bold; }
-        .icon-btn:hover { opacity: 0.9; }
+        .app-container {
+            background: var(--container-bg);
+            padding: 24px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            max-width: 480px;
+        }
 
-        button.action-btn { background: #27ae60; color: white; border: none; padding: 10px 12px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 13px; }
-        .speak-btn { background: #3498db; color: white; border: none; padding: 4px 8px; border-radius: 6px; cursor: pointer; font-size: 11px; margin-left: 6px; display: inline-flex; align-items: center; justify-content: center; gap: 3px; }
-        .speak-btn-speaker { background: #e74c3c; color: white; border: none; border-radius: 50%; width: 32px; height: 32px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        /* Banner Header */
+        .hero-banner {
+            text-align: center;
+            background: var(--primary-color);
+            color: white;
+            padding: 24px 20px;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            position: relative;
+        }
 
-        .result-card { background: var(--result-bg); padding: 15px; border-radius: 10px; border-left: 4px solid #27ae60; min-height: 80px; margin-bottom: 15px; line-height: 1.6; color: var(--text-color); }
+        .hero-banner h1 {
+            font-size: 26px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
 
-        .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); color: white; padding: 8px 16px; border-radius: 20px; font-size: 12px; display: none; z-index: 1000; }
+        .hero-banner h1 span {
+            font-size: 18px;
+            color: #f1c40f;
+            font-style: italic;
+            font-weight: 700;
+        }
+
+        .hero-banner p {
+            font-size: 14px;
+            opacity: 0.95;
+            font-weight: 500;
+        }
+
+        .theme-toggle-btn {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            font-size: 18px;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Language Direction Box */
+        .translation-direction {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--card-bg);
+            padding: 12px 16px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            border: 1px solid var(--border-color);
+            gap: 10px;
+        }
+
+        .lang-select-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+        }
+
+        .lang-select-box label {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 6px;
+        }
+
+        .lang-select {
+            width: 100%;
+            padding: 8px;
+            border-radius: 8px;
+            border: 1px solid var(--primary-color);
+            font-size: 13px;
+            font-weight: 600;
+            outline: none;
+            background: var(--input-bg);
+            color: var(--text-color);
+            cursor: pointer;
+            text-align: center;
+            text-align-last: center;
+        }
+
+        .swap-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 18px;
+            flex-shrink: 0;
+        }
+
+        /* Search Section */
+        .search-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .search-input-group {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px 16px;
+            font-size: 14px;
+            border: 1px solid var(--input-border);
+            background: var(--input-bg);
+            color: var(--text-color);
+            border-radius: 10px;
+            outline: none;
+        }
+
+        input[type="text"]::placeholder {
+            color: #888888;
+        }
+
+        .icon-btn {
+            background: #efefef;
+            color: #333333;
+            border: none;
+            padding: 10px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            font-weight: 600;
+            flex: 1;
+        }
+
+        [data-theme="dark"] .icon-btn {
+            background: #333333;
+            color: #ffffff;
+        }
+
+        button.action-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 14px;
+            flex: 2;
+        }
+
+        button.action-btn:hover {
+            background: var(--primary-hover);
+        }
+
+        /* Result Card */
+        .result-card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 5px solid var(--primary-color);
+            min-height: 90px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .result-card p {
+            color: var(--subtext-color);
+            font-size: 14px;
+            text-align: center;
+            width: 100%;
+        }
+
+        .speak-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .speak-btn-speaker {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            display: none;
+            z-index: 1000;
+        }
     </style>
 </head>
 <body>
@@ -121,15 +346,165 @@
                 <button id="micBtn" class="icon-btn" onclick="startVoiceSearch()">🎙️ কথা বলুন</button>
                 <button class="icon-btn" onclick="document.getElementById('imageInput').click()">📷 স্ক্যান</button>
                 <input type="file" id="imageInput" accept="image/*" style="display: none;" onchange="processImageSearch(event)">
-                <button class="action-btn" style="flex:1;" onclick="searchWord()">খুঁজুন</button>
+                <button class="action-btn" onclick="searchWord()">খুঁজুন</button>
             </div>
         </div>
+
         <div id="resultContainer" class="result-card">
-            <p style="color: var(--subtext-color); text-align: center; font-size: 12px;">শব্দ বা বাক্য লিখুন, অনুবাদ দেখতে পাবেন</p>
+            <p>শব্দ বা বাক্য লিখুন, অনুবাদ দেখতে পাবেন</p>
         </div>
     </div>
 </div>
 
-<script src="script.js"></script>
+<script>
+    function toggleDarkMode() {
+        const body = document.body;
+        const btn = document.getElementById('themeToggleBtn');
+        if (body.getAttribute('data-theme') === 'dark') {
+            body.removeAttribute('data-theme');
+            btn.innerText = '🌙';
+        } else {
+            body.setAttribute('data-theme', 'dark');
+            btn.innerText = '☀️';
+        }
+    }
+
+    function showToast(msg) {
+        const toast = document.getElementById('toast');
+        toast.innerText = msg;
+        toast.style.display = 'block';
+        setTimeout(() => { toast.style.display = 'none'; }, 2000);
+    }
+
+    function copyToClipboard(text) {
+        navigator.clipboard.writeText(text);
+        showToast("কপি করা হয়েছে! 📋");
+    }
+
+    function swapLanguages() {
+        const sourceSelect = document.getElementById('sourceLang');
+        const targetSelect = document.getElementById('targetLang');
+        if (sourceSelect.value === 'auto') sourceSelect.value = 'en';
+        const temp = sourceSelect.value;
+        sourceSelect.value = targetSelect.value;
+        targetSelect.value = temp;
+    }
+
+    function speakText(text, langCode = 'en-US') {
+        if (!('speechSynthesis' in window)) return;
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = langCode;
+        utterance.rate = 0.85;
+        window.speechSynthesis.speak(utterance);
+    }
+
+    async function searchWord() {
+        let word = document.getElementById('wordInput').value.trim();
+        const sourceLang = document.getElementById('sourceLang').value;
+        const targetLang = document.getElementById('targetLang').value;
+        const resCard = document.getElementById('resultContainer');
+
+        if (!word) {
+            alert('একটি শব্দ বা বাক্য লিখুন!');
+            return;
+        }
+
+        resCard.style.display = 'block';
+        resCard.innerHTML = '<p style="text-align: center; color: #10915c;">🔍 অনুবাদ ও অর্থ অনুসন্ধান করা হচ্ছে...</p>';
+
+        try {
+            let translatedText = "";
+
+            // Banglish text detection logic
+            const isBanglish = /^[a-zA-Z0-9\s.,?!]+$/.test(word) && (
+                /\b(ami|tumi|she|amra|tara|jabo|khabo|korbo|koro|kore|jacchi|kothay|bhalo|feni|dhaka|koto|theke|jonno|keno|ki|kon|kokhon)\b/i.test(word)
+            );
+
+            if (isBanglish) {
+                const enRes = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=bn-BD&tl=en&dt=t&q=${encodeURIComponent(word)}`);
+                const enData = await enRes.json();
+                let englishText = (enData && enData[0] && enData[0][0][0]) ? enData[0][0][0] : word;
+
+                const bnRes = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=bn&dt=t&q=${encodeURIComponent(englishText)}`);
+                const bnData = await bnRes.json();
+                let banglaText = (bnData && bnData[0] && bnData[0][0][0]) ? bnData[0][0][0] : "";
+
+                if (banglaText && englishText !== word) {
+                    translatedText = `${englishText} (${banglaText})`;
+                } else if (englishText !== word) {
+                    translatedText = englishText;
+                }
+            }
+
+            if (!translatedText) {
+                const res = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sourceLang}&tl=${targetLang}&dt=t&q=${encodeURIComponent(word)}`);
+                const data = await res.json();
+                if (data && data[0]) {
+                    data[0].forEach(item => {
+                        if (item[0]) translatedText += item[0];
+                    });
+                }
+            }
+
+            const targetSpeakLang = targetLang === 'bn' ? 'bn-BD' : 'en-US';
+
+            resCard.innerHTML = `
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <h3 style="color:#10915c; font-size:16px;">${word}</h3>
+                    <button class="speak-btn-speaker" onclick="speakText('${word.replace(/'/g, "\\'")}', 'en-US')">🔊</button>
+                </div>
+                <p style="font-size: 14px; font-weight: bold; margin-top: 8px; color: var(--text-color); text-align: left;">
+                    <b>অর্থ / অনুবাদ:</b> ${translatedText}
+                </p>
+                <div style="margin-top: 8px;">
+                    <button class="speak-btn" onclick="speakText('${translatedText.replace(/'/g, "\\'")}', '${targetSpeakLang}')">🔊 অনুবাদ শুনুন</button>
+                </div>
+                <hr style="margin: 10px 0; border: 0; border-top: 1px solid var(--border-color);">
+                <p style="text-align: left; font-size: 12px;">🎯 <b>IELTS Usage:</b> Daily conversation and writing context</p>
+                <button class="icon-btn" style="margin-top:8px; font-size:11px; flex:none;" onclick="copyToClipboard('${word} : ${translatedText}')">📋 Copy Word & Meaning</button>
+            `;
+        } catch(e) {
+            resCard.innerHTML = '<p style="color:red; text-align:center;">অনুবাদ ব্যর্থ হয়েছে। ইন্টারনেট সংযোগ পরীক্ষা করুন।</p>';
+        }
+    }
+
+    function startVoiceSearch() {
+        if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+            alert('আপনার ব্রাউজারে ভয়েস সাপোর্ট নেই!');
+            return;
+        }
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        const recognition = new SpeechRecognition();
+        recognition.lang = 'en-US';
+        recognition.start();
+        recognition.onresult = function(event) {
+            document.getElementById('wordInput').value = event.results[0][0].transcript;
+            searchWord();
+        };
+    }
+
+    function processImageSearch(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        const resCard = document.getElementById('resultContainer');
+        resCard.style.display = 'block';
+        resCard.innerHTML = '<p style="text-align: center; color: #10915c;">🖼️ ছবি থেকে লেখা স্ক্যান করা হচ্ছে...</p>';
+
+        Tesseract.recognize(file, 'eng')
+            .then(({ data: { text } }) => {
+                const cleanedText = text.trim().replace(/\n/g, ' ');
+                if (cleanedText) {
+                    document.getElementById('wordInput').value = cleanedText;
+                    searchWord();
+                } else {
+                    resCard.innerHTML = '<p style="color:red; text-align:center;">ছবি থেকে কোনো লেখা পড়া যায়নি।</p>';
+                }
+            })
+            .catch(() => {
+                resCard.innerHTML = '<p style="color:red; text-align:center;">ছবি প্রসেস করতে সমস্যা হয়েছে।</p>';
+            });
+    }
+</script>
 </body>
 </html>
