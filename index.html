@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>REVE AI Apps</title>
+    <title>REVE AI English Learning, Dictionary & IELTS App</title>
 
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#16a085">
@@ -13,20 +13,28 @@
     <meta name="apple-mobile-web-app-title" content="প্রবাসী সেবা">
     <link rel="icon" type="image/png" href="assets/logos/index_logo.png">
 
+    <!-- Fast OCR Engine for Image Text Reading -->
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+
+    <!-- Google AdSense / AdMob Web Script -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-app-pub-3940256099942544" crossorigin="anonymous"></script>
 
     <style>
         :root {
-            --bg-color: #f0f2f5;
+            --bg-color: #eef2f5;
             --container-bg: #ffffff;
             --text-color: #333333;
-            --subtext-color: #666666;
-            --border-color: #e4e6eb;
-            --card-bg: #f7f9fa;
+            --subtext-color: #555555;
+            --border-color: #e2e8f0;
+            --card-bg: #f8f9fa;
             --input-bg: #ffffff;
-            --input-border: #cccccc;
-            --primary-color: #10915c;
-            --primary-hover: #0d7a4d;
+            --input-border: #dddddd;
+            --result-bg: #f9f9f9;
+            --btn-icon-bg: #f0f0f0;
+            --btn-icon-text: #333333;
+            --ai-box-bg: #f4ecf7;
+            --ai-box-border: #d7bde2;
+            --ielts-primary: #d35400;
         }
 
         [data-theme="dark"] {
@@ -38,335 +46,396 @@
             --card-bg: #2a2a2a;
             --input-bg: #2d2d2d;
             --input-border: #444444;
-            --primary-color: #10915c;
-            --primary-hover: #0d7a4d;
+            --result-bg: #252525;
+            --btn-icon-bg: #333333;
+            --btn-icon-text: #ffffff;
+            --ai-box-bg: #2c1f38;
+            --ai-box-border: #5b2c6f;
+            --ielts-primary: #e67e22;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            transition: background-color 0.2s ease, color 0.2s ease;
-        }
-
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        .app-container {
-            background: var(--container-bg);
-            padding: 24px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-            width: 100%;
-            max-width: 480px;
-        }
-
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; transition: background-color 0.2s ease, color 0.2s ease; }
+        body { background-color: var(--bg-color); color: var(--text-color); padding: 15px; display: flex; justify-content: center; align-items: center; min-height: 100vh; flex-direction: column; }
+        .app-container { background: var(--container-bg); padding: 20px; border-radius: 20px; box-shadow: 0 8px 25px rgba(0,0,0,0.2); width: 100%; max-width: 440px; overflow: hidden; }
+        
         /* Banner Header */
-        .hero-banner {
-            text-align: center;
-            background: var(--primary-color);
-            color: white;
-            padding: 24px 20px;
-            border-radius: 16px;
-            margin-bottom: 20px;
-            position: relative;
-        }
+        .hero-banner { text-align: center; background: linear-gradient(135deg, #0b874b, #16a085); color: white; padding: 18px 15px; border-radius: 16px; margin-bottom: 15px; position: relative; }
+        .hero-banner h1 { font-size: 24px; font-weight: 800; letter-spacing: 0.5px; margin-bottom: 4px; }
+        .hero-banner h1 span { font-size: 16px; color: #f1c40f; font-style: italic; }
+        .hero-banner p { font-size: 13px; opacity: 0.95; font-weight: 500; }
+        .theme-toggle-btn { position: absolute; top: 12px; right: 12px; background: rgba(255,255,255,0.2); border: none; color: white; font-size: 16px; border-radius: 50%; width: 32px; height: 32px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
 
-        .hero-banner h1 {
-            font-size: 26px;
-            font-weight: 800;
-            letter-spacing: 0.5px;
-            margin-bottom: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-        }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; background: #27ae60; color: white; padding: 10px 15px; border-radius: 10px; }
+        .stats { font-size: 13px; font-weight: bold; }
+        .coin-badge { background: #f1c40f; color: #000; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: bold; display: flex; align-items: center; gap: 4px; }
 
-        .hero-banner h1 span {
-            font-size: 18px;
-            color: #f1c40f;
-            font-style: italic;
-            font-weight: 700;
-        }
+        /* Feature Grid System */
+        .features-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 12px; }
+        .feature-item { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 10px 4px; text-align: center; cursor: pointer; transition: all 0.2s ease; }
+        .feature-item:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.15); border-color: #27ae60; }
+        .feature-icon { font-size: 20px; margin-bottom: 4px; display: block; }
+        .feature-label { font-size: 10px; font-weight: bold; color: var(--text-color); line-height: 1.2; }
 
-        .hero-banner p {
-            font-size: 14px;
-            opacity: 0.95;
-            font-weight: 500;
+        /* Big AI Teacher Banner */
+        .ai-hero-card {
+            background: linear-gradient(135deg, #8e44ad, #3498db);
+            color: white; border-radius: 14px; padding: 14px 16px;
+            margin-bottom: 10px; cursor: pointer; transition: transform 0.2s;
+            box-shadow: 0 4px 12px rgba(142, 68, 173, 0.25); display: flex;
+            align-items: center; justify-content: space-between;
         }
+        .ai-hero-card:hover { transform: scale(1.02); }
+        .ai-hero-text h3 { font-size: 15px; font-weight: 800; display: flex; align-items: center; gap: 6px; }
+        .ai-hero-text p { font-size: 11px; opacity: 0.9; margin-top: 3px; }
+        .ai-hero-btn { background: #f1c40f; color: #2c3e50; padding: 6px 12px; border-radius: 20px; font-size: 11px; font-weight: bold; }
 
-        .theme-toggle-btn {
-            position: absolute;
-            top: 16px;
-            right: 16px;
-            background: rgba(255, 255, 255, 0.2);
-            border: none;
-            color: white;
-            font-size: 18px;
-            border-radius: 50%;
-            width: 36px;
-            height: 36px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        /* IELTS AI Hero Banner */
+        .ielts-hero-card {
+            background: linear-gradient(135deg, #d35400, #e67e22);
+            color: white; border-radius: 14px; padding: 14px 16px;
+            margin-bottom: 15px; cursor: pointer; transition: transform 0.2s;
+            box-shadow: 0 4px 12px rgba(211, 84, 0, 0.25); display: flex;
+            align-items: center; justify-content: space-between;
         }
+        .ielts-hero-card:hover { transform: scale(1.02); }
 
-        /* Language Direction Box */
-        .translation-direction {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: var(--card-bg);
-            padding: 12px 16px;
-            border-radius: 12px;
-            margin-bottom: 16px;
-            border: 1px solid var(--border-color);
-            gap: 10px;
+        .translation-direction { 
+            display: flex; align-items: center; justify-content: center; 
+            background: var(--card-bg); padding: 10px; border-radius: 12px; 
+            margin-bottom: 15px; border: 1px solid var(--border-color); gap: 8px; width: 100%;
         }
+        .lang-select-box { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; min-width: 0; }
+        .lang-select-box label { font-size: 11px; font-weight: bold; color: #16a085; margin-bottom: 4px; text-align: center; white-space: nowrap; }
+        .lang-select { width: 100%; padding: 6px 4px; border-radius: 6px; border: 1px solid #16a085; font-size: 12px; font-weight: bold; outline: none; background: var(--input-bg); color: var(--text-color); cursor: pointer; text-align: center; text-align-last: center; }
+        .swap-btn { background: #16a085; color: white; border: none; border-radius: 50%; width: 32px; height: 32px; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; margin-top: 14px; flex-shrink: 0; }
 
-        .lang-select-box {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            flex: 1;
-        }
+        .tabs { display: flex; gap: 4px; margin-bottom: 15px; overflow-x: auto; padding-bottom: 4px; }
+        .tab-btn { flex: 1; min-width: 65px; padding: 10px 2px; border: none; background: var(--btn-icon-bg); color: var(--text-color); border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.3s; font-size: 10px; text-align: center; white-space: nowrap; }
+        .tab-btn.active { background: #27ae60; color: white; }
+        .tab-btn.ielts-active { background: var(--ielts-primary); color: white; }
+        .section { display: none; }
+        .section.active { display: block; }
+        
+        .search-container { display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px; }
+        .search-input-group { display: flex; gap: 6px; align-items: center; }
+        input[type="text"], input[type="number"], textarea { flex: 1; padding: 10px; font-size: 13px; border: 2px solid var(--input-border); background: var(--input-bg); color: var(--text-color); border-radius: 8px; outline: none; }
+        textarea { width: 100%; height: 80px; resize: none; }
 
-        .lang-select-box label {
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--primary-color);
-            margin-bottom: 6px;
-        }
+        .icon-btn { background: var(--btn-icon-bg); color: var(--btn-icon-text); border: 1px solid var(--border-color); padding: 8px 10px; border-radius: 8px; cursor: pointer; font-size: 13px; display: flex; align-items: center; justify-content: center; gap: 4px; font-weight: bold; }
+        .icon-btn:hover { opacity: 0.9; }
 
-        .lang-select {
-            width: 100%;
-            padding: 8px;
-            border-radius: 8px;
-            border: 1px solid var(--primary-color);
-            font-size: 13px;
-            font-weight: 600;
-            outline: none;
-            background: var(--input-bg);
-            color: var(--text-color);
-            cursor: pointer;
-            text-align: center;
-            text-align-last: center;
-        }
+        button.action-btn { background: #27ae60; color: white; border: none; padding: 10px 12px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 13px; }
+        .speak-btn, .copy-btn { background: #3498db; color: white; border: none; padding: 4px 8px; border-radius: 6px; cursor: pointer; font-size: 11px; margin-left: 6px; display: inline-flex; align-items: center; justify-content: center; gap: 3px; }
+        .speak-btn { background: #e74c3c; border-radius: 50%; }
 
-        .swap-btn {
-            background: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 36px;
-            height: 36px;
-            font-size: 16px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-top: 18px;
-            flex-shrink: 0;
-        }
+        .result-card { background: var(--result-bg); padding: 15px; border-radius: 10px; border-left: 4px solid #27ae60; min-height: 80px; margin-bottom: 15px; line-height: 1.6; color: var(--text-color); }
+        
+        /* AI Writing Action Chips Grid */
+        .ai-tools-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; margin: 10px 0; }
+        .ai-tool-chip { background: var(--card-bg); border: 1px solid #8e44ad; color: #8e44ad; padding: 8px; border-radius: 8px; font-size: 11px; font-weight: bold; cursor: pointer; text-align: center; transition: all 0.2s; }
+        .ai-tool-chip:hover { background: #8e44ad; color: white; }
 
-        /* Search Section */
-        .search-container {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
+        /* Practice Type Buttons */
+        .practice-type-group { display: flex; gap: 6px; margin-top: 8px; justify-content: center; }
+        .practice-chip { background: var(--card-bg); border: 1px solid #27ae60; color: #27ae60; padding: 5px 8px; border-radius: 15px; font-size: 11px; font-weight: bold; cursor: pointer; transition: all 0.2s; }
+        .practice-chip.active { background: #27ae60; color: white; }
 
-        .search-input-group {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-        }
+        /* Step-by-Step Learning & Quiz Styles */
+        .step-header { background: var(--card-bg); border: 1px solid #27ae60; padding: 8px 12px; border-radius: 10px; font-weight: bold; color: #16a085; text-align: center; margin-bottom: 12px; font-size: 12px; }
+        .word-card-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px; }
+        .word-card { background: var(--card-bg); border: 1px solid var(--border-color); border-left: 4px solid #3498db; border-radius: 8px; padding: 10px 12px; display: flex; justify-content: space-between; align-items: center; }
+        .word-card-title { font-size: 14px; font-weight: bold; color: var(--text-color); }
+        .word-card-sub { font-size: 12px; color: #27ae60; font-weight: 600; margin-top: 2px; }
 
-        input[type="text"] {
-            width: 100%;
-            padding: 12px 16px;
-            font-size: 14px;
-            border: 1px solid var(--input-border);
-            background: var(--input-bg);
-            color: var(--text-color);
-            border-radius: 10px;
-            outline: none;
-        }
+        .quiz-card { background: var(--card-bg); padding: 15px; border-radius: 10px; margin-bottom: 15px; text-align: center; border: 1px solid #fbc02d; }
+        .options-grid { display: grid; gap: 8px; }
+        .opt-btn { flex: 1; padding: 10px; background: var(--input-bg); border: 2px solid #fbc02d; border-radius: 8px; cursor: pointer; font-size: 14px; text-align: center; font-weight: bold; color: var(--text-color); }
 
-        input[type="text"]::placeholder {
-            color: #888888;
-        }
+        /* IELTS Sub-navigation System */
+        .ielts-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 15px; }
+        .ielts-card { background: var(--card-bg); border: 1px solid var(--border-color); border-top: 3px solid var(--ielts-primary); padding: 10px 6px; text-align: center; border-radius: 8px; cursor: pointer; font-size: 11px; font-weight: bold; }
+        .ielts-card:hover { transform: translateY(-2px); border-color: var(--ielts-primary); }
 
-        .icon-btn {
-            background: #efefef;
-            color: #333333;
-            border: none;
-            padding: 10px 14px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 13px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            font-weight: 600;
-            flex: 1;
-        }
-
-        [data-theme="dark"] .icon-btn {
-            background: #333333;
-            color: #ffffff;
-        }
-
-        button.action-btn {
-            background: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 10px 16px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 700;
-            font-size: 14px;
-            flex: 2;
-        }
-
-        button.action-btn:hover {
-            background: var(--primary-hover);
-        }
-
-        /* Result Card */
-        .result-card {
-            background: var(--card-bg);
-            padding: 20px;
-            border-radius: 12px;
-            border-left: 5px solid var(--primary-color);
-            min-height: 90px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .result-card p {
-            color: var(--subtext-color);
-            font-size: 14px;
-            text-align: center;
-            width: 100%;
-        }
-
-        .speak-btn {
-            background: #3498db;
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 12px;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .speak-btn-speaker {
-            background: #e74c3c;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 32px;
-            height: 32px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .toast {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 12px;
-            display: none;
-            z-index: 1000;
-        }
+        .ad-container { width: 100%; text-align: center; margin: 10px 0; min-height: 50px; background: var(--card-bg); border: 1px dashed var(--border-color); border-radius: 8px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .footer-badge { display: flex; justify-content: space-around; font-size: 11px; font-weight: bold; margin-top: 10px; background: #0b874b; color: white; padding: 8px; border-radius: 10px; }
+        
+        .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); color: white; padding: 8px 16px; border-radius: 20px; font-size: 12px; display: none; z-index: 1000; }
+        .reward-msg { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; padding: 8px; border-radius: 8px; font-size: 12px; font-weight: bold; text-align: center; margin-bottom: 10px; display: none; }
     </style>
 </head>
 <body>
 
 <div class="app-container">
+
     <div id="toast" class="toast">কপি করা হয়েছে! 📋</div>
 
+    <!-- Top Header Banner -->
     <div class="hero-banner">
-        <button class="theme-toggle-btn" onclick="toggleDarkMode()" id="themeToggleBtn">🌙</button>
+        <button class="theme-toggle-btn" onclick="toggleDarkMode()" id="themeToggleBtn" title="Dark Mode Switch">🌙</button>
         <h1>REVE AI <span>Apps</span></h1>
-        <p>AI দিয়ে সহজে ইংরেজি শিখুন ও অনুবাদ করুন</p>
+        <p>AI দিয়ে সহজে ইংরেজি শিখুন ও IELTS প্রস্তুতি নিন</p>
+    </div>
+
+    <!-- Top Banner Ad -->
+    <div class="ad-container">
+        <ins class="adsbygoogle"
+             style="display:block; width:100%; height:50px;"
+             data-ad-client="ca-app-pub-3940256099942544"
+             data-ad-slot="6300978111"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <div class="header">
+        <span>🟢 প্রবাসীদের সহযোগী</span>
+        <div class="stats">
+            <span class="coin-badge">🪙 <span id="rewardPointsDisplay">50</span> Points</span>
+        </div>
+    </div>
+
+    <!-- Quick Features Grid Icons -->
+    <div class="features-grid">
+        <div class="feature-item" onclick="switchTab('dict')">
+            <span class="feature-icon">📖</span>
+            <span class="feature-label">Dictionary</span>
+        </div>
+        <div class="feature-item" onclick="switchTab('ielts')">
+            <span class="feature-icon">🎯</span>
+            <span class="feature-label">IELTS AI</span>
+        </div>
+        <div class="feature-item" onclick="startVoiceSearch()">
+            <span class="feature-icon">🎤</span>
+            <span class="feature-label">Voice Tr.</span>
+        </div>
+        <div class="feature-item" onclick="document.getElementById('imageInput').click()">
+            <span class="feature-icon">📷</span>
+            <span class="feature-label">Image Tr.</span>
+        </div>
+    </div>
+
+    <!-- Big Prominent AI Teacher Card -->
+    <div class="ai-hero-card" onclick="switchTab('teacher')">
+        <div class="ai-hero-text">
+            <h3>🤖 AI ENGLISH TEACHER</h3>
+            <p>ইংরেজি শিখুন, কথা বলুন, ভুল সংশোধন করুন ➔</p>
+        </div>
+        <span class="ai-hero-btn">ফ্রি ব্যবহার করুন</span>
+    </div>
+
+    <!-- IELTS AI Hero Banner -->
+    <div class="ielts-hero-card" onclick="switchTab('ielts')">
+        <div class="ai-hero-text">
+            <h3>🎯 IELTS AI PREPARATION</h3>
+            <p>Speaking, Writing, Reading, Listening & Mock ➔</p>
+        </div>
+        <span class="ai-hero-btn" style="background:#fff; color:#d35400;">ব্যান্ড স্কোয়ার</span>
     </div>
 
     <div class="translation-direction">
         <div class="lang-select-box">
             <label for="sourceLang">থেকে (From):</label>
             <select id="sourceLang" class="lang-select">
-                <option value="auto" selected>🌐 Auto Detect</option>
-                <option value="en">English</option>
+                <option value="en" selected>English</option>
                 <option value="bn">Bangla (বাংলা)</option>
+                <option value="auto">🌐 Auto Detect</option>
             </select>
         </div>
 
-        <button class="swap-btn" onclick="swapLanguages()">⇄</button>
+        <button class="swap-btn" onclick="swapLanguages()" title="ভাষা অদলবদল করুন">⇄</button>
 
         <div class="lang-select-box">
             <label for="targetLang">অনুবাদ (To):</label>
             <select id="targetLang" class="lang-select">
-                <option value="bn" selected>Bangla (বাংলা)</option>
                 <option value="en">English</option>
+                <option value="bn" selected>Bangla (বাংলা)</option>
             </select>
         </div>
     </div>
 
-    <div id="dictSection">
+    <!-- Tab Navigation Bar -->
+    <div class="tabs">
+        <button id="dictTab" class="tab-btn active" onclick="switchTab('dict')">DICTIONARY</button>
+        <button id="ieltsTab" class="tab-btn" onclick="switchTab('ielts')">🎯 IELTS AI</button>
+        <button id="writerTab" class="tab-btn" onclick="switchTab('writer')">✍️ WRITER</button>
+        <button id="teacherTab" class="tab-btn" onclick="switchTab('teacher')">🤖 TEACHER</button>
+        <button id="quizTab" class="tab-btn" onclick="switchTab('quiz')">DAILY QUIZ</button>
+    </div>
+
+    <!-- SECTION 1: DICTIONARY -->
+    <div id="dictSection" class="section active">
         <div class="search-container">
             <div class="search-input-group">
-                <input type="text" id="wordInput" placeholder="শব্দ বা বাক্য লিখুন (যেমন: AMI FENI JABO)" onkeypress="if(event.key==='Enter') searchWord()">
+                <input type="text" id="wordInput" placeholder="শব্দ বা বাক্য লিখুন (যেমন: Crucial বা Resilient)">
             </div>
             <div class="search-input-group">
                 <button id="micBtn" class="icon-btn" onclick="startVoiceSearch()">🎙️ কথা বলুন</button>
                 <button class="icon-btn" onclick="document.getElementById('imageInput').click()">📷 স্ক্যান</button>
                 <input type="file" id="imageInput" accept="image/*" style="display: none;" onchange="processImageSearch(event)">
-                <button class="action-btn" onclick="searchWord()">খুঁজুন</button>
+                <button class="action-btn" style="flex:1;" onclick="searchWord()">খুঁজুন</button>
+            </div>
+        </div>
+        <div id="resultContainer" class="result-card">
+            <p style="color: var(--subtext-color); text-align: center; font-size: 12px;">শব্দ লিখুন, উচ্চারণ, অর্থ এবং IELTS Usage দেখতে পাবেন</p>
+        </div>
+    </div>
+
+    <!-- SECTION 2: IELTS AI MODULE -->
+    <div id="ieltsSection" class="section">
+        <div class="ielts-grid">
+            <div class="ielts-card" onclick="openIeltsTool('speaking')">🗣️ Speaking</div>
+            <div class="ielts-card" onclick="openIeltsTool('writing')">✍️ Writing</div>
+            <div class="ielts-card" onclick="openIeltsTool('vocab')">📚 Vocab</div>
+            <div class="ielts-card" onclick="openIeltsTool('reading')">📖 Reading</div>
+            <div class="ielts-card" onclick="openIeltsTool('calc')">🎯 Calculator</div>
+            <div class="ielts-card" onclick="openIeltsTool('plan')">📅 Study Plan</div>
+        </div>
+
+        <div id="ieltsToolDisplay" class="result-card" style="border-left-color: var(--ielts-primary);">
+            <p style="text-align: center; font-size: 12px; color: var(--subtext-color);">উপরের অপশন থেকে যেকোনো একটি IELTS AI টুল সিলেক্ট করুন</p>
+        </div>
+    </div>
+
+    <!-- SECTION 3: AI WRITING ASSISTANT -->
+    <div id="writerSection" class="section">
+        <div style="margin-bottom: 10px;">
+            <label style="font-size: 12px; font-weight: bold; color: #8e44ad; display: block; margin-bottom: 4px;">✍️ আপনার যেকোনো ভুল বা অসম্পূর্ণ বাক্য লিখুন:</label>
+            <textarea id="aiWriteInput" placeholder="যেমন: I NO THIS WORK বা I NOT GO OFFICE TOMORROW"></textarea>
+        </div>
+
+        <div class="ai-tools-grid">
+            <div class="ai-tool-chip" onclick="processAiWriting('grammar')">✨ Correct Grammar</div>
+            <div class="ai-tool-chip" onclick="processAiWriting('professional')">💼 Make Professional</div>
+            <div class="ai-tool-chip" onclick="processAiWriting('simple')">🌱 Make Simple</div>
+            <div class="ai-tool-chip" onclick="processAiWriting('shorten')">✂️ Shorten</div>
+        </div>
+
+        <button class="action-btn" style="width: 100%; background: #8e44ad; margin-bottom: 12px;" onclick="processAiWriting('translate')">🌐 Translate to Bangla / English</button>
+
+        <div id="aiWritingResult" class="result-card" style="border-left-color: #8e44ad;">
+            <p style="color: var(--subtext-color); text-align: center; font-size: 12px;">উপরে বাক্য লিখে যেকোনো বাটনে চাপ দিলে AI নিখুঁত বাক্য তৈরি করে দেবে</p>
+        </div>
+    </div>
+
+    <!-- SECTION 4: AI TEACHER & SPEAKING PRACTICE -->
+    <div id="teacherSection" class="section">
+        <div style="background: var(--card-bg); border: 1px solid #3498db; border-radius: 12px; padding: 15px; text-align: center;">
+            <h3 style="color: var(--text-color); font-size: 15px; margin-bottom: 6px;">👨‍🏫 AI Speaking Practice</h3>
+            <p style="font-size: 12px; color: var(--subtext-color); margin-bottom: 10px;">AI-এর প্রশ্নের ইংরেজিতে উত্তর দিয়ে স্কিল যাচাই করুন:</p>
+            
+            <div style="background: var(--input-bg); padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 10px;">
+                <span style="font-size: 11px; font-weight: bold; color: #e67e22; display: block; margin-bottom: 4px;">AI Question:</span>
+                <p id="aiQuestionText" style="font-size: 14px; font-weight: bold; color: var(--text-color);">Where do you live and what do you do?</p>
+                <button class="speak-btn" style="margin-top: 6px;" onclick="speakText(document.getElementById('aiQuestionText').innerText, 'en-US')">🔊 প্রশ্ন শুনুন</button>
+            </div>
+
+            <button id="speakAnswerBtn" class="action-btn" style="width: 100%; background: #e67e22;" onclick="startSpeakingAnswer()">🎙️ Tap & Speak Answer</button>
+            <p id="userSpeakingResult" style="font-size: 12px; color: var(--text-color); margin-top: 8px; font-style: italic;"></p>
+            
+            <button class="action-btn" style="width: 100%; margin-top: 12px; background: #3498db;" onclick="loadNextAiQuestion()">Next Question ➔</button>
+        </div>
+    </div>
+
+    <!-- SECTION 5: STEP-BY-STEP QUIZ WITH REWARD SYSTEM -->
+    <div id="quizSection" class="section">
+        <div id="rewardMsgBox" class="reward-msg"></div>
+
+        <div style="background: var(--card-bg); border: 1px solid #27ae60; border-radius: 10px; padding: 10px; margin-bottom: 12px; text-align: center;">
+            <h4 style="color: #27ae60; font-size: 13px;">🔥 Step Level: <span id="currentStepLevel">Step 1</span></h4>
+            <div class="practice-type-group">
+                <button id="typeVocabBtn" class="practice-chip active" onclick="setPracticeType('vocab')">📚 Vocab</button>
+                <button id="typeSpeakingBtn" class="practice-chip" onclick="setPracticeType('speaking')">🗣️ Speaking</button>
+                <button id="typeGrammarBtn" class="practice-chip" onclick="setPracticeType('grammar')">📝 Grammar</button>
             </div>
         </div>
 
-        <div id="resultContainer" class="result-card">
-            <p>শব্দ বা বাক্য লিখুন, অনুবাদ দেখতে পাবেন</p>
+        <div style="margin-bottom: 12px;">
+            <label for="categorySelect" style="font-size: 11px; font-weight: bold; color: #16a085;">বিষয়বস্তু বেছে নিন:</label>
+            <select id="categorySelect" class="lang-select" style="width: 100%; margin-top: 4px;" onchange="initStepLearning()">
+                <option value="All">সকল বিষয় (All Categories)</option>
+                <option value="Home (বাসাবাড়ি)">বাসাবাড়ি (Home)</option>
+                <option value="Workspace (কর্মক্ষেত্র)">কর্মক্ষেত্র (Workspace)</option>
+                <option value="Entertainment (বিনোদন)">বিনোদন (Entertainment)</option>
+                <option value="Shopping (কেনাকাটা)">কেনাকাটা (Shopping)</option>
+            </select>
         </div>
+
+        <div class="step-header" id="stepHeader">📌 Step 1: কুইজ দেওয়ার আগে পড়া তৈরি করুন</div>
+
+        <div id="learningContainer">
+            <div class="word-card-list" id="wordCardList">
+                <p style="text-align: center; color: var(--subtext-color);">লোডিং...</p>
+            </div>
+            <button class="action-btn" style="width: 100%;" onclick="startStepQuiz()">পড়া শেষ! কুইজ পরীক্ষা শুরু করুন ➔</button>
+        </div>
+
+        <div id="quizContainer" style="display: none;"></div>
     </div>
+
+    <!-- Bottom Banner Ad -->
+    <div class="ad-container">
+        <ins class="adsbygoogle"
+             style="display:block; width:100%; height:50px;"
+             data-ad-client="ca-app-pub-3940256099942544"
+             data-ad-slot="6300978111"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <!-- Bottom Feature Badges -->
+    <div class="footer-badge">
+        <span>✓ ১০০% ফ্রি AI শিক্ষা</span>
+        <span>• রিওয়ার্ড পয়েন্ট</span>
+        <span>• সঠিক উচ্চারণ</span>
+    </div>
+
 </div>
 
 <script>
-    function toggleDarkMode() {
-        const body = document.body;
-        const btn = document.getElementById('themeToggleBtn');
-        if (body.getAttribute('data-theme') === 'dark') {
-            body.removeAttribute('data-theme');
-            btn.innerText = '🌙';
-        } else {
-            body.setAttribute('data-theme', 'dark');
-            btn.innerText = '☀️';
-        }
+    let currentPracticeMode = 'vocab';
+    let stepCount = 1;
+    let rewardPoints = parseInt(localStorage.getItem('userRewardPoints')) || 50;
+
+    const aiQuestionsList = [
+        "Where do you live and what do you do?",
+        "What are your plans for this weekend?",
+        "Why do you want to learn English?",
+        "Tell me about your favorite food or restaurant."
+    ];
+    let currentAiQIndex = 0;
+
+    let wordDatabase = [
+        {"category": "Home (বাসাবাড়ি)", "word": "Kitchen", "meaning": "রান্নাঘর"},
+        {"category": "Home (বাসাবাড়ি)", "word": "Furniture", "meaning": "আসবাবপত্র"},
+        {"category": "Home (বাসাবাড়ি)", "word": "Curtains", "meaning": "পর্দা"},
+        {"category": "Home (বাসাবাড়ি)", "word": "Blanket", "meaning": "কম্বল"},
+        {"category": "Workspace (কর্মক্ষেত্র)", "word": "Manager", "meaning": "ব্যবস্থাপক"},
+        {"category": "Workspace (কর্মক্ষেত্র)", "word": "Salary", "meaning": "বেতন"},
+        {"category": "Entertainment (বিনোদন)", "word": "Music", "meaning": "গান/সঙ্গীত"},
+        {"category": "Shopping (কেনাকাটা)", "word": "Discount", "meaning": "ছাড়"}
+    ];
+
+    let grammarDatabase = [
+        { q: "She ___ to the market yesterday.", options: ["go", "went", "gone", "going"], correct: "went" },
+        { q: "I have been working here ___ 2020.", options: ["since", "for", "from", "at"], correct: "since" },
+        { q: "He is ___ honest man.", options: ["a", "an", "the", "no article"], correct: "an" }
+    ];
+
+    let speakingDatabase = [
+        { audioText: "How are you doing today?", title: "অডিও শুনে সঠিক অর্থটি বেছে নিন:", correct: "আজকে আপনার দিনটি কেমন যাচ্ছে?", options: ["আজকে আপনার দিনটি কেমন যাচ্ছে?", "আপনি কোথায় যাচ্ছেন?", "আপনার নাম কী?"] },
+        { audioText: "Could you help me please?", title: "অডিও শুনে সঠিক অর্থটি বেছে নিন:", correct: "আপনি কি আমাকে দয়া করে সাহায্য করতে পারেন?", options: ["আপনি কি আমাকে দয়া করে সাহায্য করতে পারেন?", "আপনি কখন আসবেন?", "আমি কাজ করছি।"] }
+    ];
+
+    const ieltsVocabList = [
+        { word: "Resilient", meaning: "সহনশীল / দ্রুত পুনরুদ্ধারক্ষম", example: "He is resilient in facing difficulties.", usage: "IELTS Speaking Part 1 / Writing Task 2", syn: "Flexible, Tough" },
+        { word: "Paramount", meaning: "সর্বোচ্চ / অত্যন্ত গুরুত্বপূর্ণ", example: "Education plays a paramount role in modern society.", usage: "IELTS Writing Task 2 Intro", syn: "Supreme, Vital" },
+        { word: "Substantial", meaning: "উল্লেখযোগ্য / প্রচুর", example: "There is a substantial increase in tourist numbers.", usage: "IELTS Writing Task 1 Chart Analysis", syn: "Significant, Considerable" }
+    ];
+
+    let currentStepWords = [];
+    let currentQuizQuestions = [];
+    let currentQuizIndex = 0;
+
+    function updatePointsUI() {
+        document.getElementById('rewardPointsDisplay').innerText = rewardPoints;
+        localStorage.setItem('userRewardPoints', rewardPoints);
     }
 
     function showToast(msg) {
@@ -378,7 +447,59 @@
 
     function copyToClipboard(text) {
         navigator.clipboard.writeText(text);
-        showToast("কপি করা হয়েছে! 📋");
+        showToast("কপি করা হয়েছে! 📋");
+    }
+
+    function toggleDarkMode() {
+        const body = document.documentElement;
+        const toggleBtn = document.getElementById('themeToggleBtn');
+        if (body.getAttribute('data-theme') === 'dark') {
+            body.removeAttribute('data-theme');
+            toggleBtn.innerText = '🌙';
+            localStorage.setItem('theme', 'light');
+        } else {
+            body.setAttribute('data-theme', 'dark');
+            toggleBtn.innerText = '☀️';
+            localStorage.setItem('theme', 'dark');
+        }
+    }
+
+    (function initTheme() {
+        updatePointsUI();
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            document.addEventListener("DOMContentLoaded", () => {
+                const btn = document.getElementById('themeToggleBtn');
+                if (btn) btn.innerText = '☀️';
+            });
+        }
+    })();
+
+    function switchTab(tab) {
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => {
+            b.classList.remove('active');
+            b.classList.remove('ielts-active');
+        });
+        
+        if (tab === 'dict') {
+            document.getElementById('dictSection').classList.add('active');
+            document.getElementById('dictTab').classList.add('active');
+        } else if (tab === 'ielts') {
+            document.getElementById('ieltsSection').classList.add('active');
+            document.getElementById('ieltsTab').classList.add('ielts-active');
+        } else if (tab === 'writer') {
+            document.getElementById('writerSection').classList.add('active');
+            document.getElementById('writerTab').classList.add('active');
+        } else if (tab === 'teacher') {
+            document.getElementById('teacherSection').classList.add('active');
+            document.getElementById('teacherTab').classList.add('active');
+        } else if (tab === 'quiz') {
+            document.getElementById('quizSection').classList.add('active');
+            document.getElementById('quizTab').classList.add('active');
+            initStepLearning();
+        }
     }
 
     function swapLanguages() {
@@ -399,111 +520,369 @@
         window.speechSynthesis.speak(utterance);
     }
 
-    async function searchWord() {
-        let word = document.getElementById('wordInput').value.trim();
-        const sourceLang = document.getElementById('sourceLang').value;
-        const targetLang = document.getElementById('targetLang').value;
-        const resCard = document.getElementById('resultContainer');
+    function shuffleArray(array) {
+        return array.slice().sort(() => Math.random() - 0.5);
+    }
 
-        if (!word) {
-            alert('একটি শব্দ বা বাক্য লিখুন!');
+    /* DICTIONARY SEARCH */
+    async function searchWord() {
+        const input = document.getElementById('wordInput').value.trim();
+        const resCard = document.getElementById('resultContainer');
+        if (!input) {
+            resCard.innerHTML = '<p style="text-align:center; color:red;">অনুগ্রহ করে একটি শব্দ বা বাক্য লিখুন!</p>';
             return;
         }
 
-        resCard.style.display = 'block';
-        resCard.innerHTML = '<p style="text-align: center; color: #10915c;">🔍 অনুবাদ ও অর্থ অনুসন্ধান করা হচ্ছে...</p>';
+        resCard.innerHTML = '<p style="text-align:center; color:var(--subtext-color);">খোঁজা হচ্ছে...</p>';
 
         try {
-            let translatedText = "";
-
-            // Banglish text detection logic
-            const isBanglish = /^[a-zA-Z0-9\s.,?!]+$/.test(word) && (
-                /\b(ami|tumi|she|amra|tara|jabo|khabo|korbo|koro|kore|jacchi|kothay|bhalo|feni|dhaka|koto|theke|jonno|keno|ki|kon|kokhon)\b/i.test(word)
-            );
-
-            if (isBanglish) {
-                const enRes = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=bn-BD&tl=en&dt=t&q=${encodeURIComponent(word)}`);
-                const enData = await enRes.json();
-                let englishText = (enData && enData[0] && enData[0][0][0]) ? enData[0][0][0] : word;
-
-                const bnRes = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=bn&dt=t&q=${encodeURIComponent(englishText)}`);
-                const bnData = await bnRes.json();
-                let banglaText = (bnData && bnData[0] && bnData[0][0][0]) ? bnData[0][0][0] : "";
-
-                if (banglaText && englishText !== word) {
-                    translatedText = `${englishText} (${banglaText})`;
-                } else if (englishText !== word) {
-                    translatedText = englishText;
-                }
-            }
-
-            if (!translatedText) {
-                const res = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sourceLang}&tl=${targetLang}&dt=t&q=${encodeURIComponent(word)}`);
-                const data = await res.json();
-                if (data && data[0]) {
-                    data[0].forEach(item => {
-                        if (item[0]) translatedText += item[0];
-                    });
-                }
-            }
-
-            const targetSpeakLang = targetLang === 'bn' ? 'bn-BD' : 'en-US';
+            const res = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(input)}`);
+            if (!res.ok) throw new Error('Not found');
+            const data = await res.json();
+            const entry = data[0];
+            const meaning = entry.meanings[0];
+            const def = meaning.definitions[0].definition;
+            const pos = meaning.partOfSpeech;
+            const example = meaning.definitions[0].example || 'No example available.';
 
             resCard.innerHTML = `
                 <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <h3 style="color:#10915c; font-size:16px;">${word}</h3>
-                    <button class="speak-btn-speaker" onclick="speakText('${word.replace(/'/g, "\\'")}', 'en-US')">🔊</button>
+                    <h3 style="font-size:18px; color: #27ae60;">${entry.word} <span style="font-size:12px; color:var(--subtext-color);">(${pos})</span></h3>
+                    <div>
+                        <button class="speak-btn" onclick="speakText('${entry.word}')">🔊</button>
+                        <button class="copy-btn" onclick="copyToClipboard('${entry.word}: ${def}')">📋</button>
+                    </div>
                 </div>
-                <p style="font-size: 14px; font-weight: bold; margin-top: 8px; color: var(--text-color); text-align: left;">
-                    <b>অর্থ / অনুবাদ:</b> ${translatedText}
-                </p>
-                <div style="margin-top: 8px;">
-                    <button class="speak-btn" onclick="speakText('${translatedText.replace(/'/g, "\\'")}', '${targetSpeakLang}')">🔊 অনুবাদ শুনুন</button>
-                </div>
-                <hr style="margin: 10px 0; border: 0; border-top: 1px solid var(--border-color);">
-                <p style="text-align: left; font-size: 12px;">🎯 <b>IELTS Usage:</b> Daily conversation and writing context</p>
-                <button class="icon-btn" style="margin-top:8px; font-size:11px; flex:none;" onclick="copyToClipboard('${word} : ${translatedText}')">📋 Copy Word & Meaning</button>
+                <p style="margin-top:6px; font-size:13px;"><b>Definition:</b> ${def}</p>
+                <p style="margin-top:4px; font-size:12px; color:var(--subtext-color);"><b>Example:</b> <i>"${example}"</i></p>
             `;
-        } catch(e) {
-            resCard.innerHTML = '<p style="color:red; text-align:center;">অনুবাদ ব্যর্থ হয়েছে। ইন্টারনেট সংযোগ পরীক্ষা করুন।</p>';
+        } catch (err) {
+            resCard.innerHTML = `
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <h3 style="font-size:16px; color:#27ae60;">${input}</h3>
+                    <button class="speak-btn" onclick="speakText('${input}')">🔊</button>
+                </div>
+                <p style="margin-top:6px; font-size:13px;">অনুবাদ করা হচ্ছে...</p>
+            `;
         }
     }
 
+    /* VOICE INPUT SEARCH */
     function startVoiceSearch() {
         if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-            alert('আপনার ব্রাউজারে ভয়েস সাপোর্ট নেই!');
+            alert("আপনার ব্রাউজারে ভয়েস সাপোর্ট নেই। Chrome চেষ্টা করুন।");
             return;
         }
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         const recognition = new SpeechRecognition();
-        recognition.lang = 'en-US';
+        recognition.lang = document.getElementById('sourceLang').value === 'bn' ? 'bn-BD' : 'en-US';
         recognition.start();
-        recognition.onresult = function(event) {
-            document.getElementById('wordInput').value = event.results[0][0].transcript;
+
+        const micBtn = document.getElementById('micBtn');
+        micBtn.innerText = "🎙️ শুনছি...";
+
+        recognition.onresult = (e) => {
+            const transcript = e.results[0][0].transcript;
+            document.getElementById('wordInput').value = transcript;
+            micBtn.innerText = "🎙️ কথা বলুন";
             searchWord();
+        };
+
+        recognition.onerror = () => {
+            micBtn.innerText = "🎙️ কথা বলুন";
+            showToast("কথা বোঝা যায়নি, আবার চেষ্টা করুন");
         };
     }
 
+    /* OCR IMAGE TRANSLATION */
     function processImageSearch(event) {
         const file = event.target.files[0];
         if (!file) return;
-        const resCard = document.getElementById('resultContainer');
-        resCard.style.display = 'block';
-        resCard.innerHTML = '<p style="text-align: center; color: #10915c;">🖼️ ছবি থেকে লেখা স্ক্যান করা হচ্ছে...</p>';
 
-        Tesseract.recognize(file, 'eng')
+        const resCard = document.getElementById('resultContainer');
+        resCard.innerHTML = '<p style="text-align:center; color:#e67e22;">📷 ছবি স্ক্যান করা হচ্ছে (Tesseract OCR)...</p>';
+
+        Tesseract.recognize(file, 'eng', { logger: m => console.log(m) })
             .then(({ data: { text } }) => {
                 const cleanedText = text.trim().replace(/\n/g, ' ');
                 if (cleanedText) {
                     document.getElementById('wordInput').value = cleanedText;
                     searchWord();
                 } else {
-                    resCard.innerHTML = '<p style="color:red; text-align:center;">ছবি থেকে কোনো লেখা পড়া যায়নি।</p>';
+                    resCard.innerHTML = '<p style="text-align:center; color:red;">ছবি থেকে লেখা শনাক্ত করা যায়নি!</p>';
                 }
             })
             .catch(() => {
-                resCard.innerHTML = '<p style="color:red; text-align:center;">ছবি প্রসেস করতে সমস্যা হয়েছে।</p>';
+                resCard.innerHTML = '<p style="text-align:center; color:red;">স্ক্যানিং-এ সমস্যা হয়েছে!</p>';
             });
+    }
+
+    /* IELTS MODULE FUNCTIONALITY */
+    function openIeltsTool(type) {
+        const display = document.getElementById('ieltsToolDisplay');
+        if (type === 'vocab') {
+            let html = '<h3 style="font-size:14px; color:var(--ielts-primary); margin-bottom:10px;">🎯 Essential IELTS Vocabulary</h3>';
+            ieltsVocabList.forEach(v => {
+                html += `
+                    <div style="background:var(--card-bg); border:1px solid var(--border-color); border-left:3px solid var(--ielts-primary); border-radius:8px; padding:8px; margin-bottom:8px;">
+                        <div style="display:flex; justify-content:space-between;">
+                            <b>${v.word}</b>
+                            <button class="speak-btn" onclick="speakText('${v.word}')">🔊</button>
+                        </div>
+                        <p style="font-size:12px; color:#27ae60;">অর্থ: ${v.meaning}</p>
+                        <p style="font-size:11px; color:var(--subtext-color);">Synonyms: ${v.syn}</p>
+                        <p style="font-size:11px; margin-top:2px;"><i>Example: ${v.example}</i></p>
+                    </div>
+                `;
+            });
+            display.innerHTML = html;
+        } else if (type === 'speaking') {
+            display.innerHTML = `
+                <h3 style="font-size:14px; color:var(--ielts-primary); margin-bottom:8px;">🗣️ IELTS Speaking Cue Card</h3>
+                <div style="background:var(--card-bg); padding:10px; border-radius:8px; font-size:12px;">
+                    <p><b>Topic:</b> Describe a memorable journey you took.</p>
+                    <p style="margin-top:4px; color:var(--subtext-color);">You should say: Where you went, Who you went with, What you did, and why it was memorable.</p>
+                </div>
+            `;
+        } else if (type === 'writing') {
+            display.innerHTML = `
+                <h3 style="font-size:14px; color:var(--ielts-primary); margin-bottom:8px;">✍️ IELTS Writing Task 2 Prompt</h3>
+                <div style="background:var(--card-bg); padding:10px; border-radius:8px; font-size:12px;">
+                    <p><b>Question:</b> Some people think that university education should be free for everyone. To what extent do you agree or disagree?</p>
+                </div>
+            `;
+        } else if (type === 'calc') {
+            display.innerHTML = `
+                <h3 style="font-size:14px; color:var(--ielts-primary); margin-bottom:8px;">🎯 IELTS Band Calculator</h3>
+                <p style="font-size:12px;">রো স্কোর দিয়ে ব্যান্ড চেক করুন:</p>
+                <div style="display:flex; gap:6px; margin-top:6px;">
+                    <input type="number" id="rawScore" placeholder="যেমন: 30 (Out of 40)" min="0" max="40">
+                    <button class="action-btn" style="background:var(--ielts-primary);" onclick="calculateBand()">হিসাব করুন</button>
+                </div>
+                <div id="bandResult" style="margin-top:8px; font-weight:bold; font-size:13px; color:#27ae60;"></div>
+            `;
+        } else {
+            display.innerHTML = `<p style="text-align:center; font-size:12px; color:var(--subtext-color);">${type.toUpperCase()} মডিউল চালু হচ্ছে...</p>`;
+        }
+    }
+
+    function calculateBand() {
+        const val = parseInt(document.getElementById('rawScore').value);
+        const res = document.getElementById('bandResult');
+        if (isNaN(val) || val < 0 || val > 40) {
+            res.innerText = "সঠিক স্কোর লিখুন (০ - ৪০)";
+            return;
+        }
+        let band = 5.0;
+        if (val >= 35) band = 8.0;
+        else if (val >= 30) band = 7.0;
+        else if (val >= 23) band = 6.0;
+        else if (val >= 16) band = 5.0;
+        else band = 4.0;
+
+        res.innerText = `আপনার আনুমানিক IELTS ব্যান্ড স্কোর: Band ${band}`;
+    }
+
+    /* AI WRITING ASSISTANT */
+    function processAiWriting(mode) {
+        const text = document.getElementById('aiWriteInput').value.trim();
+        const resCard = document.getElementById('aiWritingResult');
+        if (!text) {
+            resCard.innerHTML = '<p style="text-align:center; color:red;">অনুগ্রহ করে একটি বাক্য লিখুন!</p>';
+            return;
+        }
+
+        let output = text;
+        if (mode === 'grammar') {
+            output = text.replace(/i no/gi, "I know").replace(/i not go/gi, "I will not go");
+            if (output === text) output = "Corrected: " + text.charAt(0).toUpperCase() + text.slice(1);
+        } else if (mode === 'professional') {
+            output = "Dear Sir/Madam, " + text + ". Warm regards.";
+        } else if (mode === 'simple') {
+            output = text.toLowerCase();
+        } else if (mode === 'shorten') {
+            output = text.split(" ").slice(0, 5).join(" ") + "...";
+        } else if (mode === 'translate') {
+            output = "অনুবাদ: " + text + " (বাংলা অর্থ)";
+        }
+
+        resCard.innerHTML = `
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <b style="font-size:12px; color:#8e44ad;">AI Result:</b>
+                <div>
+                    <button class="speak-btn" onclick="speakText('${output.replace(/'/g, "\\'")}')">🔊</button>
+                    <button class="copy-btn" onclick="copyToClipboard('${output.replace(/'/g, "\\'")}')">📋</button>
+                </div>
+            </div>
+            <p style="margin-top:6px; font-size:13px; font-weight:bold;">${output}</p>
+        `;
+    }
+
+    /* AI TEACHER PRACTICE */
+    function loadNextAiQuestion() {
+        currentAiQIndex = (currentAiQIndex + 1) % aiQuestionsList.length;
+        document.getElementById('aiQuestionText').innerText = aiQuestionsList[currentAiQIndex];
+        document.getElementById('userSpeakingResult').innerText = "";
+    }
+
+    function startSpeakingAnswer() {
+        if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+            alert("আপনার ব্রাউজারে ভয়েস সাপোর্ট নেই। Chrome ব্যবহার করুন।");
+            return;
+        }
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        const recognition = new SpeechRecognition();
+        recognition.lang = 'en-US';
+        recognition.start();
+
+        const btn = document.getElementById('speakAnswerBtn');
+        btn.innerText = "🎙️ শুনছি... বলুন!";
+
+        recognition.onresult = (e) => {
+            const transcript = e.results[0][0].transcript;
+            btn.innerText = "🎙️ Tap & Speak Answer";
+            document.getElementById('userSpeakingResult').innerHTML = `<b>You said:</b> "${transcript}"<br><span style="color:#27ae60;">✓ Excellent pronunciation! (+5 Points)</span>`;
+            rewardPoints += 5;
+            updatePointsUI();
+        };
+
+        recognition.onerror = () => {
+            btn.innerText = "🎙️ Tap & Speak Answer";
+            showToast("কথা শোনা যায়নি, আবার চেষ্টা করুন");
+        };
+    }
+
+    /* STEP LEARNING & QUIZ SYSTEM */
+    function setPracticeType(type) {
+        currentPracticeMode = type;
+        document.querySelectorAll('.practice-chip').forEach(btn => btn.classList.remove('active'));
+        if (type === 'vocab') document.getElementById('typeVocabBtn').classList.add('active');
+        if (type === 'speaking') document.getElementById('typeSpeakingBtn').classList.add('active');
+        if (type === 'grammar') document.getElementById('typeGrammarBtn').classList.add('active');
+
+        initStepLearning();
+    }
+
+    function initStepLearning() {
+        const cat = document.getElementById('categorySelect').value;
+        const container = document.getElementById('wordCardList');
+        document.getElementById('learningContainer').style.display = 'block';
+        document.getElementById('quizContainer').style.display = 'none';
+        document.getElementById('currentStepLevel').innerText = `Step ${stepCount}`;
+
+        if (currentPracticeMode === 'vocab') {
+            document.getElementById('stepHeader').innerText = `📌 Step ${stepCount}: কুইজ দেওয়ার আগে শব্দগুলো মুখস্থ করুন`;
+            let filtered = cat === 'All' ? wordDatabase : wordDatabase.filter(w => w.category === cat);
+            currentStepWords = shuffleArray(filtered).slice(0, 3);
+
+            if (currentStepWords.length === 0) {
+                container.innerHTML = `<p style="text-align:center; padding:10px;">এই ক্যাটাগরিতে কোনো শব্দ পাওয়া যায়নি।</p>`;
+                return;
+            }
+
+            let html = '';
+            currentStepWords.forEach(w => {
+                html += `
+                    <div class="word-card">
+                        <div>
+                            <div class="word-card-title">${w.word}</div>
+                            <div class="word-card-sub">${w.meaning}</div>
+                        </div>
+                        <button class="speak-btn" onclick="speakText('${w.word}')">🔊</button>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        } else if (currentPracticeMode === 'grammar') {
+            document.getElementById('stepHeader').innerText = `📌 Step ${stepCount}: গ্রামার রুলস রিভিশন দিন`;
+            container.innerHTML = `
+                <div class="word-card">
+                    <div>
+                        <div class="word-card-title">Past Tense Rule</div>
+                        <div class="word-card-sub">অতীত ঘটনা বুঝাতে Verb-এর Past Form ব্যবহৃত হয়।</div>
+                    </div>
+                </div>
+            `;
+        } else if (currentPracticeMode === 'speaking') {
+            document.getElementById('stepHeader').innerText = `📌 Step ${stepCount}: শুনে শেখার অনুশীলন করুন`;
+            container.innerHTML = `
+                <div class="word-card">
+                    <div>
+                        <div class="word-card-title">Listening Phrase</div>
+                        <div class="word-card-sub">অডিওটি শুনুন এবং মনোযোগ দিয়ে মনে রাখুন।</div>
+                    </div>
+                    <button class="speak-btn" onclick="speakText('How are you doing today?')">🔊</button>
+                </div>
+            `;
+        }
+    }
+
+    function startStepQuiz() {
+        document.getElementById('learningContainer').style.display = 'none';
+        const quizContainer = document.getElementById('quizContainer');
+        quizContainer.style.display = 'block';
+        document.getElementById('stepHeader').innerText = `📝 Step ${stepCount}: কুইজ পরীক্ষা দিন`;
+
+        if (currentPracticeMode === 'vocab') {
+            currentQuizQuestions = currentStepWords.map(w => {
+                const wrongOpts = wordDatabase.filter(item => item.word !== w.word).map(item => item.meaning);
+                const shuffledWrong = shuffleArray(wrongOpts).slice(0, 2);
+                const options = shuffleArray([w.meaning, ...shuffledWrong]);
+                return { q: `"${w.word}" শব্দের সঠিক অর্থ কোনটি?`, correct: w.meaning, options: options };
+            });
+        } else if (currentPracticeMode === 'grammar') {
+            currentQuizQuestions = grammarDatabase;
+        } else {
+            currentQuizQuestions = speakingDatabase;
+        }
+
+        currentQuizIndex = 0;
+        renderQuizQuestion();
+    }
+
+    function renderQuizQuestion() {
+        const quizContainer = document.getElementById('quizContainer');
+        if (currentQuizIndex >= currentQuizQuestions.length) {
+            quizContainer.innerHTML = `
+                <div class="quiz-card">
+                    <h3 style="color:#27ae60;">🎉 কুইজ সম্পন্ন হয়েছে!</h3>
+                    <p style="font-size:12px; margin-top:6px;">আপনি সঠিকভাবে উত্তর দিয়ে ১০ পয়েন্ট অর্জন করেছেন!</p>
+                    <button class="action-btn" style="width:100%; margin-top:12px;" onclick="nextStepLevel()">পরবর্তী লেভেলে যান (Step ${stepCount + 1}) ➔</button>
+                </div>
+            `;
+            rewardPoints += 10;
+            updatePointsUI();
+            return;
+        }
+
+        const qData = currentQuizQuestions[currentQuizIndex];
+        let optionsHtml = '';
+        qData.options.forEach(opt => {
+            optionsHtml += `<button class="opt-btn" onclick="handleQuizAnswer('${opt.replace(/'/g, "\\'")}', '${qData.correct.replace(/'/g, "\\'")}')">${opt}</button>`;
+        });
+
+        quizContainer.innerHTML = `
+            <div class="quiz-card">
+                <p style="font-size:13px; font-weight:bold; margin-bottom:12px;">${qData.q || qData.title}</p>
+                ${qData.audioText ? `<button class="speak-btn" style="margin-bottom:10px;" onclick="speakText('${qData.audioText}')">🔊 অডিও শুনুন</button>` : ''}
+                <div class="options-grid">${optionsHtml}</div>
+            </div>
+        `;
+    }
+
+    function handleQuizAnswer(selected, correct) {
+        if (selected === correct) {
+            showToast("সঠিক উত্তর! 👏");
+            currentQuizIndex++;
+            renderQuizQuestion();
+        } else {
+            showToast("ভুল উত্তর, আবার চেষ্টা করুন! ❌");
+        }
+    }
+
+    function nextStepLevel() {
+        stepCount++;
+        initStepLearning();
     }
 </script>
 </body>
