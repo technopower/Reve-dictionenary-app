@@ -6,7 +6,7 @@
     <title>REVE AI Global Master Translator</title>
 
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#1a73e8">
+    <meta name="theme-color" content="#09122c">
     <link rel="apple-touch-icon" href="assets/logos/index_logo.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -18,44 +18,38 @@
 
     <style>
         :root {
-            --primary: #1a73e8;
-            --primary-hover: #1557b0;
-            --primary-light: #e8f0fe;
-            --bg-body: #f0f4f9;
-            --card-bg: #ffffff;
-            --text-main: #202124;
-            --text-muted: #5f6368;
-            --border-color: #dadce0;
-            --focus-ring: rgba(26, 115, 232, 0.25);
-            --accent-purple: #8430ce;
-            --accent-purple-light: #f3e8fd;
-            --shadow-elevation-1: 0 2px 6px rgba(60,64,67,0.1), 0 1px 2px rgba(60,64,67,0.08);
-            --shadow-elevation-2: 0 6px 16px rgba(60,64,67,0.12);
-        }
-
-        [data-theme="dark"] {
-            --primary: #8ab4f8;
-            --primary-hover: #aecbfa;
-            --primary-light: rgba(138, 180, 248, 0.15);
-            --bg-body: #17181c;
-            --card-bg: #202124;
-            --text-main: #e8eaed;
-            --text-muted: #9aa0a6;
-            --border-color: #3c4043;
-            --focus-ring: rgba(138, 180, 248, 0.3);
-            --accent-purple: #c58af9;
-            --accent-purple-light: rgba(197, 138, 249, 0.15);
-            --shadow-elevation-1: 0 2px 6px rgba(0,0,0,0.4);
-            --shadow-elevation-2: 0 6px 16px rgba(0,0,0,0.5);
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --primary-light: rgba(37, 99, 235, 0.15);
+            --bg-body: linear-gradient(135deg, #09122c 0%, #0b2545 50%, #001e4d 100%);
+            --card-bg: rgba(15, 23, 42, 0.75);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: rgba(255, 255, 255, 0.12);
+            --focus-ring: rgba(37, 99, 235, 0.4);
+            --accent-purple: #a855f7;
+            --accent-purple-light: rgba(168, 85, 247, 0.15);
+            --shadow-elevation-1: 0 4px 20px rgba(0, 0, 0, 0.4);
+            --shadow-elevation-2: 0 8px 32px rgba(0, 0, 0, 0.6);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Google Sans', Roboto, -apple-system, BlinkMacSystemFont, sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background-color: var(--bg-body); color: var(--text-main); display: flex; justify-content: center; min-height: 100vh; padding: 12px 10px; }
+        body { 
+            background: var(--bg-body); 
+            background-attachment: fixed;
+            color: var(--text-main); 
+            display: flex; 
+            justify-content: center; 
+            min-height: 100vh; 
+            padding: 12px 10px; 
+        }
 
         .app-shell {
             width: 100%;
             max-width: 480px;
             background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             border-radius: 28px;
             box-shadow: var(--shadow-elevation-2);
             border: 1px solid var(--border-color);
@@ -65,12 +59,13 @@
         }
 
         .top-navbar {
-            background: linear-gradient(135deg, #1a73e8, #0f52ba);
+            background: rgba(15, 23, 42, 0.9);
             padding: 18px 20px 14px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             color: #ffffff;
+            border-bottom: 1px solid var(--border-color);
         }
         .brand-logo {
             display: flex;
@@ -81,7 +76,7 @@
             color: #ffffff;
         }
         .brand-logo span {
-            color: #fef08a;
+            color: #60a5fa;
             font-weight: 800;
         }
         .nav-actions {
@@ -90,7 +85,7 @@
             gap: 10px;
         }
         .nav-icon-btn {
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
             border: none;
             color: #ffffff;
             font-size: 18px;
@@ -104,24 +99,26 @@
             transition: background 0.2s;
         }
         .nav-icon-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.2);
         }
         .user-pts {
-            background: #fef08a;
-            color: #854d0e;
+            background: rgba(254, 240, 138, 0.2);
+            color: #fef08a;
             font-size: 11px;
             font-weight: 800;
             padding: 4px 10px;
             border-radius: 20px;
+            border: 1px solid rgba(254, 240, 138, 0.3);
         }
 
         .hub-tabs {
             display: flex;
-            background: var(--bg-body);
+            background: rgba(30, 41, 59, 0.6);
             padding: 6px;
             margin: 12px 16px 0;
             border-radius: 16px;
             gap: 4px;
+            border: 1px solid var(--border-color);
         }
         .hub-tab {
             flex: 1;
@@ -137,8 +134,9 @@
             transition: all 0.2s;
         }
         .hub-tab.active {
-            background: var(--card-bg);
-            color: var(--primary);
+            background: rgba(37, 99, 235, 0.3);
+            color: #60a5fa;
+            border: 1px solid rgba(96, 165, 250, 0.3);
             box-shadow: var(--shadow-elevation-1);
         }
 
@@ -147,11 +145,11 @@
             align-items: center;
             justify-content: space-between;
             padding: 14px 16px;
-            background: var(--card-bg);
+            background: rgba(30, 41, 59, 0.4);
             border-bottom: 1px solid var(--border-color);
         }
         .lang-pill-box {
-            background: var(--bg-body);
+            background: rgba(15, 23, 42, 0.6);
             border: 1px solid var(--border-color);
             border-radius: 24px;
             padding: 6px 14px;
@@ -160,7 +158,7 @@
             gap: 6px;
             font-size: 13px;
             font-weight: 700;
-            color: var(--primary);
+            color: #60a5fa;
             position: relative;
             cursor: pointer;
         }
@@ -171,9 +169,9 @@
             cursor: pointer;
         }
         .swap-circle-btn {
-            background: var(--primary-light);
-            border: none;
-            color: var(--primary);
+            background: rgba(37, 99, 235, 0.2);
+            border: 1px solid rgba(37, 99, 235, 0.4);
+            color: #60a5fa;
             width: 38px;
             height: 38px;
             border-radius: 50%;
@@ -199,7 +197,7 @@
         }
 
         .translate-card {
-            background: var(--card-bg);
+            background: rgba(30, 41, 59, 0.5);
             border: 1px solid var(--border-color);
             border-radius: 22px;
             padding: 16px;
@@ -207,8 +205,8 @@
             box-shadow: var(--shadow-elevation-1);
         }
         .translate-card:focus-within {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px var(--focus-ring);
+            border-color: #60a5fa;
+            box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.2);
         }
 
         .card-textarea {
@@ -244,8 +242,8 @@
             gap: 6px;
         }
         .tool-btn {
-            background: none;
-            border: none;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
             color: var(--text-muted);
             width: 34px;
             height: 34px;
@@ -258,12 +256,13 @@
             transition: all 0.2s;
         }
         .tool-btn:hover {
-            background: var(--primary-light);
-            color: var(--primary);
+            background: rgba(37, 99, 235, 0.2);
+            color: #60a5fa;
+            border-color: rgba(96, 165, 250, 0.3);
         }
 
         .result-panel {
-            background: var(--bg-body);
+            background: rgba(15, 23, 42, 0.6);
             border: 1px solid var(--border-color);
             border-radius: 22px;
             padding: 16px;
@@ -286,8 +285,8 @@
         }
 
         .ai-enhancer-bar {
-            background: var(--accent-purple-light);
-            border: 1px dashed var(--accent-purple);
+            background: rgba(168, 85, 247, 0.1);
+            border: 1px dashed rgba(168, 85, 247, 0.4);
             padding: 10px 14px;
             border-radius: 16px;
             display: flex;
@@ -297,9 +296,9 @@
         }
         .ai-pill-btn {
             flex: 1;
-            background: var(--card-bg);
-            border: 1.5px solid var(--border-color);
-            color: var(--accent-purple);
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            color: #d8b4fe;
             padding: 10px 8px;
             border-radius: 14px;
             font-size: 12px;
@@ -309,7 +308,8 @@
             transition: all 0.2s;
         }
         .ai-pill-btn:hover {
-            border-color: var(--accent-purple);
+            border-color: #a855f7;
+            background: rgba(168, 85, 247, 0.2);
             box-shadow: var(--shadow-elevation-1);
         }
 
@@ -320,7 +320,7 @@
         }
         .btn-main-action {
             flex: 1;
-            background: var(--primary);
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
             color: white;
             border: none;
             padding: 12px 16px;
@@ -332,17 +332,17 @@
             align-items: center;
             justify-content: center;
             gap: 6px;
-            box-shadow: 0 4px 12px rgba(26, 115, 232, 0.3);
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4);
             transition: all 0.2s;
         }
         .btn-main-action:hover {
-            background: var(--primary-hover);
+            background: linear-gradient(135deg, #1d4ed8, #1e40af);
         }
 
         .admob-test-banner {
             width: 100%;
-            background: #e9ecef;
-            border: 2px dashed #adb5bd;
+            background: rgba(30, 41, 59, 0.4);
+            border: 1px dashed rgba(255, 255, 255, 0.2);
             border-radius: 14px;
             padding: 12px;
             text-align: center;
@@ -351,21 +351,22 @@
         .admob-test-banner span {
             font-size: 12px;
             font-weight: 700;
-            color: #495057;
+            color: var(--text-muted);
         }
 
         .voice-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6);
-            backdrop-filter: blur(8px);
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(12px);
             display: none;
             align-items: center;
             justify-content: center;
             z-index: 9999;
         }
         .voice-card {
-            background: var(--card-bg);
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid var(--border-color);
             width: 85%;
             max-width: 320px;
             border-radius: 28px;
@@ -380,7 +381,7 @@
         .voice-pulse-btn {
             width: 76px;
             height: 76px;
-            background: var(--primary);
+            background: #2563eb;
             color: white;
             border-radius: 50%;
             margin: 20px auto 16px;
@@ -389,13 +390,13 @@
             justify-content: center;
             font-size: 32px;
             cursor: pointer;
-            box-shadow: 0 8px 24px rgba(26, 115, 232, 0.4);
+            box-shadow: 0 0 25px rgba(37, 99, 235, 0.6);
             animation: rippleEffect 1.5s infinite;
         }
         @keyframes rippleEffect {
-            0% { box-shadow: 0 0 0 0 rgba(26, 115, 232, 0.5); }
-            70% { box-shadow: 0 0 0 22px rgba(26, 115, 232, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(26, 115, 232, 0); }
+            0% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.6); }
+            70% { box-shadow: 0 0 0 22px rgba(37, 99, 235, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); }
         }
 
         .toast-msg {
@@ -403,7 +404,8 @@
             bottom: 24px;
             left: 50%;
             transform: translateX(-50%);
-            background: #202124;
+            background: #0f172a;
+            border: 1px solid var(--border-color);
             color: white;
             padding: 8px 18px;
             border-radius: 20px;
@@ -430,7 +432,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            background: var(--bg-body);
+            background: rgba(30, 41, 59, 0.4);
             padding: 8px 12px;
             border-radius: 12px;
             margin-bottom: 12px;
@@ -441,15 +443,15 @@
             border: none;
             font-size: 12px;
             font-weight: 700;
-            color: var(--primary);
+            color: #60a5fa;
             outline: none;
             cursor: pointer;
         }
 
         .wrong-review-banner {
-            background: #fef2f2;
-            border: 1px solid #fca5a5;
-            color: #b91c1c;
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #fca5a5;
             padding: 10px 12px;
             border-radius: 12px;
             font-size: 12px;
@@ -475,7 +477,7 @@
         </div>
         <div class="nav-actions">
             <span class="user-pts">🪙 <span id="rewardDisplay">50</span> Pts</span>
-            <button class="nav-icon-btn" onclick="toggleTheme()" id="themeBtn" title="Theme">🌙</button>
+            <button class="nav-icon-btn" onclick="toggleTheme()" id="themeBtn" title="Theme">✨</button>
         </div>
     </div>
 
@@ -558,7 +560,7 @@
         </div>
 
         <div class="action-cta-row">
-            <button class="btn-main-action" style="background:#0f9d58;" id="btnVoice" onclick="openVoiceModal()">🎙️ Smart Voice AI</button>
+            <button class="btn-main-action" style="background:linear-gradient(135deg, #059669, #047857);" id="btnVoice" onclick="openVoiceModal()">🎙️ Smart Voice AI</button>
             <button class="btn-main-action" id="btnTranslate" onclick="translateText()">অনুবাদ করুন ➔</button>
         </div>
 
@@ -568,7 +570,7 @@
             </div>
             
             <div class="card-bottom-actions" style="margin-top:auto;">
-                <span style="font-size:11px; font-weight:700; color:var(--primary);" id="aiVerifiedText">AI Smart Corrected Output</span>
+                <span style="font-size:11px; font-weight:700; color:#60a5fa;" id="aiVerifiedText">AI Smart Corrected Output</span>
                 <div class="card-tools">
                     <button class="tool-btn" onclick="speakOutput()" title="Listen Voice">🔊</button>
                     <button class="tool-btn" onclick="copyOutput()" title="Copy Text">📋</button>
@@ -586,7 +588,7 @@
     <!-- MAIN VIEW 2: TEACHER -->
     <div id="teacherView" class="workspace-content tab-panel">
         <div class="translate-card" style="text-align:center;">
-            <span style="font-size:11px; font-weight:800; color:var(--primary);">AI SMART PRACTICE:</span>
+            <span style="font-size:11px; font-weight:800; color:#60a5fa;">AI SMART PRACTICE:</span>
             <p id="aiQuestion" style="font-size:15px; font-weight:700; margin:10px 0;">Where do you live and what do you do?</p>
             <button class="tool-btn" style="margin:0 auto 10px;" onclick="speakCustom(document.getElementById('aiQuestion').innerText, 'en-US')">🔊</button>
             <button class="btn-main-action" style="width:100%;" onclick="openVoiceModal()">🎙️ Speak Answer</button>
@@ -626,10 +628,10 @@
 
             <div class="quiz-header-status">
                 <span id="quizCounterText">⚔️ Arena Level 1 • রাউন্ড ১ / ৫</span>
-                <span id="quizScoreText" style="color:var(--primary);">স্কোর: ০</span>
+                <span id="quizScoreText" style="color:#60a5fa;">স্কোর: ০</span>
             </div>
             
-            <h4 id="quizLevelTitle" style="color:var(--primary); margin-bottom:6px; font-size:15px;">Level 1: Rookie Vanguard</h4>
+            <h4 id="quizLevelTitle" style="color:#60a5fa; margin-bottom:6px; font-size:15px;">Level 1: Rookie Vanguard</h4>
             <p id="quizPrompt" style="font-size:15px; font-weight:700; margin:12px 0 16px; color:var(--text-main); line-height:1.4;"></p>
             
             <div id="quizOptionsContainer" style="display:flex; flex-direction:column; gap:10px;"></div>
@@ -643,7 +645,7 @@
     <div class="voice-card">
         <button style="position:absolute; top:14px; right:16px; background:none; border:none; font-size:18px; color:var(--text-muted); cursor:pointer;" onclick="closeVoiceModal()">✖</button>
         <div style="font-size:22px; font-weight:800; letter-spacing:-0.5px; margin-bottom:8px;">
-            <span style="color:#4285F4">G</span><span style="color:#EA4335">o</span><span style="color:#FBBC05">o</span><span style="color:#4285F4">g</span><span style="color:#34A853">l</span><span style="color:#EA4335">e</span>
+            <span style="color:#60a5fa">G</span><span style="color:#f87171">o</span><span style="color:#fbbf24">o</span><span style="color:#60a5fa">g</span><span style="color:#34d399">l</span><span style="color:#f87171">e</span>
         </div>
         <div class="voice-pulse-btn" onclick="closeVoiceModal()">🎙️</div>
         <div id="voiceStatus" style="font-size:15px; font-weight:700; margin-bottom:4px;">Smart Listening...</div>
@@ -713,7 +715,7 @@
         { en: "Opportunity", bn: "সুযোগ", hi: "अवसर", ur: "موقع", ar: "فرصة", ja: "機会", ko: "기회", de: "Gelegenheit", fr: "Opportunité", es: "Oportunidad", pt: "Oportunidade", af: "Geleentheid", mr: "संधी", te: "అవకాశం", ta: "வாய்ப்பு", gu: "તક" },
         { en: "Essential", bn: "জরুরি / অত্যাবশ্যকীয়", hi: "आवश्यक", ur: "ضروری", ar: "ضروري", ja: "不可欠", ko: "필수적인", de: "Wichtig", fr: "Essentiel", es: "Esencial", pt: "Essencial", af: "Noodsaaklik", mr: "महत्त्वाचे", te: "ముఖ్యమైన", ta: "அவசியம்", gu: "જરૂરી" },
         { en: "Improve", bn: "উন্নতি করা", hi: "सुधारना", ur: "بہتر بنانا", ar: "تحسين", ja: "改善する", ko: "향상시키다", de: "Verbessern", fr: "Améliorer", es: "Mejorar", pt: "Melhorar", af: "Verbeter", mr: "सुधारणे", te: "మెరుగుపరచడం", ta: "மேம்படுத்த", gu: "સુધારવું" },
-        { en: "Difficult", bn: "কঠিন", hi: "कठिन", ur: "مشکل", ar: "صعب", ja: "難しい", ko: "어려운", de: "Schwierig", fr: "Difficile", es: "Difícil", pt: "Difícil", af: "Moeilik", mr: "कठीण", te: "కష్టమైన", ta: "கடினம்", gu: "મુશ્કેल" },
+        { en: "Difficult", bn: "কঠিন", hi: "कठिन", ur: "مشکل", ar: "صعب", ja: "難しい", ko: "어려운", de: "Schwierig", fr: "Difficile", es: "Difícil", pt: "Difícil", af: "Moeilik", mr: "कठीण", te: "కష్టమైన", ta: "கடினம்", gu: "મુશ્કેલ" },
         { en: "Comfortable", bn: "আরামদায়ক", hi: "आरामदायक", ur: "آرام دہ", ar: "مريح", ja: "快適な", ko: "편안한", de: "Bequem", fr: "Confortable", es: "Cómodo", pt: "Confortável", af: "Gemaklik", mr: "आरामदायी", te: "సౌకర్యవంతమైన", ta: "சௌகரியமான", gu: "આરામદાયક" },
         { en: "Success", bn: "সাফল্য", hi: "सफलता", ur: "کامیابی", ar: "نجاح", ja: "成功", ko: "성공", de: "Erfolg", fr: "Succès", es: "Éxito", pt: "Sucesso", af: "Sukses", mr: "यश", te: "విజయం", ta: "வெற்றி", gu: "સફળતા" },
         { en: "Challenge", bn: "চ্যালেঞ্জ / পরীক্ষা", hi: "चुनौती", ur: "چیلنج", ar: "تحدي", ja: "挑戦", ko: "도전", de: "Herausforderung", fr: "Défi", es: "Desafío", pt: "Desafio", af: "Uitdaging", mr: "आव्हानात्मक", te: "సవాలు", ta: "சவால்", gu: "પડકાર" },
@@ -806,15 +808,7 @@
     }
 
     function toggleTheme() {
-        const root = document.documentElement;
-        const btn = document.getElementById('themeBtn');
-        if (root.getAttribute('data-theme') === 'dark') {
-            root.removeAttribute('data-theme');
-            btn.innerText = '🌙';
-        } else {
-            root.setAttribute('data-theme', 'dark');
-            btn.innerText = '☀️';
-        }
+        showToast("✨ Premium Deep Blue Theme Active");
     }
 
     document.getElementById('sourceInput').addEventListener('input', function() {
@@ -840,7 +834,6 @@
         }
     }
 
-    /* AI Strong Auto-Correction Engine: Silently fixes client's speech/text errors without saying "Error" */
     async function translateText() {
         const input = document.getElementById('sourceInput').value.trim();
         const output = document.getElementById('targetOutput');
@@ -853,7 +846,6 @@
 
         output.innerHTML = '<span style="color:var(--text-muted);">এআই স্মার্ট প্রসেসিং হচ্ছে...</span>';
 
-        // Auto-correct common spoken/written mistakes silently
         let cleanText = input;
         const smartCorrections = {
             "thiland": "Thailand", "malasiya": "Malaysia", "bangladesh": "Bangladesh",
@@ -906,9 +898,8 @@
             return;
         }
 
-        output.innerHTML = '<span style="color:var(--accent-purple);">✨ এআই স্মার্ট কারেকশন চলছে...</span>';
+        output.innerHTML = '<span style="color:#d8b4fe;">✨ এআই স্মার্ট কারেকশন চলছে...</span>';
         
-        // Simulating robust AI enhancement and polite silent correction
         setTimeout(() => {
             let refined = input.charAt(0).toUpperCase() + input.slice(1);
             if (mode === 'grammar') {
@@ -959,7 +950,6 @@
         }
     }
 
-    /* Smart Voice AI Input with Silent Correction */
     async function openVoiceModal() {
         if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
             alert("আপনার ব্রাউজারে স্পিচ রিকগনিশন সমর্থিত নয়।");
@@ -994,7 +984,6 @@
             }
             status.innerText = txt;
             if (e.results[0].isFinal) {
-                // Silently bypass any user spoken errors and feed clean text
                 document.getElementById('sourceInput').value = txt;
                 setTimeout(() => {
                     closeVoiceModal();
@@ -1126,7 +1115,7 @@
             box.innerHTML = `
                 <div style="padding: 10px 0;">
                     <span style="font-size: 42px;">🏆</span>
-                    <h3 style="color:var(--primary); margin: 6px 0; font-size:18px;">Congratulations!</h3>
+                    <h3 style="color:#60a5fa; margin: 6px 0; font-size:18px;">Congratulations!</h3>
                     <p style="font-size: 15px; font-weight: 700; color:var(--text-main); margin-bottom: 4px;">Arena Level ${currentLevel} Conquered!</p>
                     <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">
                         Round Score: <strong>${quizScore} / ${totalQ}</strong>
@@ -1137,7 +1126,7 @@
                             💡 <span>${wrongAnswerPool.length} mistakes will be reviewed in upcoming arena stages.</span>
                         </div>
                     ` : `
-                        <p style="color:#0f9d58; font-size:12px; font-weight:700; margin-bottom:14px;">✓ Flawless victory! All answers correct.</p>
+                        <p style="color:#34d399; font-size:12px; font-weight:700; margin-bottom:14px;">✓ Flawless victory! All answers correct.</p>
                     `}
 
                     ${hasNext ? `
@@ -1145,7 +1134,7 @@
                             Next Arena Level (${currentLevel + 1} / 1000 ➔)
                         </button>
                     ` : `
-                        <p style="color:#0f9d58; font-weight:800; margin-bottom:12px;">👑 Legend! You completed all 1000 Arena Levels!</p>
+                        <p style="color:#34d399; font-weight:800; margin-bottom:12px;">👑 Legend! You completed all 1000 Arena Levels!</p>
                         <button class="btn-main-action" style="width: 100%;" onclick="resetToLevelOne()">
                             Restart Arena from Level 1 ➔
                         </button>
@@ -1276,9 +1265,9 @@
             </div>
             <div class="quiz-header-status">
                 <span id="quizCounterText">⚔️ Arena Level ${currentLevel} • Q 1 / 5</span>
-                <span id="quizScoreText" style="color:var(--primary);">Score: 0</span>
+                <span id="quizScoreText" style="color:#60a5fa;">Score: 0</span>
             </div>
-            <h4 id="quizLevelTitle" style="color:var(--primary); margin-bottom:6px; font-size:15px;">Vocab Arena Challenge</h4>
+            <h4 id="quizLevelTitle" style="color:#60a5fa; margin-bottom:6px; font-size:15px;">Vocab Arena Challenge</h4>
             <p id="quizPrompt" style="font-size:15px; font-weight:700; margin:12px 0 16px; color:var(--text-main); line-height:1.4;"></p>
             <div id="quizOptionsContainer" style="display:flex; flex-direction:column; gap:10px;"></div>
         `;
