@@ -169,7 +169,7 @@
 
     <div id="toast" class="toast">কপি করা হয়েছে! 📋</div>
 
-    <!-- GOOGLE VOICE LISTENING MODAL (SCREENSHOT 1 EXACT REPLICA) -->
+    <!-- GOOGLE VOICE LISTENING MODAL -->
     <div id="voiceModal" class="voice-modal-overlay">
         <div class="voice-modal-card">
             <button class="close-modal-btn" onclick="closeVoiceModal()">✕</button>
@@ -270,7 +270,7 @@
             </div>
         </div>
 
-        <!-- Translation Output Card with Bottom Toolbar (SCREENSHOT 2 REPLICA) -->
+        <!-- Translation Output Card with Bottom Toolbar -->
         <div id="resultContainer" class="result-card">
             <p style="color: var(--text-muted); text-align: center; font-size: 12px; margin-top: 15px;">ভয়েস বাটনে ট্যাপ করে কথা বলুন অথবা বাক্য লিখে অনুবাদ করুন</p>
         </div>
@@ -496,11 +496,24 @@
         trg.value = temp;
     }
 
-    /* GOOGLE STYLE VOICE DIALOG LOGIC */
-    function openGoogleVoiceModal() {
+    /* GOOGLE STYLE VOICE DIALOG WITH AUTO MIC PERMISSION REQUEST */
+    async function openGoogleVoiceModal() {
         if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-            alert("আপনার ব্রাউজারে ভয়েস সাপোর্ট নেই। গুগল ক্রোম ব্যবহার করুন।");
+            alert("আপনার ব্রাউজারে ভয়েস সাপোর্ট নেই। দয়া করে গুগল ক্রোম ব্রাউজার ব্যবহার করুন।");
             return;
+        }
+
+        // সিস্টেমে মাইক্রোফোন পারমিশন ডায়ালগ ট্রিগার করা
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                stream.getTracks().forEach(track => track.stop());
+            } catch (err) {
+                console.error("Mic permission error:", err);
+                showToast("মাইক্রোফোন পারমিশন 'Allow' করুন!");
+                alert("ভয়েস ব্যবহার করতে ব্রাউজার সেটিং থেকে Microphone Permission 'Allow' করতে হবে।");
+                return;
+            }
         }
 
         const srcLang = document.getElementById('sourceLang').value;
@@ -516,6 +529,7 @@
         globalRecognition = new SpeechRecognition();
         globalRecognition.lang = srcLang === 'bn' ? 'bn-BD' : 'en-US';
         globalRecognition.interimResults = true;
+        globalRecognition.maxAlternatives = 1;
 
         globalRecognition.onresult = function(event) {
             let interimTranscript = '';
@@ -533,11 +547,23 @@
             }
         };
 
-        globalRecognition.onerror = function() {
-            liveText.innerText = "কথা বোঝা যায়নি, আবার বলুন";
+        globalRecognition.onerror = function(event) {
+            console.error("Speech Error:", event.error);
+            if (event.error === 'not-allowed') {
+                liveText.innerText = "মাইক্রোফোন পারমিশন বন্ধ আছে!";
+                showToast("ব্রাউজার সেটিং থেকে মাইক অন করুন");
+            } else if (event.error === 'no-speech') {
+                liveText.innerText = "কোনো শব্দ শোনা যায়নি, আবার বলুন";
+            } else {
+                liveText.innerText = "কথা বোঝা যায়নি, আবার বলুন";
+            }
         };
 
-        globalRecognition.start();
+        try {
+            globalRecognition.start();
+        } catch(e) {
+            console.log("Recognition restart issue:", e);
+        }
     }
 
     function closeVoiceModal() {
@@ -577,7 +603,7 @@
         }, 60);
     }
 
-    /* CORE TRANSLATION ENGINE (SCREENSHOT 2 OUTPUT REPLICA) */
+    /* CORE TRANSLATION ENGINE */
     async function searchWord() {
         const input = document.getElementById('wordInput').value.trim();
         const resCard = document.getElementById('resultContainer');
@@ -592,7 +618,7 @@
 
         const cleanInput = input.toLowerCase().replace(/[।?!.]/g, '').trim();
 
-        // 1. Local Banglish Check
+        // ১. লোকাল বাংলিশ ডিকশনারি চেক
         if (masterBanglishMap[cleanInput]) {
             let tr = targetLang === 'en' ? masterBanglishMap[cleanInput].en : masterBanglishMap[cleanInput].bn;
             let audioLang = targetLang === 'en' ? 'en-US' : 'bn-BD';
@@ -601,7 +627,7 @@
             return;
         }
 
-        // 2. Google Translate GTX Engine
+        // ২. গুগল ট্রান্সলেট GTX ইঞ্জিন
         try {
             const hasBanglaScript = /[\u0980-\u09FF]/.test(input);
             const sl = hasBanglaScript ? 'bn' : 'auto';
@@ -638,7 +664,7 @@
                 <div class="result-text">${translated}</div>
             </div>
 
-            <!-- Bottom Action Toolbar (Screenshot 2 Replica) -->
+            <!-- Bottom Action Toolbar -->
             <div class="action-icons-bar">
                 <button class="action-icon-btn" title="উচ্চারণ শুনুন" onclick="speakText('${translated.replace(/'/g, "\\'")}', '${audioLang}')">🔊</button>
                 <button class="action-icon-btn" title="শেয়ার করুন" onclick="shareContent('${translated.replace(/'/g, "\\'")}')">🔗</button>
