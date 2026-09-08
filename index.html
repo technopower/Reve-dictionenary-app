@@ -757,7 +757,7 @@
             trans: "🌐 TRADUTOR", ielts: "🎯 IELTS IA", teacher: "👨‍🏫 PROFESSOR", quiz: "QUIZ",
             translateBtn: "Traduzir ➔", voiceBtn: "🎙️ Voz do Google",
             grammar: "✨ Corrigir Gramática", pure: "🇬🇧 Inglês Puro", formal: "💼 Profissional",
-            placeholder: "Digite o texto...", resultPlaceholder: "A tradução aparecerá aqui...",
+            placeholder: "Digite o texto ou palavra...", resultPlaceholder: "A tradução aparecerá aqui...",
             aiVerified: "Resultado verificado por IA",
             quizLang: "Idioma do quiz:", reviewText: "Revisando erros anteriores!"
         },
@@ -765,7 +765,7 @@
             trans: "🌐 VERTALER", ielts: "🎯 IELTS KI", teacher: "👨‍🏫 ONDERWYSER", quiz: "VASVRAAG",
             translateBtn: "Vertaal ➔", voiceBtn: "🎙️ Google Stem",
             grammar: "✨ Reguleer Grammatika", pure: "🇬🇧 Suiwer Engels", formal: "💼 Formeel",
-            placeholder: "Voer teks in...", resultPlaceholder: "Vertaling sal hier verskyn...",
+            placeholder: "Voer teks of woord in...", resultPlaceholder: "Vertaling sal hier verskyn...",
             aiVerified: "KI-geverifieerde uitset",
             quizLang: "Vasvra-taal:", reviewText: "Hersien vorige foute!"
         },
@@ -773,7 +773,7 @@
             trans: "🌐 भाषांतरकार", ielts: "🎯 आयएलटीएस", teacher: "👨‍🏫 शिक्षक", quiz: "दररोज क्विझ",
             translateBtn: "भाषांतर करा ➔", voiceBtn: "🎙️ गूगल व्हॉईस",
             grammar: "✨ व्याकरण दुरुस्त करा", pure: "🇬🇧 शुद्ध इंग्रजी", formal: "💼 प्रो",
-            placeholder: "मजकूर प्रविष्ट करा...", resultPlaceholder: "येथे भाषांतर दिसेल...",
+            placeholder: "मजकूर किंवा शब्द प्रविष्ट करा...", resultPlaceholder: "येथे भाषांतर दिसेल...",
             aiVerified: "AI सत्यापित आउटपुट",
             quizLang: "क्विझ भाषा:", reviewText: "मागील चुकांचे पुनरावलोकन!"
         },
@@ -781,7 +781,7 @@
             trans: "🌐 అనువాదకుడు", ielts: "🎯 ఐెల్ట్స్", teacher: "👨‍🏫 ఉపాధ్యాయుడు", quiz: "క్విజ్",
             translateBtn: "అనువదించు ➔", voiceBtn: "🎙️ గూగుల్ వాయిస్",
             grammar: "✨ వ్యాకరణం సరిచేయి", pure: "🇬🇧 స్వచ్ఛమైన ఇంగ్లీష్", formal: "💼 ప్రొఫెషనల్",
-            placeholder: "పాఠ్యాన్ని నమోదు చేయండి...", resultPlaceholder: "ఇక్కడ అనువాదం కనిపిస్తుంది...",
+            placeholder: "పాఠ్యం లేదా పదத்தை నమోదు చేయండి...", resultPlaceholder: "ఇక్కడ అనువాదం కనిపిస్తుంది...",
             aiVerified: "AI ధృవీకరించబడిన అవుట్‌పుట్",
             quizLang: "క్విజ్ భాష:", reviewText: "మునుపటి తప్పులను సమీక్షిస్తోంది!"
         },
@@ -789,7 +789,7 @@
             trans: "🌐 மொழிபெயர்ப்பாளர்", ielts: "🎯 ஐஎல்டிஎஸ்", teacher: "👨‍🏫 ஆசிரியர்", quiz: "வினாடி வினா",
             translateBtn: "மொழிபெயர் ➔", voiceBtn: "🎙️ கூகுள் குரல்",
             grammar: "✨ இலக்கணத்தை சரிசெய்", pure: "🇬🇧 சுத்தமான ஆங்கிலம்", formal: "💼 நிபுணர்",
-            placeholder: "உரையை உள்ளிடவும்...", resultPlaceholder: "மொழிபெயர்ப்பு இங்கே தோன்றும்...",
+            placeholder: "உரை அல்லது சொல்லை உள்ளிடவும்...", resultPlaceholder: "மொழிபெயர்ப்பு இங்கே தோன்றும்...",
             aiVerified: "AI சரிபார்க்கப்பட்ட வெளியீடு",
             quizLang: "வினாடி வினா மொழி:", reviewText: "முந்தைய பிழைகளை மதிப்பாய்வு செய்கிறது!"
         },
@@ -814,6 +814,7 @@
         document.getElementById('btnGrammar').innerText = t.grammar;
         document.getElementById('btnPure').innerText = t.pure;
         document.getElementById('btnFormal').innerText = t.formal;
+        document.getElementById('sourceInput').placeholder = t.placeholder;
         document.getElementById('resPlaceholder').innerText = t.resultPlaceholder;
         document.getElementById('aiVerifiedText').innerText = t.aiVerified;
         document.getElementById('quizLangLabelText').innerText = t.quizLang;
@@ -864,7 +865,6 @@
         document.getElementById('srcLabel').innerText = s.options[s.selectedIndex].text.split(' ')[0];
         document.getElementById('targetLabel').innerText = t.options[t.selectedIndex].text.split(' ')[0];
         
-        // Apply UI localization based on Source Language selection
         applyUiLocalization(s.value);
     }
 
@@ -944,7 +944,6 @@
         }
     }
 
-    /* Universal Translation Function */
     async function translateText() {
         const input = document.getElementById('sourceInput').value.trim();
         const output = document.getElementById('targetOutput');
@@ -996,7 +995,6 @@
         }
     }
 
-    /* AI Master Quick Enhancements */
     async function runAiMaster(mode) {
         const input = document.getElementById('sourceInput').value.trim();
         const output = document.getElementById('targetOutput');
@@ -1063,7 +1061,6 @@
         }
     }
 
-    /* Speech & Audio Playback */
     function speakOutput() {
         if (!currentResult) return;
         const target = document.getElementById('targetLang').value;
@@ -1096,7 +1093,6 @@
         }
     }
 
-    /* Voice Recognition Modal & Engine */
     async function openVoiceModal() {
         if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
             alert("আপনার ব্রাউজারে স্পিচ রিকগনিশন নেই। ক্রোম ব্যবহার করুন।");
@@ -1151,7 +1147,6 @@
         if (globalRecognition) try { globalRecognition.stop(); } catch(e){}
     }
 
-    /* OCR Image Reader */
     function handleImageOcr(e) {
         const file = e.target.files[0];
         if (!file) return;
@@ -1164,7 +1159,6 @@
         }).catch(() => showToast("ছবি স্ক্যান ব্যর্থ হয়েছে"));
     }
 
-    /* IELTS Interactive Render */
     function renderIelts(type) {
         const box = document.getElementById('ieltsResultBox');
         if (type === 'speaking') {
@@ -1178,7 +1172,6 @@
         }
     }
 
-    /* ADVANCED MULTI-LANGUAGE QUIZ GENERATOR */
     function changeQuizLanguage() {
         selectedQuizLang = document.getElementById('quizLangSelect').value;
         buildLevelQuestions();
