@@ -21,7 +21,7 @@
             --primary: #1a73e8;
             --primary-hover: #1557b0;
             --primary-light: #e8f0fe;
-            --bg-body: #f8fafd;
+            --bg-body: #f0f4f9;
             --card-bg: #ffffff;
             --text-main: #202124;
             --text-muted: #5f6368;
@@ -29,8 +29,8 @@
             --focus-ring: rgba(26, 115, 232, 0.25);
             --accent-purple: #8430ce;
             --accent-purple-light: #f3e8fd;
-            --shadow-elevation-1: 0 1px 3px rgba(60,64,67,0.12), 0 1px 2px rgba(60,64,67,0.15);
-            --shadow-elevation-2: 0 4px 12px rgba(60,64,67,0.1);
+            --shadow-elevation-1: 0 2px 6px rgba(60,64,67,0.1), 0 1px 2px rgba(60,64,67,0.08);
+            --shadow-elevation-2: 0 6px 16px rgba(60,64,67,0.12);
         }
 
         [data-theme="dark"] {
@@ -45,8 +45,8 @@
             --focus-ring: rgba(138, 180, 248, 0.3);
             --accent-purple: #c58af9;
             --accent-purple-light: rgba(197, 138, 249, 0.15);
-            --shadow-elevation-1: 0 1px 3px rgba(0,0,0,0.4);
-            --shadow-elevation-2: 0 4px 12px rgba(0,0,0,0.5);
+            --shadow-elevation-1: 0 2px 6px rgba(0,0,0,0.4);
+            --shadow-elevation-2: 0 6px 16px rgba(0,0,0,0.5);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Google Sans', Roboto, -apple-system, BlinkMacSystemFont, sans-serif; -webkit-tap-highlight-color: transparent; }
@@ -64,12 +64,14 @@
             overflow: hidden;
         }
 
+        /* Reference Design Top Blue Header Style */
         .top-navbar {
-            padding: 16px 20px 12px;
+            background: linear-gradient(135deg, #1a73e8, #0f52ba);
+            padding: 18px 20px 14px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            border-bottom: 1px solid var(--border-color);
+            color: #ffffff;
         }
         .brand-logo {
             display: flex;
@@ -77,10 +79,10 @@
             gap: 8px;
             font-size: 19px;
             font-weight: 700;
-            color: var(--text-main);
+            color: #ffffff;
         }
         .brand-logo span {
-            color: var(--primary);
+            color: #fef08a;
             font-weight: 800;
         }
         .nav-actions {
@@ -89,9 +91,9 @@
             gap: 10px;
         }
         .nav-icon-btn {
-            background: none;
+            background: rgba(255, 255, 255, 0.2);
             border: none;
-            color: var(--text-muted);
+            color: #ffffff;
             font-size: 18px;
             cursor: pointer;
             width: 38px;
@@ -103,15 +105,14 @@
             transition: background 0.2s;
         }
         .nav-icon-btn:hover {
-            background: var(--primary-light);
-            color: var(--primary);
+            background: rgba(255, 255, 255, 0.3);
         }
         .user-pts {
             background: #fef08a;
             color: #854d0e;
             font-size: 11px;
             font-weight: 800;
-            padding: 4px 8px;
+            padding: 4px 10px;
             border-radius: 20px;
         }
 
@@ -142,42 +143,41 @@
             box-shadow: var(--shadow-elevation-1);
         }
 
+        /* Language Switch Bar Matching Reference Screenshot */
         .lang-switch-container {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 12px 16px;
+            padding: 14px 16px;
+            background: var(--card-bg);
             border-bottom: 1px solid var(--border-color);
         }
-        .lang-btn {
-            background: none;
-            border: none;
-            color: var(--primary);
-            font-size: 14px;
-            font-weight: 700;
-            cursor: pointer;
+        .lang-pill-box {
+            background: var(--bg-body);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 6px 14px;
             display: flex;
             align-items: center;
-            gap: 4px;
-            padding: 6px 12px;
-            border-radius: 8px;
+            gap: 6px;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--primary);
             position: relative;
+            cursor: pointer;
         }
-        .lang-btn select {
+        .lang-pill-box select {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0; width: 100%; height: 100%;
             opacity: 0;
             cursor: pointer;
         }
         .swap-circle-btn {
-            background: none;
+            background: var(--primary-light);
             border: none;
-            color: var(--text-muted);
-            width: 36px;
-            height: 36px;
+            color: var(--primary);
+            width: 38px;
+            height: 38px;
             border-radius: 50%;
             cursor: pointer;
             display: flex;
@@ -187,8 +187,9 @@
             transition: transform 0.2s, background 0.2s;
         }
         .swap-circle-btn:hover {
-            background: var(--primary-light);
-            color: var(--primary);
+            transform: scale(1.05);
+            background: var(--primary);
+            color: #ffffff;
         }
 
         .workspace-content {
@@ -199,10 +200,11 @@
             flex: 1;
         }
 
+        /* Sleek Curved White Card Matching UI Showcase */
         .translate-card {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
-            border-radius: 20px;
+            border-radius: 22px;
             padding: 16px;
             position: relative;
             box-shadow: var(--shadow-elevation-1);
@@ -266,7 +268,7 @@
         .result-panel {
             background: var(--bg-body);
             border: 1px solid var(--border-color);
-            border-radius: 20px;
+            border-radius: 22px;
             padding: 16px;
             display: flex;
             flex-direction: column;
@@ -301,9 +303,9 @@
             background: var(--card-bg);
             border: 1.5px solid var(--border-color);
             color: var(--accent-purple);
-            padding: 12px 10px;
+            padding: 10px 8px;
             border-radius: 14px;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 700;
             cursor: pointer;
             text-align: center;
@@ -454,7 +456,7 @@
     
     <div id="toast" class="toast-msg">কপি করা হয়েছে! 📋</div>
 
-    <!-- Top Navigation Header -->
+    <!-- Top Navigation Header matching screenshot design -->
     <div class="top-navbar">
         <div class="brand-logo">
             <span>REVE</span> AI Translate
@@ -477,7 +479,7 @@
     <div id="transView" class="workspace-content tab-panel active">
         
         <div class="lang-switch-container">
-            <div class="lang-btn">
+            <div class="lang-pill-box">
                 <span id="srcLabel">Bangla</span> ▾
                 <select id="srcLang" onchange="updateLangLabel()">
                     <option value="bn" selected>Bangla (বাংলা / বাংলিশ)</option>
@@ -501,7 +503,7 @@
 
             <button class="swap-circle-btn" onclick="swapLanguages()" title="Swap Languages">⇄</button>
 
-            <div class="lang-btn">
+            <div class="lang-pill-box">
                 <span id="targetLabel">English</span> ▾
                 <select id="targetLang" onchange="updateLangLabel()">
                     <option value="en" selected>English (ইংরেজি)</option>
@@ -566,7 +568,7 @@
 
     </div>
 
-    <!-- MAIN VIEW 2: IELTS AI (WITH REGULAR PREPARATION FEATURE) -->
+    <!-- MAIN VIEW 2: IELTS AI -->
     <div id="ieltsView" class="workspace-content tab-panel">
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
             <div class="translate-card" style="text-align:center; cursor:pointer;" onclick="renderIelts('speaking')">
@@ -587,7 +589,6 @@
             </div>
         </div>
 
-        <!-- NEW: Regular Preparation Button -->
         <div class="translate-card" style="text-align:center; background:var(--primary-light); cursor:pointer; border:1px solid var(--primary);" onclick="renderIelts('regPrep')">
             <h4 style="color:var(--primary); font-size:15px;">📅 Regular Daily Prep Plan</h4>
             <p style="font-size:11px; color:var(--text-muted); margin-top:4px;">British Council standard routine & tips</p>
@@ -789,7 +790,7 @@
             grammar: "✨ వ్యాకరణం సరిచేయి", pure: "🇬🇧 స్వచ్ఛమైన ఇంగ్లీష్", formal: "💼 ప్రొఫెషనల్",
             placeholder: "పాఠ్యం లేదా పదத்தை నమోదు చేయండి...", resultPlaceholder: "ఇక్కడ అనువాదం కనిపిస్తుంది...",
             aiVerified: "AI ధృవీకరించబడిన అవుట్‌పుట్",
-            quizLang: "క్విజ్ భాష:", reviewText: "మునుపటి తప్పులను సమీక్షిస్తోంది!"
+            quizLang: "క్विజ్ భాష:", reviewText: "మునుపటి తప్పులను సమీక్షిస్తోంది!"
         },
         'ta': {
             trans: "🌐 மொழிபெயர்ப்பாளர்", ielts: "🎯 ஐஎல்டிஎஸ்", teacher: "👨‍🏫 ஆசிரியர்", quiz: "வினாடி வினா",
@@ -805,7 +806,7 @@
             grammar: "✨ વ્યાકરણ સુધારો", pure: "🇬🇧 શુદ્ધ અંગ્રેજી", formal: "💼 પ્રોફેશનલ",
             placeholder: "લખો...", resultPlaceholder: "અહીં ભાષાંતર દેખાશે...",
             aiVerified: "AI ચકાસાયેલ આઉટપુટ",
-            quizLang: "ક્विઝ ભાષા:", reviewText: "અગાઉની ભૂલોની સમીક્ષા!"
+            quizLang: "ક્વિઝ ભાષા:", reviewText: "અગાઉની ભૂલોની સમીક્ષા!"
         }
     };
 
@@ -852,7 +853,7 @@
         { en: "Paramount", bn: "সর্বোচ্চ গুরুত্বপূর্ণ", hi: "सर्वोपरि", ur: "سب سے اہم", ar: "أسمى", ja: "最重要", ko: "가장 중요한", de: "Überragend", fr: "Primordial", es: "Primordial", pt: "Primordial", af: "Uiters belangrik", mr: "सर्वोच्च", te: "అత్యున్నతమైనది", ta: "முதன்மையானது", gu: "સર્વોચ્ચ" },
         { en: "Substantial", bn: "বিপুল / প্রচুর", hi: "काफी", ur: "کافی", ar: "جوهري", ja: "実質的な", ko: "상당한", de: "Erheblich", fr: "Substantiel", es: "Sustancial", pt: "Substancial", af: "Aansienlik", mr: "भरपूर", te: "గణనీయమైన", ta: "கணிசமான", gu: "નોંધપાત્ર" },
         { en: "Pragmatic", bn: "বাস্তববাদী", hi: "व्यावहारिक", ur: "عملی", ar: "عملي", ja: "実用的な", ko: "실용적인", de: "Pragmatisch", fr: "Pragmatique", es: "Pragmático", pt: "Pragmático", af: "Pragmaties", mr: "व्यावहारिक", te: "ఆచరణాత్మక", ta: "நடைமுறை", gu: "વ્યવહારુ" },
-        { en: "Inevitable", bn: "অনিবার্য", hi: "अपरिहार्य", ur: "নাگزیر", ar: "حتمي", ja: "避けられない", ko: "불가피한", de: "Unvermeidlich", fr: "Inévitable", es: "Inevitável", pt: "Inevitável", af: "Onvermydelik", mr: "अपरिहार्य", te: "అనివార్యమైనది", ta: "தவிர்க்க முடியாதது", gu: "અનિવાર્ય" }
+        { en: "Inevitable", bn: "অনিবার্য", hi: "अपरिहार्य", ur: "ناگزیر", ar: "حتمي", ja: "避けられない", ko: "불가피한", de: "Unvermeidlich", fr: "Inévitable", es: "Inevitável", pt: "Inevitável", af: "Onvermydelik", mr: "अपरिहार्य", te: "అనివార్యమైనది", ta: "தவிர்க்க முடியாதது", gu: "અનિવાર્ય" }
     ];
 
     let currentLevel = parseInt(localStorage.getItem('userQuizLevel')) || 1;
