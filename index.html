@@ -467,10 +467,10 @@
 
     <!-- Module Hub Bar -->
     <div class="hub-tabs">
-        <button class="hub-tab active" onclick="switchView('trans')">🌐 TRANSLATOR</button>
-        <button class="hub-tab" onclick="switchView('ielts')">🎯 IELTS AI</button>
-        <button class="hub-tab" onclick="switchView('teacher')">👨‍🏫 TEACHER</button>
-        <button class="hub-tab" onclick="switchView('quiz')">DAILY QUIZ</button>
+        <button class="hub-tab active" id="tabTransBtn" onclick="switchView('trans')">🌐 TRANSLATOR</button>
+        <button class="hub-tab" id="tabIeltsBtn" onclick="switchView('ielts')">🎯 IELTS AI</button>
+        <button class="hub-tab" id="tabTeacherBtn" onclick="switchView('teacher')">👨‍🏫 TEACHER</button>
+        <button class="hub-tab" id="tabQuizBtn" onclick="switchView('quiz')">DAILY QUIZ</button>
     </div>
 
     <!-- MAIN VIEW 1: TRANSLATOR -->
@@ -488,7 +488,7 @@
                     <option value="mr">Marathi (मराठी - মারাঠি)</option>
                     <option value="te">Telugu (తెలుగు - তেলেগু)</option>
                     <option value="ta">Tamil (தமிழ் - তামিল)</option>
-                    <option value="gu">Gujarati (ગુજરાતી - গুজরাটি)</option>
+                    <option value="gu">Gujarati (ગુજરાતી - ગુજરાતી)</option>
                     <option value="ur">Urdu (اردو - উর্দু)</option>
                     <option value="ja">Japanese (日本語 - জাপান)</option>
                     <option value="ko">Korean (한국어 - দক্ষিণ কোরিয়া)</option>
@@ -512,7 +512,7 @@
                     <option value="mr">Marathi (मराठी - মারাঠি)</option>
                     <option value="te">Telugu (తెలుగు - তেলেগু)</option>
                     <option value="ta">Tamil (தமிழ் - তামিল)</option>
-                    <option value="gu">Gujarati (ગુજરાતી - গুজরাটি)</option>
+                    <option value="gu">Gujarati (ગુજરાતી - ગુજરાતી)</option>
                     <option value="ur">Urdu (اردو - উর্দু)</option>
                     <option value="ja">Japanese (日本語 - জাপান)</option>
                     <option value="ko">Korean (한국어 - দক্ষিণ কোরিয়া)</option>
@@ -539,23 +539,23 @@
         </div>
 
         <div class="ai-enhancer-bar">
-            <button class="ai-pill-btn" onclick="runAiMaster('grammar')">✨ Fix Grammar</button>
-            <button class="ai-pill-btn" onclick="runAiMaster('pure')">🇬🇧 Pure English</button>
-            <button class="ai-pill-btn" onclick="runAiMaster('formal')">💼 Make Pro</button>
+            <button class="ai-pill-btn" id="btnGrammar" onclick="runAiMaster('grammar')">✨ Fix Grammar</button>
+            <button class="ai-pill-btn" id="btnPure" onclick="runAiMaster('pure')">🇬🇧 Pure English</button>
+            <button class="ai-pill-btn" id="btnFormal" onclick="runAiMaster('formal')">💼 Make Pro</button>
         </div>
 
         <div class="action-cta-row">
-            <button class="btn-main-action" style="background:#0f9d58;" onclick="openVoiceModal()">🎙️ Google Voice</button>
-            <button class="btn-main-action" onclick="translateText()">অনুবাদ করুন ➔</button>
+            <button class="btn-main-action" style="background:#0f9d58;" id="btnVoice" onclick="openVoiceModal()">🎙️ Google Voice</button>
+            <button class="btn-main-action" id="btnTranslate" onclick="translateText()">অনুবাদ করুন ➔</button>
         </div>
 
         <div class="result-panel">
             <div id="targetOutput" class="result-text-area">
-                <span class="result-placeholder">ফলাফল এখানে দৃশ্যমান হবে...</span>
+                <span class="result-placeholder" id="resPlaceholder">ফলাফল এখানে দৃশ্যমান হবে...</span>
             </div>
             
             <div class="card-bottom-actions" style="margin-top:auto;">
-                <span style="font-size:11px; font-weight:700; color:var(--primary);">AI Verified Output</span>
+                <span style="font-size:11px; font-weight:700; color:var(--primary);" id="aiVerifiedText">AI Verified Output</span>
                 <div class="card-tools">
                     <button class="tool-btn" onclick="speakOutput()" title="Listen Voice">🔊</button>
                     <button class="tool-btn" onclick="copyOutput()" title="Copy Text">📋</button>
@@ -607,7 +607,7 @@
         <div class="translate-card" id="quizCardBox" style="text-align:center;">
             
             <div class="quiz-lang-selector-box">
-                <span style="font-size:11px; font-weight:700; color:var(--text-muted);">কুইজ ভাষা:</span>
+                <span style="font-size:11px; font-weight:700; color:var(--text-muted);" id="quizLangLabelText">কুইজ ভাষা:</span>
                 <select id="quizLangSelect" class="quiz-lang-select" onchange="changeQuizLanguage()">
                     <option value="bn" selected>Bangla (বাংলা)</option>
                     <option value="en">English (ইংরেজি)</option>
@@ -629,7 +629,7 @@
             </div>
 
             <div id="wrongReviewBanner" class="wrong-review-banner" style="display: none;">
-                ⚠️ <span>পূর্বের ভুল প্রশ্ন সংশোধন পর্ব চলছে!</span>
+                ⚠️ <span id="reviewBannerText">পূর্বের ভুল প্রশ্ন সংশোধন পর্ব চলছে!</span>
             </div>
 
             <div class="quiz-header-status">
@@ -671,6 +671,155 @@
         'hi': 'hi-IN', 'ar': 'ar-SA', 'es': 'es-ES', 'fr': 'fr-FR'
     };
 
+    /* DYNAMIC UI LOCALIZATION DICTIONARY */
+    const uiTranslations = {
+        'bn': {
+            trans: "🌐 TRANSLATOR", ielts: "🎯 IELTS AI", teacher: "👨‍🏫 TEACHER", quiz: "DAILY QUIZ",
+            translateBtn: "অনুবাদ করুন ➔", voiceBtn: "🎙️ Google Voice",
+            grammar: "✨ Fix Grammar", pure: "🇬🇧 Pure English", formal: "💼 Make Pro",
+            placeholder: "শব্দ বা বাক্য লিখুন...", resultPlaceholder: "ফলাফল এখানে দৃশ্যমান হবে...",
+            aiVerified: "AI Verified Output",
+            quizLang: "কুইজ ভাষা:", reviewText: "পূর্বের ভুল প্রশ্ন সংশোধন পর্ব চলছে!"
+        },
+        'en': {
+            trans: "🌐 TRANSLATOR", ielts: "🎯 IELTS AI", teacher: "👨‍🏫 TEACHER", quiz: "DAILY QUIZ",
+            translateBtn: "Translate ➔", voiceBtn: "🎙️ Google Voice",
+            grammar: "✨ Fix Grammar", pure: "🇬🇧 Pure English", formal: "💼 Make Pro",
+            placeholder: "Enter text or word...", resultPlaceholder: "Translation will appear here...",
+            aiVerified: "AI Verified Output",
+            quizLang: "Quiz Lang:", reviewText: "Reviewing previous mistakes!"
+        },
+        'de': {
+            trans: "🌐 ÜBERSETZER", ielts: "🎯 IELTS KI", teacher: "👨‍🏫 LEHRER", quiz: " TÄGLICHES QUIZ",
+            translateBtn: "Übersetzen ➔", voiceBtn: "🎙️ Google Stimme",
+            grammar: "✨ Grammatik", pure: "🇩🇪 Reines Deutsch", formal: "💼 Professionell",
+            placeholder: "Text oder Wort eingeben...", resultPlaceholder: "Die Übersetzung erscheint hier...",
+            aiVerified: "KI-geprüftes Ergebnis",
+            quizLang: "Quizsprache:", reviewText: "Vorherige Fehler wiederholen!"
+        },
+        'ar': {
+            trans: "🌐 مترجم", ielts: "🎯 IELTS ذكاء", teacher: "👨‍🏫 معلم", quiz: "اختبار يومي",
+            translateBtn: "ترجم ➔", voiceBtn: "🎙️ صوت جوجل",
+            grammar: "✨ تصحيح النحو", pure: "🇬🇧 إنجليزية نقية", formal: "💼 احترافي",
+            placeholder: "أدخل النص أو الكلمة...", resultPlaceholder: "ستظهر الترجمة هنا...",
+            aiVerified: "نتيجة معتمدة بالذكاء الاصطناعي",
+            quizLang: "لغة الاختبار:", reviewText: "مراجعة الأخطاء السابقة!"
+        },
+        'hi': {
+            trans: "🌐 अनुवादक", ielts: "🎯 आईelts AI", teacher: "👨‍🏫 शिक्षक", quiz: "दैनिक क्विज़",
+            translateBtn: "अनुवाद करें ➔", voiceBtn: "🎙️ गूगल आवाज़",
+            grammar: "✨ व्याकरण सुधारें", pure: "🇬🇧 शुद्ध अंग्रेजी", formal: "💼 पेशेवर",
+            placeholder: "शब्द या वाक्य दर्ज करें...", resultPlaceholder: "अनुवाद यहाँ दिखाई देगा...",
+            aiVerified: "AI सत्यापित परिणाम",
+            quizLang: "क्विज़ भाषा:", reviewText: "पिछली गलतियों का संशोधन!"
+        },
+        'ur': {
+            trans: "🌐 مترجم", ielts: "🎯 آئی ای ایل ٹی ایس", teacher: "👨‍🏫 استاد", quiz: "روزانہ کوز",
+            translateBtn: "ترجمہ کریں ➔", voiceBtn: "🎙️ گوگل آواز",
+            grammar: "✨ گرامر درست کریں", pure: "🇬🇧 خالص انگریزی", formal: "💼 پیشہ ورانہ",
+            placeholder: "الفاظ یا جملہ درج کریں...", resultPlaceholder: "ترجمہ یہاں ظاہر ہوگا...",
+            aiVerified: "AI تصدیق شدہ نتیجہ",
+            quizLang: "کوز کی زبان:", reviewText: "پچھلی غلطیوں کا جائزہ!"
+        },
+        'ja': {
+            trans: "🌐 翻訳者", ielts: "🎯 IELTS AI", teacher: "👨‍🏫 先生", quiz: "クイズ",
+            translateBtn: "翻訳する ➔", voiceBtn: "🎙️ 音声入力",
+            grammar: "✨ 文法修正", pure: "🇬🇧 綺麗な英語", formal: "💼 フォーマル",
+            placeholder: "テキストを入力...", resultPlaceholder: "ここに翻訳が表示されます...",
+            aiVerified: "AI検証済み出力",
+            quizLang: "クイズ言語:", reviewText: "過去の間違いの復習中！"
+        },
+        'ko': {
+            trans: "🌐 번역기", ielts: "🎯 IELTS AI", teacher: "👨‍🏫 선생님", quiz: "퀴즈",
+            translateBtn: "번역하기 ➔", voiceBtn: "🎙️ 구글 음성",
+            grammar: "✨ 문법 교정", pure: "🇬🇧 순수 영어", formal: "💼 비즈니스",
+            placeholder: "텍스트 입력...", resultPlaceholder: "번역 결과가 여기에 표시됩니다...",
+            aiVerified: "AI 검증된 출력",
+            quizLang: "퀴즈 언어:", reviewText: "이전 오답 복습 중!"
+        },
+        'es': {
+            trans: "🌐 TRADUCTOR", ielts: "🎯 IELTS IA", teacher: "👨‍🏫 PROFESOR", quiz: "CUESTIONARIO",
+            translateBtn: "Traducir ➔", voiceBtn: "🎙️ Voz de Google",
+            grammar: "✨ Corregir Gramática", pure: "🇬🇧 Inglés Puro", formal: "💼 Profesional",
+            placeholder: "Ingrese texto o palabra...", resultPlaceholder: "La traducción aparecerá aquí...",
+            aiVerified: "Resultado verificado por IA",
+            quizLang: "Idioma del cuestionario:", reviewText: "¡Revisando errores anteriores!"
+        },
+        'fr': {
+            trans: "🌐 TRADUCTEUR", ielts: "🎯 IELTS IA", teacher: "👨‍🏫 PROFESSEUR", quiz: "QUIZ",
+            translateBtn: "Traduire ➔", voiceBtn: "🎙️ Voix Google",
+            grammar: "✨ Corriger la grammaire", pure: "🇬🇧 Anglais pur", formal: "💼 Professionnel",
+            placeholder: "Entrez le texte...", resultPlaceholder: "La traduction apparaîtra ici...",
+            aiVerified: "Résultat vérifié par IA",
+            quizLang: "Langue du quiz:", reviewText: "Révision des erreurs précédentes !"
+        },
+        'pt': {
+            trans: "🌐 TRADUTOR", ielts: "🎯 IELTS IA", teacher: "👨‍🏫 PROFESSOR", quiz: "QUIZ",
+            translateBtn: "Traduzir ➔", voiceBtn: "🎙️ Voz do Google",
+            grammar: "✨ Corrigir Gramática", pure: "🇬🇧 Inglês Puro", formal: "💼 Profissional",
+            placeholder: "Digite o texto...", resultPlaceholder: "A tradução aparecerá aqui...",
+            aiVerified: "Resultado verificado por IA",
+            quizLang: "Idioma do quiz:", reviewText: "Revisando erros anteriores!"
+        },
+        'af': {
+            trans: "🌐 VERTALER", ielts: "🎯 IELTS KI", teacher: "👨‍🏫 ONDERWYSER", quiz: "VASVRAAG",
+            translateBtn: "Vertaal ➔", voiceBtn: "🎙️ Google Stem",
+            grammar: "✨ Reguleer Grammatika", pure: "🇬🇧 Suiwer Engels", formal: "💼 Formeel",
+            placeholder: "Voer teks in...", resultPlaceholder: "Vertaling sal hier verskyn...",
+            aiVerified: "KI-geverifieerde uitset",
+            quizLang: "Vasvra-taal:", reviewText: "Hersien vorige foute!"
+        },
+        'mr': {
+            trans: "🌐 भाषांतरकार", ielts: "🎯 आयएलटीएस", teacher: "👨‍🏫 शिक्षक", quiz: "दररोज क्विझ",
+            translateBtn: "भाषांतर करा ➔", voiceBtn: "🎙️ गूगल व्हॉईस",
+            grammar: "✨ व्याकरण दुरुस्त करा", pure: "🇬🇧 शुद्ध इंग्रजी", formal: "💼 प्रो",
+            placeholder: "मजकूर प्रविष्ट करा...", resultPlaceholder: "येथे भाषांतर दिसेल...",
+            aiVerified: "AI सत्यापित आउटपुट",
+            quizLang: "क्विझ भाषा:", reviewText: "मागील चुकांचे पुनरावलोकन!"
+        },
+        'te': {
+            trans: "🌐 అనువాదకుడు", ielts: "🎯 ఐెల్ట్స్", teacher: "👨‍🏫 ఉపాధ్యాయుడు", quiz: "క్విజ్",
+            translateBtn: "అనువదించు ➔", voiceBtn: "🎙️ గూగుల్ వాయిస్",
+            grammar: "✨ వ్యాకరణం సరిచేయి", pure: "🇬🇧 స్వచ్ఛమైన ఇంగ్లీష్", formal: "💼 ప్రొఫెషనల్",
+            placeholder: "పాఠ్యాన్ని నమోదు చేయండి...", resultPlaceholder: "ఇక్కడ అనువాదం కనిపిస్తుంది...",
+            aiVerified: "AI ధృవీకరించబడిన అవుట్‌పుట్",
+            quizLang: "క్విజ్ భాష:", reviewText: "మునుపటి తప్పులను సమీక్షిస్తోంది!"
+        },
+        'ta': {
+            trans: "🌐 மொழிபெயர்ப்பாளர்", ielts: "🎯 ஐஎல்டிஎஸ்", teacher: "👨‍🏫 ஆசிரியர்", quiz: "வினாடி வினா",
+            translateBtn: "மொழிபெயர் ➔", voiceBtn: "🎙️ கூகுள் குரல்",
+            grammar: "✨ இலக்கணத்தை சரிசெய்", pure: "🇬🇧 சுத்தமான ஆங்கிலம்", formal: "💼 நிபுணர்",
+            placeholder: "உரையை உள்ளிடவும்...", resultPlaceholder: "மொழிபெயர்ப்பு இங்கே தோன்றும்...",
+            aiVerified: "AI சரிபார்க்கப்பட்ட வெளியீடு",
+            quizLang: "வினாடி வினா மொழி:", reviewText: "முந்தைய பிழைகளை மதிப்பாய்வு செய்கிறது!"
+        },
+        'gu': {
+            trans: "🌐 ભાષાંતરકાર", ielts: "🎯 આઇઇએલટીએસ", teacher: "👨‍🏫 શિક્ષક", quiz: "ક્વિઝ",
+            translateBtn: "ભાષાંતર કરો ➔", voiceBtn: "🎙️ ગૂગલ વૉઇસ",
+            grammar: "✨ વ્યાકરણ સુધારો", pure: "🇬🇧 શુદ્ધ અંગ્રેજી", formal: "💼 પ્રોફેશનલ",
+            placeholder: "લખો...", resultPlaceholder: "અહીં ભાષાંતર દેખાશે...",
+            aiVerified: "AI ચકાસાયેલ આઉટપુટ",
+            quizLang: "ક્વિઝ ભાષા:", reviewText: "અગાઉની ભૂલોની સમીક્ષા!"
+        }
+    };
+
+    function applyUiLocalization(langCode) {
+        const t = uiTranslations[langCode] || uiTranslations['en'];
+        document.getElementById('tabTransBtn').innerText = t.trans;
+        document.getElementById('tabIeltsBtn').innerText = t.ielts;
+        document.getElementById('tabTeacherBtn').innerText = t.teacher;
+        document.getElementById('tabQuizBtn').innerText = t.quiz;
+        document.getElementById('btnTranslate').innerHTML = `${t.translateBtn}`;
+        document.getElementById('btnVoice').innerHTML = t.voiceBtn;
+        document.getElementById('btnGrammar').innerText = t.grammar;
+        document.getElementById('btnPure').innerText = t.pure;
+        document.getElementById('btnFormal').innerText = t.formal;
+        document.getElementById('resPlaceholder').innerText = t.resultPlaceholder;
+        document.getElementById('aiVerifiedText').innerText = t.aiVerified;
+        document.getElementById('quizLangLabelText').innerText = t.quizLang;
+        document.getElementById('reviewBannerText').innerText = t.reviewText;
+    }
+
     const banglishMap = {
         "ami dhaka jabo": "I will go to Dhaka.",
         "ami dhaka jai": "I go to Dhaka.",
@@ -682,96 +831,21 @@
     };
 
     const masterVocabDatabase = [
-        { 
-            en: "Opportunity", 
-            bn: "সুযোগ", hi: "अवसर", ur: "موقع", ar: "فرصة", ja: "機会", ko: "기회", 
-            de: "Gelegenheit", fr: "Opportunité", es: "Oportunidad", pt: "Oportunidade", 
-            af: "Geleentheid", mr: "संधी", te: "అవకాశం", ta: "வாய்ப்பு", gu: "તક" 
-        },
-        { 
-            en: "Essential", 
-            bn: "জরুরি / অত্যাবশ্যকীয়", hi: "आवश्यक", ur: "ضروری", ar: "ضروري", ja: "不可欠", ko: "필수적인", 
-            de: "Wichtig", fr: "Essentiel", es: "Esencial", pt: "Essencial", 
-            af: "Noodsaaklik", mr: "महत्त्वाचे", te: "ముఖ్యమైన", ta: "அவசியம்", gu: "જરૂરી" 
-        },
-        { 
-            en: "Improve", 
-            bn: "উন্নতি করা", hi: "सुधारना", ur: "بہتر بنانا", ar: "تحسين", ja: "改善する", ko: "향상시키다", 
-            de: "Verbessern", fr: "Améliorer", es: "Mejorar", pt: "Melhorar", 
-            af: "Verbeter", mr: "सुधारणे", te: "మెరుగుపరచడం", ta: "மேம்படுத்த", gu: "સુધારવું" 
-        },
-        { 
-            en: "Difficult", 
-            bn: "কঠিন", hi: "कठिन", ur: "مشکل", ar: "صعب", ja: "難しい", ko: "어려운", 
-            de: "Schwierig", fr: "Difficile", es: "Difícil", pt: "Difícil", 
-            af: "Moeilik", mr: "कठीण", te: "కష్టమైన", ta: "கடினம்", gu: "મુશ્કેલ" 
-        },
-        { 
-            en: "Comfortable", 
-            bn: "আরামদায়ক", hi: "आरामदायक", ur: "آرام دہ", ar: "مريح", ja: "快適な", ko: "편안한", 
-            de: "Bequem", fr: "Confortable", es: "Cómodo", pt: "Confortável", 
-            af: "Gemaklik", mr: "आरामदायी", te: "సౌకర్యవంతమైన", ta: "சௌகரியமான", gu: "આરામદાયક" 
-        },
-        { 
-            en: "Success", 
-            bn: "সাফল্য", hi: "सफलता", ur: "کامیابی", ar: "نجاح", ja: "成功", ko: "성공", 
-            de: "Erfolg", fr: "Succès", es: "Éxito", pt: "Sucesso", 
-            af: "Sukses", mr: "यश", te: "విజయం", ta: "வெற்றி", gu: "સફળતા" 
-        },
-        { 
-            en: "Challenge", 
-            bn: "চ্যালেঞ্জ / পরীক্ষা", hi: "चुनौती", ur: "چیلنج", ar: "تحدي", ja: "挑戦", ko: "도전", 
-            de: "Herausforderung", fr: "Défi", es: "Desafío", pt: "Desafio", 
-            af: "Uitdaging", mr: "आव्हानात्मक", te: "సవాలు", ta: "சவால்", gu: "પડકાર" 
-        },
-        { 
-            en: "Important", 
-            bn: "গুরুত্বপূর্ণ", hi: "महत्वपूर्ण", ur: "اہم", ar: "مهم", ja: "重要", ko: "중요한", 
-            de: "Wichtig", fr: "Important", es: "Importante", pt: "Importante", 
-            af: "Belangrik", mr: "महत्त्वाचे", te: "ముఖ్యమైనది", ta: "முக்கியமானது", gu: "મહત્વપૂર્ણ" 
-        },
-        { 
-            en: "Responsible", 
-            bn: "দায়িত্বশীল", hi: "जिम्मेदार", ur: "ذمہ دار", ar: "مسؤول", ja: "責任がある", ko: "책임 있는", 
-            de: "Verantwortlich", fr: "Responsable", es: "Responsable", pt: "Responsável", 
-            af: "Verantwoordelik", mr: "जबाबदार", te: "బాధ్యతాయుతమైన", ta: "பொறுப்புள்ள", gu: "જવાબદાર" 
-        },
-        { 
-            en: "Experience", 
-            bn: "অভিজ্ঞতা", hi: "अनुभव", ur: "تجربہ", ar: "خبرة", ja: "経験", ko: "경험", 
-            de: "Erfahrung", fr: "Expérience", es: "Experiencia", pt: "Experiência", 
-            af: "Ervaring", mr: "अनुभव", te: "అనుభవం", ta: "அனுபவம்", gu: "અનુભવ" 
-        },
-        { 
-            en: "Resilient", 
-            bn: "সহনশীল", hi: "लचीला", ur: "لچکدار", ar: "مرن", ja: "回復力がある", ko: "회복력 있는", 
-            de: "Widerstandsfähig", fr: "Résistant", es: "Resiliente", pt: "Resiliente", 
-            af: "Veerkragtig", mr: "लवचिक", te: "స్థితిస్థాపకత", ta: "மீள்தன்மை", gu: "સ્થિતિસ્થાપક" 
-        },
-        { 
-            en: "Paramount", 
-            bn: "সর্বোচ্চ গুরুত্বপূর্ণ", hi: "सर्वोपरि", ur: "سب سے اہم", ar: "أسمى", ja: "最重要", ko: "가장 중요한", 
-            de: "Überragend", fr: "Primordial", es: "Primordial", pt: "Primordial", 
-            af: "Uiters belangrik", mr: "सर्वोच्च", te: "అత్యున్నతమైనది", ta: "முதன்மையானது", gu: "સર્વોચ્ચ" 
-        },
-        { 
-            en: "Substantial", 
-            bn: "বিপুল / প্রচুর", hi: "काफी", ur: "کافی", ar: "جوهري", ja: "実質的な", ko: "상당한", 
-            de: "Erheblich", fr: "Substantiel", es: "Sustancial", pt: "Substancial", 
-            af: "Aansienlik", mr: "भरपूर", te: "గణనీయమైన", ta: "கணிசமான", gu: "નોંધપાત્ર" 
-        },
-        { 
-            en: "Pragmatic", 
-            bn: "বাস্তববাদী", hi: "व्यावहारिक", ur: "عملی", ar: "عملي", ja: "実用的な", ko: "실용적인", 
-            de: "Pragmatisch", fr: "Pragmatique", es: "Pragmático", pt: "Pragmático", 
-            af: "Pragmaties", mr: "व्यावहारिक", te: "ఆచరణాత్మక", ta: "நடைமுறை", gu: "વ્યવહારુ" 
-        },
-        { 
-            en: "Inevitable", 
-            bn: "অনিবার্য", hi: "अपरिहार्य", ur: "ناگزیر", ar: "حتمي", ja: "避けられない", ko: "불가피한", 
-            de: "Unvermeidlich", fr: "Inévitable", es: "Inevitable", pt: "Inevitável", 
-            af: "Onvermydelik", mr: "अपरिहार्य", te: "అనివార్యమైనది", ta: "தவிர்க்க முடியாதது", gu: "અનિવાર્ય" 
-        }
+        { en: "Opportunity", bn: "সুযোগ", hi: "अवसर", ur: "موقع", ar: "فرصة", ja: "機会", ko: "기회", de: "Gelegenheit", fr: "Opportunité", es: "Oportunidad", pt: "Oportunidade", af: "Geleentheid", mr: "संधी", te: "అవకాశం", ta: "வாய்ப்பு", gu: "તક" },
+        { en: "Essential", bn: "জরুরি / অত্যাবশ্যকীয়", hi: "आवश्यक", ur: "ضروری", ar: "ضروري", ja: "不可欠", ko: "필수적인", de: "Wichtig", fr: "Essentiel", es: "Esencial", pt: "Essencial", af: "Noodsaaklik", mr: "महत्त्वाचे", te: "ముఖ్యమైన", ta: "அவசியம்", gu: "જરૂરી" },
+        { en: "Improve", bn: "উন্নতি করা", hi: "सुधारना", ur: "بہتر بنانا", ar: "تحسين", ja: "改善する", ko: "향상시키다", de: "Verbessern", fr: "Améliorer", es: "Mejorar", pt: "Melhorar", af: "Verbeter", mr: "सुधारणे", te: "మెరుగుపరచడం", ta: "மேம்படுத்த", gu: "સુધારવું" },
+        { en: "Difficult", bn: "কঠিন", hi: "कठिन", ur: "مشکل", ar: "صعب", ja: "難しい", ko: "어려운", de: "Schwierig", fr: "Difficile", es: "Difícil", pt: "Difícil", af: "Moeilik", mr: "कठीण", te: "కష్టమైన", ta: "கடினம்", gu: "મુશ્કેલ" },
+        { en: "Comfortable", bn: "আরামদায়ক", hi: "आरामदायक", ur: "آرام دہ", ar: "مريح", ja: "快適な", ko: "편안한", de: "Bequem", fr: "Confortable", es: "Cómodo", pt: "Confortável", af: "Gemaklik", mr: "आरामदायी", te: "సౌకర్యవంతమైన", ta: "சௌகரியமான", gu: "આરામદાયક" },
+        { en: "Success", bn: "সাফল্য", hi: "सफलता", ur: "کامیابی", ar: "نجاح", ja: "成功", ko: "성공", de: "Erfolg", fr: "Succès", es: "Éxito", pt: "Sucesso", af: "Sukses", mr: "यश", te: "విజయం", ta: "வெற்றி", gu: "સફળતા" },
+        { en: "Challenge", bn: "চ্যালেঞ্জ / পরীক্ষা", hi: "चुनौती", ur: "چیلنج", ar: "تحدي", ja: "挑戦", ko: "도전", de: "Herausforderung", fr: "Défi", es: "Desafío", pt: "Desafio", af: "Uitdaging", mr: "आव्हानात्मक", te: "సవాలు", ta: "சவால்", gu: "પડકાર" },
+        { en: "Important", bn: "গুরুত্বপূর্ণ", hi: "महत्वपूर्ण", ur: "اہم", ar: "مهم", ja: "重要", ko: "중요한", de: "Wichtig", fr: "Important", es: "Importante", pt: "Importante", af: "Belangrik", mr: "महत्त्वाचे", te: "ముఖ్యమైనది", ta: "முக்கியமானது", gu: "મહત્વપૂર્ણ" },
+        { en: "Responsible", bn: "দায়িত্বশীল", hi: "जिम्मेदार", ur: "ذمہ دار", ar: "مسؤول", ja: "責任がある", ko: "책임 있는", de: "Verantwortlich", fr: "Responsable", es: "Responsable", pt: "Responsável", af: "Verantwoordelik", mr: "जबाबदार", te: "బాధ్యతాయుతమైన", ta: "பொறுப்புள்ள", gu: "જવાબદાર" },
+        { en: "Experience", bn: "অভিজ্ঞতা", hi: "अनुभव", ur: "تجربہ", ar: "خبرة", ja: "経験", ko: "경험", de: "Erfahrung", fr: "Expérience", es: "Experiencia", pt: "Experiência", af: "Ervaring", mr: "अनुभव", te: "అనుభవం", ta: "அனுபவம்", gu: "અનુભવ" },
+        { en: "Resilient", bn: "সহনশীল", hi: "लचीला", ur: "لچکدار", ar: "مرن", ja: "回復力がある", ko: "회복력 있는", de: "Widerstandsfähig", fr: "Résistant", es: "Resiliente", pt: "Resiliente", af: "Veerkragtig", mr: "लवचिक", te: "స్థితిస్థాపకత", ta: "மீள்தன்மை", gu: "સ્થિતિસ્થાપક" },
+        { en: "Paramount", bn: "সর্বোচ্চ গুরুত্বপূর্ণ", hi: "सर्वोपरि", ur: "سب سے اہم", ar: "أسمى", ja: "最重要", ko: "가장 중요한", de: "Überragend", fr: "Primordial", es: "Primordial", pt: "Primordial", af: "Uiters belangrik", mr: "सर्वोच्च", te: "అత్యున్నతమైనది", ta: "முதன்மையானது", gu: "સર્વોચ્ચ" },
+        { en: "Substantial", bn: "বিপুল / প্রচুর", hi: "काफी", ur: "کافی", ar: "جوهري", ja: "実質的な", ko: "상당한", de: "Erheblich", fr: "Substantiel", es: "Sustancial", pt: "Substancial", af: "Aansienlik", mr: "भरपूर", te: "గణనీయమైన", ta: "கணிசமான", gu: "નોંધપાત્ર" },
+        { en: "Pragmatic", bn: "বাস্তববাদী", hi: "व्यावहारिक", ur: "عملی", ar: "عملي", ja: "実用的な", ko: "실용적인", de: "Pragmatisch", fr: "Pragmatique", es: "Pragmático", pt: "Pragmático", af: "Pragmaties", mr: "व्यावहारिक", te: "ఆచరణాత్మక", ta: "நடைமுறை", gu: "વ્યવહારુ" },
+        { en: "Inevitable", bn: "অনিবার্য", hi: "अपरिहार्य", ur: "ناگزیر", ar: "حتمي", ja: "避けられない", ko: "불가피한", de: "Unvermeidlich", fr: "Inévitable", es: "Inevitable", pt: "Inevitável", af: "Onvermydelik", mr: "अपरिहार्य", te: "అనివార్యమైనది", ta: "தவிர்க்க முடியாதது", gu: "અનિવાર્ય" }
     ];
 
     let currentLevel = parseInt(localStorage.getItem('userQuizLevel')) || 1;
@@ -789,6 +863,9 @@
         const t = document.getElementById('targetLang');
         document.getElementById('srcLabel').innerText = s.options[s.selectedIndex].text.split(' ')[0];
         document.getElementById('targetLabel').innerText = t.options[t.selectedIndex].text.split(' ')[0];
+        
+        // Apply UI localization based on Source Language selection
+        applyUiLocalization(s.value);
     }
 
     window.addEventListener('DOMContentLoaded', () => {
@@ -851,7 +928,9 @@
     function clearAll() {
         document.getElementById('sourceInput').value = '';
         document.getElementById('charCount').innerText = '0 / 5000';
-        document.getElementById('targetOutput').innerHTML = '<span class="result-placeholder">ফলাফল এখানে দৃশ্যমান হবে...</span>';
+        const srcVal = document.getElementById('srcLang').value;
+        const t = uiTranslations[srcVal] || uiTranslations['en'];
+        document.getElementById('targetOutput').innerHTML = `<span class="result-placeholder">${t.resultPlaceholder}</span>`;
         currentResult = "";
     }
 
@@ -1107,10 +1186,10 @@
     }
 
     function getLevelCategory(lvl) {
-        if (lvl <= 25) return "Foundation Vocabulary (সহজ শব্দার্থ)";
-        if (lvl <= 50) return "Grammar & Daily Use (দৈনন্দিন প্রয়োগ)";
-        if (lvl <= 75) return "Spoken & Fluency (কথোপকথন ও ফ্লুয়েন্সি)";
-        return "Master & IELTS Mastery (সর্বোচ্চ স্তর)";
+        if (lvl <= 25) return "Foundation Vocabulary";
+        if (lvl <= 50) return "Grammar & Daily Use";
+        if (lvl <= 75) return "Spoken & Fluency";
+        return "Master & IELTS Mastery";
     }
 
     function getLanguageSpecificPrompt(word) {
@@ -1197,27 +1276,27 @@
             box.innerHTML = `
                 <div style="padding: 10px 0;">
                     <span style="font-size: 42px;">🎉</span>
-                    <h3 style="color:var(--primary); margin: 8px 0; font-size:18px;">লেভেল ${currentLevel} সম্পন্ন হয়েছে!</h3>
+                    <h3 style="color:var(--primary); margin: 8px 0; font-size:18px;">Level ${currentLevel} Completed!</h3>
                     <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 12px;">
-                        আপনার স্কোর: <strong>${quizScore} / ${totalQ}</strong>
+                        Score: <strong>${quizScore} / ${totalQ}</strong>
                     </p>
                     
                     ${wrongAnswerPool.length > 0 ? `
                         <div class="wrong-review-banner" style="margin-bottom: 14px;">
-                            💡 <span>${wrongAnswerPool.length}টি ভুল উত্তর পরবর্তী লেভেলে পুনরায় প্র্যাকটিস করানো হবে।</span>
+                            💡 <span>${wrongAnswerPool.length} mistakes will be reviewed in upcoming levels.</span>
                         </div>
                     ` : `
-                        <p style="color:#0f9d58; font-size:12px; font-weight:700; margin-bottom:14px;">✓ সকল প্রশ্নের সঠিক উত্তর সম্পন্ন হয়েছে!</p>
+                        <p style="color:#0f9d58; font-size:12px; font-weight:700; margin-bottom:14px;">✓ All questions mastered perfectly!</p>
                     `}
 
                     ${hasNext ? `
                         <button class="btn-main-action" style="width: 100%; margin-bottom: 8px;" onclick="goToNextLevel()">
-                            পরবর্তী লেভেল শুরু করুন (Level ${currentLevel + 1} ➔)
+                            Next Level (Level ${currentLevel + 1} ➔)
                         </button>
                     ` : `
-                        <p style="color:#0f9d58; font-weight:800; margin-bottom:12px;">🏆 অভিনন্দন! আপনি ১০০তম লেভেল সম্পন্ন করেছেন!</p>
+                        <p style="color:#0f9d58; font-weight:800; margin-bottom:12px;">🏆 Congratulations! You completed Level 100!</p>
                         <button class="btn-main-action" style="width: 100%;" onclick="resetToLevelOne()">
-                            লেভেল ১ থেকে আবার খেলুন ➔
+                            Play From Level 1 ➔
                         </button>
                     `}
                 </div>
@@ -1230,13 +1309,13 @@
         
         if (qData.isReview) {
             banner.style.display = 'flex';
-            banner.innerHTML = `⚠️ <span>পূর্বের ভুল প্রশ্ন সংশোধন: সঠিক উত্তর দিন!</span>`;
+            banner.innerHTML = `⚠️ <span>Mistake correction mode active!</span>`;
         } else {
             banner.style.display = 'none';
         }
 
-        document.getElementById('quizCounterText').innerText = `🔥 Level ${currentLevel} / ${totalMaxLevels} • প্রশ্ন ${currentQuizIndex + 1} / ${currentLevelQuestions.length}`;
-        document.getElementById('quizScoreText').innerText = `স্কোর: ${quizScore}`;
+        document.getElementById('quizCounterText').innerText = `🔥 Level ${currentLevel} / ${totalMaxLevels} • Q ${currentQuizIndex + 1} / ${currentLevelQuestions.length}`;
+        document.getElementById('quizScoreText').innerText = `Score: ${quizScore}`;
         document.getElementById('quizLevelTitle').innerText = `Level ${currentLevel}: ${getLevelCategory(currentLevel)}`;
         document.getElementById('quizPrompt').innerText = qData.q;
 
@@ -1258,11 +1337,11 @@
 
         if (isCorrect) {
             if (qData.isReview) {
-                showToast("সঠিক উত্তর! ভুল সংশোধন হয়েছে 🎯");
+                showToast("Correct! Mistake corrected 🎯");
                 wrongAnswerPool = wrongAnswerPool.filter(item => item.en !== qData.rawItem.en);
                 localStorage.setItem('userWrongAnswers', JSON.stringify(wrongAnswerPool));
             } else {
-                showToast("সঠিক উত্তর! +১০ পয়েন্ট 🪙");
+                showToast("Correct! +10 Points 🪙");
                 points += 10;
                 quizScore += 1;
                 document.getElementById('rewardDisplay').innerText = points;
@@ -1270,7 +1349,7 @@
             }
         } else {
             const correctText = qData.options[qData.ans];
-            showToast(`ভুল! সঠিক উত্তর: "${correctText}" (-৫ পয়েন্ট)`);
+            showToast(`Incorrect! Correct: "${correctText}" (-5 Pts)`);
 
             points = Math.max(0, points - 5);
             document.getElementById('rewardDisplay').innerText = points;
@@ -1295,7 +1374,7 @@
         document.getElementById('rewardDisplay').innerText = points;
         localStorage.setItem('userPts', points);
         localStorage.setItem('userQuizLevel', currentLevel);
-        showToast(`লেভেল ${currentLevel} আনলক! বোনাস +২০ পয়েন্ট 🎁`);
+        showToast(`Level ${currentLevel} Unlocked! +20 Bonus Pts 🎁`);
 
         resetQuizBoxUI();
         buildLevelQuestions();
@@ -1316,9 +1395,12 @@
 
     function resetQuizBoxUI() {
         const box = document.getElementById('quizCardBox');
+        const srcVal = document.getElementById('srcLang').value;
+        const t = uiTranslations[srcVal] || uiTranslations['en'];
+
         box.innerHTML = `
             <div class="quiz-lang-selector-box">
-                <span style="font-size:11px; font-weight:700; color:var(--text-muted);">কুইজ ভাষা:</span>
+                <span style="font-size:11px; font-weight:700; color:var(--text-muted);" id="quizLangLabelText">${t.quizLang}</span>
                 <select id="quizLangSelect" class="quiz-lang-select" onchange="changeQuizLanguage()">
                     <option value="bn" ${selectedQuizLang === 'bn' ? 'selected' : ''}>Bangla (বাংলা)</option>
                     <option value="en" ${selectedQuizLang === 'en' ? 'selected' : ''}>English (ইংরেজি)</option>
@@ -1339,11 +1421,11 @@
                 </select>
             </div>
             <div id="wrongReviewBanner" class="wrong-review-banner" style="display: none;">
-                ⚠️ <span>পূর্বের ভুল প্রশ্ন সংশোধন পর্ব চলছে!</span>
+                ⚠️ <span id="reviewBannerText">${t.reviewText}</span>
             </div>
             <div class="quiz-header-status">
-                <span id="quizCounterText">🔥 Level ${currentLevel} • প্রশ্ন ১ / ৫</span>
-                <span id="quizScoreText" style="color:var(--primary);">স্কোর: ০</span>
+                <span id="quizCounterText">🔥 Level ${currentLevel} • Q 1 / 5</span>
+                <span id="quizScoreText" style="color:var(--primary);">Score: 0</span>
             </div>
             <h4 id="quizLevelTitle" style="color:var(--primary); margin-bottom:6px; font-size:15px;">Daily Challenge</h4>
             <p id="quizPrompt" style="font-size:15px; font-weight:700; margin:12px 0 16px; color:var(--text-main); line-height:1.4;"></p>
