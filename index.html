@@ -602,7 +602,7 @@
         </div>
     </div>
 
-    <!-- MAIN VIEW 4: DAILY QUIZ (WITH MISTAKE CORRECTION & 100 LEVELS) -->
+    <!-- MAIN VIEW 4: DAILY QUIZ (FULL MULTI-LANGUAGE FIXED) -->
     <div id="quizView" class="workspace-content tab-panel">
         <div class="translate-card" id="quizCardBox" style="text-align:center;">
             
@@ -681,23 +681,98 @@
         "ami kaj korchi": "I am working."
     };
 
-    /* 100-LEVEL DYNAMIC VOCABULARY & EXPRESSION REPOSITORY */
+    /* COMPREHENSIVE 16-LANGUAGE VOCABULARY DATABASE (NO MISSING KEYS) */
     const masterVocabDatabase = [
-        { en: "Opportunity", bn: "সুযোগ", hi: "अवसर", ur: "موقع", ar: "فرصة", ja: "機会", ko: "기회", de: "Gelegenheit", fr: "Opportunité", es: "Oportunidad" },
-        { en: "Essential", bn: "জরুরি / অত্যাবশ্যকীয়", hi: "आवश्यक", ur: "ضروری", ar: "ضروري", ja: "不可欠", ko: "필수적인", de: "Wichtig", fr: "Essentiel", es: "Esencial" },
-        { en: "Improve", bn: "উন্নতি করা", hi: "सुधारना", ur: "بہتر بنانا", ar: "تحسين", ja: "改善する", ko: "향상시키다", de: "Verbessern", fr: "Améliorer", es: "Mejorar" },
-        { en: "Difficult", bn: "কঠিন", hi: "कठिन", ur: "مشکل", ar: "صعب", ja: "難しい", ko: "어려운", de: "Schwierig", fr: "Difficile", es: "Difícil" },
-        { en: "Comfortable", bn: "আরামদায়ক", hi: "आरामदायक", ur: "آرام دہ", ar: "مريح", ja: "快適な", ko: "편안한", de: "Bequem", fr: "Confortable", es: "Cómodo" },
-        { en: "Success", bn: "সাফল্য", hi: "सफलता", ur: "کامیابی", ar: "نجاح", ja: "成功", ko: "성공", de: "Erfolg", fr: "Succès", es: "Éxito" },
-        { en: "Challenge", bn: "চ্যালেঞ্জ / পরীক্ষা", hi: "चुनौती", ur: "چیلنج", ar: "تحدي", ja: "挑戦", ko: "도전", de: "Herausforderung", fr: "Défi", es: "Desafío" },
-        { en: "Important", bn: "গুরুত্বপূর্ণ", hi: "महत्वपूर्ण", ur: "اہم", ar: "مهم", ja: "重要", ko: "중요한", de: "Wichtig", fr: "Important", es: "Importante" },
-        { en: "Responsible", bn: "দায়িত্বশীল", hi: "जिम्मेदार", ur: "ذمہ دار", ar: "مسؤول", ja: "責任がある", ko: "책임 있는", de: "Verantwortlich", fr: "Responsable", es: "Responsable" },
-        { en: "Experience", bn: "অভিজ্ঞতা", hi: "अनुभव", ur: "تجربہ", ar: "خبرة", ja: "経験", ko: "경험", de: "Erfahrung", fr: "Expérience", es: "Experiencia" },
-        { en: "Resilient", bn: "সহনশীল / ঘুরে দাঁড়াতে সক্ষম", hi: "लचीला", ur: "لچکدار", ar: "مرن", ja: "回復力がある", ko: "회복력 있는", de: "Widerstandsfähig", fr: "Résistant", es: "Resiliente" },
-        { en: "Paramount", bn: "সর্বোচ্চ গুরুত্বপূর্ণ", hi: "सर्वोपरि", ur: "سب سے اہم", ar: "أسمى", ja: "最重要", ko: "가장 중요한", de: "Überragend", fr: "Primordial", es: "Primordial" },
-        { en: "Substantial", bn: "বিপুল / প্রচুর", hi: "काफी", ur: "کافی", ar: "جوهري", ja: "実質的な", ko: "상당한", de: "Erheblich", fr: "Substantiel", es: "Sustancial" },
-        { en: "Pragmatic", bn: "বাস্তববাদী", hi: "व्यावहारिक", ur: "عملی", ar: "عملي", ja: "実用的な", ko: "실용적인", de: "Pragmatisch", fr: "Pragmatique", es: "Pragmático" },
-        { en: "Inevitable", bn: "অনিবার্য", hi: "अपरिहार्य", ur: "ناگزیر", ar: "حتمي", ja: "避けられない", ko: "불가피한", de: "Unvermeidlich", fr: "Inévitable", es: "Inevitable" }
+        { 
+            en: "Opportunity", 
+            bn: "সুযোগ", hi: "अवसर", ur: "موقع", ar: "فرصة", ja: "機会", ko: "기회", 
+            de: "Gelegenheit", fr: "Opportunité", es: "Oportunidad", pt: "Oportunidade", 
+            af: "Geleentheid", mr: "संधी", te: "అవకాశం", ta: "வாய்ப்பு", gu: "તક" 
+        },
+        { 
+            en: "Essential", 
+            bn: "জরুরি / অত্যাবশ্যকীয়", hi: "आवश्यक", ur: "ضروری", ar: "ضروري", ja: "不可欠", ko: "필수적인", 
+            de: "Wichtig", fr: "Essentiel", es: "Esencial", pt: "Essencial", 
+            af: "Noodsaaklik", mr: "महत्त्वाचे", te: "ముఖ్యమైన", ta: "அவசியம்", gu: "જરૂરી" 
+        },
+        { 
+            en: "Improve", 
+            bn: "উন্নতি করা", hi: "सुधारना", ur: "بہتر بنانا", ar: "تحسين", ja: "改善する", ko: "향상시키다", 
+            de: "Verbessern", fr: "Améliorer", es: "Mejorar", pt: "Melhorar", 
+            af: "Verbeter", mr: "सुधारणे", te: "మెరుగుపరచడం", ta: "மேம்படுத்த", gu: "સુધારવું" 
+        },
+        { 
+            en: "Difficult", 
+            bn: "কঠিন", hi: "कठिन", ur: "مشکل", ar: "صعب", ja: "難しい", ko: "어려운", 
+            de: "Schwierig", fr: "Difficile", es: "Difícil", pt: "Difícil", 
+            af: "Moeilik", mr: "कठीण", te: "కష్టమైన", ta: "கடினம்", gu: "મુશ્કેલ" 
+        },
+        { 
+            en: "Comfortable", 
+            bn: "আরামদায়ক", hi: "आरामदायक", ur: "آرام دہ", ar: "مريح", ja: "快適な", ko: "편안한", 
+            de: "Bequem", fr: "Confortable", es: "Cómodo", pt: "Confortável", 
+            af: "Gemaklik", mr: "आरामदायी", te: "సౌకర్యవంతమైన", ta: "சௌகரியமான", gu: "આરામદાયક" 
+        },
+        { 
+            en: "Success", 
+            bn: "সাফল্য", hi: "सफलता", ur: "کامیابی", ar: "نجاح", ja: "成功", ko: "성공", 
+            de: "Erfolg", fr: "Succès", es: "Éxito", pt: "Sucesso", 
+            af: "Sukses", mr: "यश", te: "విజయం", ta: "வெற்றி", gu: "સફળતા" 
+        },
+        { 
+            en: "Challenge", 
+            bn: "চ্যালেঞ্জ / পরীক্ষা", hi: "चुनौती", ur: "چیلنج", ar: "تحدي", ja: "挑戦", ko: "도전", 
+            de: "Herausforderung", fr: "Défi", es: "Desafío", pt: "Desafio", 
+            af: "Uitdaging", mr: "आव्हानात्मक", te: "సవాలు", ta: "சவால்", gu: "પડકાર" 
+        },
+        { 
+            en: "Important", 
+            bn: "গুরুত্বপূর্ণ", hi: "महत्वपूर्ण", ur: "اہم", ar: "مهم", ja: "重要", ko: "중요한", 
+            de: "Wichtig", fr: "Important", es: "Importante", pt: "Importante", 
+            af: "Belangrik", mr: "महत्त्वाचे", te: "ముఖ్యమైనది", ta: "முக்கியமானது", gu: "મહત્વપૂર્ણ" 
+        },
+        { 
+            en: "Responsible", 
+            bn: "দায়িত্বশীল", hi: "जिम्मेदार", ur: "ذمہ دار", ar: "مسؤول", ja: "責任がある", ko: "책임 있는", 
+            de: "Verantwortlich", fr: "Responsable", es: "Responsable", pt: "Responsável", 
+            af: "Verantwoordelik", mr: "जबाबदार", te: "బాధ్యతాయుతమైన", ta: "பொறுப்புள்ள", gu: "જવાબદાર" 
+        },
+        { 
+            en: "Experience", 
+            bn: "অভিজ্ঞতা", hi: "अनुभव", ur: "تجربہ", ar: "خبرة", ja: "経験", ko: "경험", 
+            de: "Erfahrung", fr: "Expérience", es: "Experiencia", pt: "Experiência", 
+            af: "Ervaring", mr: "अनुभव", te: "అనుభవం", ta: "அனுபவம்", gu: "અનુભવ" 
+        },
+        { 
+            en: "Resilient", 
+            bn: "সহনশীল", hi: "लचीला", ur: "لچکدار", ar: "مرن", ja: "回復力がある", ko: "회복력 있는", 
+            de: "Widerstandsfähig", fr: "Résistant", es: "Resiliente", pt: "Resiliente", 
+            af: "Veerkragtig", mr: "लवचिक", te: "స్థితిస్థాపకత", ta: "மீள்தன்மை", gu: "સ્થિતિસ્થાપક" 
+        },
+        { 
+            en: "Paramount", 
+            bn: "সর্বোচ্চ গুরুত্বপূর্ণ", hi: "सर्वोपरि", ur: "سب سے اہم", ar: "أسمى", ja: "最重要", ko: "가장 중요한", 
+            de: "Überragend", fr: "Primordial", es: "Primordial", pt: "Primordial", 
+            af: "Uiters belangrik", mr: "सर्वोच्च", te: "అత్యున్నతమైనది", ta: "முதன்மையானது", gu: "સર્વોચ્ચ" 
+        },
+        { 
+            en: "Substantial", 
+            bn: "বিপুল / প্রচুর", hi: "काफी", ur: "کافی", ar: "جوهري", ja: "実質的な", ko: "상당한", 
+            de: "Erheblich", fr: "Substantiel", es: "Sustancial", pt: "Substancial", 
+            af: "Aansienlik", mr: "भरपूर", te: "గణనీయమైన", ta: "கணிசமான", gu: "નોંધપાત્ર" 
+        },
+        { 
+            en: "Pragmatic", 
+            bn: "বাস্তববাদী", hi: "व्यावहारिक", ur: "عملی", ar: "عملي", ja: "実用的な", ko: "실용적인", 
+            de: "Pragmatisch", fr: "Pragmatique", es: "Pragmático", pt: "Pragmático", 
+            af: "Pragmaties", mr: "व्यावहारिक", te: "ఆచరణాత్మక", ta: "நடைமுறை", gu: "વ્યવહારુ" 
+        },
+        { 
+            en: "Inevitable", 
+            bn: "অনিবার্য", hi: "अपरिहार्य", ur: "ناگزیر", ar: "حتمي", ja: "避けられない", ko: "불가피한", 
+            de: "Unvermeidlich", fr: "Inévitable", es: "Inevitable", pt: "Inevitável", 
+            af: "Onvermydelik", mr: "अपरिहार्य", te: "అనివార్యమైనది", ta: "தவிர்க்க முடியாதது", gu: "અનિવાર્ય" 
+        }
     ];
 
     let currentLevel = parseInt(localStorage.getItem('userQuizLevel')) || 1;
@@ -707,7 +782,6 @@
     const totalMaxLevels = 100;
     const questionsPerLevel = 5;
 
-    // ভুল উত্তর সংরক্ষণ তালিকা
     let wrongAnswerPool = JSON.parse(localStorage.getItem('userWrongAnswers')) || [];
     let currentLevelQuestions = [];
 
@@ -1026,7 +1100,7 @@
         }
     }
 
-    /* ADVANCED 100-LEVEL GENERATOR & ERROR CORRECTION ENGINE */
+    /* ADVANCED MULTI-LANGUAGE QUIZ GENERATOR */
     function changeQuizLanguage() {
         selectedQuizLang = document.getElementById('quizLangSelect').value;
         buildLevelQuestions();
@@ -1040,36 +1114,50 @@
         return "Master & IELTS Mastery (সর্বোচ্চ স্তর)";
     }
 
-    function generateQuestion(item, isReview = false) {
-        let targetMeaning = item[selectedQuizLang] || item['bn'] || item['en'];
-        let promptText = "";
+    function getLanguageSpecificPrompt(word) {
+        const prompts = {
+            'bn': `"${word}" - এর সঠিক বাংলা অর্থ কোনটি?`,
+            'en': `What is the correct translation of "${word}"?`,
+            'hi': `"${word}" का सही अर्थ क्या है?`,
+            'ur': `"${word}" کا درست مطلب کیا ہے؟`,
+            'ar': `ما هو المعنى الصحيح لـ "${word}"؟`,
+            'ja': `「${word}」の正しい意味を選択してください:`,
+            'ko': `"${word}"의 올바른 의미는 무엇입니까?`,
+            'de': `Was ist die richtige Bedeutung von "${word}"?`,
+            'fr': `Quelle est la bonne signification de "${word}"?`,
+            'es': `¿Cuál es el significado correcto de "${word}"?`,
+            'pt': `Qual é o significado correto de "${word}"?`,
+            'af': `Wat is die korrekte betekenis van "${word}"?`,
+            'mr': `"${word}" चा योग्य अर्थ कोणता आहे?`,
+            'te': `"${word}" యొక్క సరైన అర్థం ఏమిటి?`,
+            'ta': `"${word}" என்பதன் சரியான பொருள் என்ன?`,
+            'gu': `"${word}" નો સાચો અર્થ શું છે?`
+        };
+        return prompts[selectedQuizLang] || `Choose the correct meaning for "${word}":`;
+    }
 
-        if (selectedQuizLang === 'bn') {
-            promptText = `"${item.en}" - এর সঠিক বাংলা অর্থ কী?`;
-        } else if (selectedQuizLang === 'en') {
-            promptText = `What is the correct meaning of "${item.en}"?`;
-        } else if (selectedQuizLang === 'ur') {
-            promptText = `"${item.en}" کا درست مطلب کیا ہے؟`;
-        } else if (selectedQuizLang === 'hi') {
-            promptText = `"${item.en}" का सही अर्थ क्या है?`;
-        } else if (selectedQuizLang === 'ar') {
-            promptText = `ما هو المعنى الصحيح لـ "${item.en}"؟`;
-        } else if (selectedQuizLang === 'ja') {
-            promptText = `「${item.en}」の正しい意味は何ですか？`;
-        } else if (selectedQuizLang === 'ko') {
-            promptText = `"${item.en}"의 올바른 의미는 무엇입니까?`;
-        } else {
-            promptText = `Translate & choose meaning for "${item.en}":`;
-        }
+    function generateQuestion(item, isReview = false) {
+        let targetMeaning = item[selectedQuizLang] || item['en'];
+        let promptText = getLanguageSpecificPrompt(item.en);
 
         let seedIndex = masterVocabDatabase.findIndex(v => v.en === item.en);
         if(seedIndex === -1) seedIndex = 0;
 
-        let wrong1 = masterVocabDatabase[(seedIndex + 3) % masterVocabDatabase.length][selectedQuizLang] || "Other Option A";
-        let wrong2 = masterVocabDatabase[(seedIndex + 7) % masterVocabDatabase.length][selectedQuizLang] || "Other Option B";
+        // অন্য দুটি শব্দ থেকে অপশন নিয়ে আসা
+        let wrongItem1 = masterVocabDatabase[(seedIndex + 3) % masterVocabDatabase.length];
+        let wrongItem2 = masterVocabDatabase[(seedIndex + 7) % masterVocabDatabase.length];
 
-        if (wrong1 === targetMeaning) wrong1 = "Incorrect Option A";
-        if (wrong2 === targetMeaning || wrong2 === wrong1) wrong2 = "Incorrect Option B";
+        let wrong1 = wrongItem1[selectedQuizLang] || wrongItem1['en'];
+        let wrong2 = wrongItem2[selectedQuizLang] || wrongItem2['en'];
+
+        if (wrong1 === targetMeaning) {
+            let alt = masterVocabDatabase[(seedIndex + 4) % masterVocabDatabase.length];
+            wrong1 = alt[selectedQuizLang] || alt['en'];
+        }
+        if (wrong2 === targetMeaning || wrong2 === wrong1) {
+            let alt = masterVocabDatabase[(seedIndex + 8) % masterVocabDatabase.length];
+            wrong2 = alt[selectedQuizLang] || alt['en'];
+        }
 
         let options = [targetMeaning, wrong1, wrong2];
         options.sort(() => 0.5 - Math.random());
@@ -1084,18 +1172,15 @@
         };
     }
 
-    // প্রতি লেভেলের জন্য প্রশ্ন তৈরি (পূর্বের ভুল প্রশ্ন থাকলে সেগুলোকে অগ্রাধিকার দিয়ে যুক্ত করা)
     function buildLevelQuestions() {
         currentLevelQuestions = [];
 
-        // ১. পূর্বের কোনো ভুল প্রশ্ন থাকলে প্রথমে সেগুলোকে অন্তর্ভুক্ত করা হবে
         if (wrongAnswerPool.length > 0) {
             wrongAnswerPool.forEach(item => {
                 currentLevelQuestions.push(generateQuestion(item, true));
             });
         }
 
-        // ২. বাকি প্রশ্নগুলো নতুন লেভেলের পুল থেকে যুক্ত করা হবে
         const needed = questionsPerLevel;
         for (let i = 0; i < needed; i++) {
             const seed = (currentLevel - 1) * questionsPerLevel + i;
@@ -1121,7 +1206,7 @@
                     
                     ${wrongAnswerPool.length > 0 ? `
                         <div class="wrong-review-banner" style="margin-bottom: 14px;">
-                            💡 <span>${wrongAnswerPool.length}টি ভুল উত্তর পরবর্তী লেভেলে পুনরায় প্র্যাকটিস করে দেওয়া হবে।</span>
+                            💡 <span>${wrongAnswerPool.length}টি ভুল উত্তর পরবর্তী লেভেলে পুনরায় প্র্যাকটিস করানো হবে।</span>
                         </div>
                     ` : `
                         <p style="color:#0f9d58; font-size:12px; font-weight:700; margin-bottom:14px;">✓ সকল প্রশ্নের সঠিক উত্তর সম্পন্ন হয়েছে!</p>
@@ -1180,7 +1265,6 @@
             document.getElementById('rewardDisplay').innerText = points;
             localStorage.setItem('userPts', points);
 
-            // যদি এটি পূর্বের ভুল প্রশ্ন হয়ে থাকে, তবে ভুল তালিকা থেকে মুছে ফেলা হবে
             if (qData.isReview) {
                 wrongAnswerPool = wrongAnswerPool.filter(item => item.en !== qData.rawItem.en);
                 localStorage.setItem('userWrongAnswers', JSON.stringify(wrongAnswerPool));
@@ -1189,7 +1273,6 @@
             const correctText = qData.options[qData.ans];
             showToast(`ভুল! সঠিক উত্তর: "${correctText}"`);
 
-            // ভুল হলে প্রশ্নটি পরবর্তী লেভেলের জন্য ভুল তালিকায় যুক্ত হবে
             if (!wrongAnswerPool.some(item => item.en === qData.rawItem.en)) {
                 wrongAnswerPool.push(qData.rawItem);
                 localStorage.setItem('userWrongAnswers', JSON.stringify(wrongAnswerPool));
