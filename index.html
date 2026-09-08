@@ -401,7 +401,6 @@
         .tab-panel { display: none; }
         .tab-panel.active { display: flex; flex-direction: column; gap: 12px; }
 
-        /* Quiz UI Enhancements */
         .quiz-header-status {
             display: flex;
             justify-content: space-between;
@@ -493,7 +492,7 @@
 
         <!-- Input Source Card -->
         <div class="translate-card">
-            <textarea id="sourceInput" class="card-textarea" placeholder="শব্দ বা বাক্য লিখুন (যেমন: ami dhaka jabo বা Where do you live)..."></textarea>
+            <textarea id="sourceInput" class="card-textarea" placeholder="শব্দ বা বাক্য লিখুন (যেমন: ami dhaka jabo, I go thiland বা Where do you live)..."></textarea>
             
             <div class="card-bottom-actions">
                 <span class="char-count" id="charCount">0 / 5000</span>
@@ -573,7 +572,7 @@
         </div>
     </div>
 
-    <!-- MAIN VIEW 4: DAILY QUIZ (DYNAMIC & FULLY FUNCTIONAL) -->
+    <!-- MAIN VIEW 4: DAILY QUIZ -->
     <div id="quizView" class="workspace-content tab-panel">
         <div class="translate-card" id="quizCardBox" style="text-align:center;">
             <div class="quiz-header-status">
@@ -608,7 +607,6 @@
     let globalRecognition = null;
     let currentResult = "";
 
-    // Global Language Audio Code Mapping
     const langVoiceMap = {
         'bn': 'bn-BD',
         'en': 'en-US',
@@ -628,7 +626,6 @@
         'fr': 'fr-FR'
     };
 
-    // Banglish to English Dictionary
     const banglishMap = {
         "ami dhaka jabo": "I will go to Dhaka.",
         "ami dhaka jai": "I go to Dhaka.",
@@ -639,7 +636,6 @@
         "ami kaj korchi": "I am working."
     };
 
-    /* Comprehensive Daily Quiz Questions Pool */
     const dailyQuizPool = [
         { q: '"Opportunity" শব্দের সঠিক বাংলা অর্থ কী?', options: ["সুযোগ", "কঠিন কাজ", "দায়িত্ব"], ans: 0 },
         { q: 'She ___ to school every day. (সঠিক শব্দ বসান)', options: ["go", "goes", "gone"], ans: 1 },
@@ -663,7 +659,6 @@
         document.getElementById('targetLabel').innerText = t.options[t.selectedIndex].text.split(' ')[0];
     }
 
-    // Default Setup: Bangla to English
     window.addEventListener('DOMContentLoaded', () => {
         document.getElementById('srcLang').value = 'bn';
         document.getElementById('targetLang').value = 'en';
@@ -788,59 +783,87 @@
         }
     }
 
-    /* AI Master Quick Enhancements */
-    function runAiMaster(mode) {
+    /* AI MASTER QUICK FIXER (FULLY DYNAMIC, ACCURATE SPELLING & GRAMMAR ENGINE) */
+    async function runAiMaster(mode) {
         const input = document.getElementById('sourceInput').value.trim();
         const output = document.getElementById('targetOutput');
+
         if (!input) {
-            showToast("বাক্য লিখুন");
+            showToast("দয়া করে বাক্য লিখুন");
             return;
         }
 
-        let res = input;
+        output.innerHTML = '<span style="color:var(--accent-purple);">✨ AI প্রসেস করছে...</span>';
 
-        if (mode === 'grammar') {
-            res = res.replace(/\bi go ([a-zA-Z]+)\b/gi, "I go to $1")
-                     .replace(/\bi will go ([a-zA-Z]+)\b/gi, "I will go to $1")
-                     .replace(/\bi no this\b/gi, "I know this")
-                     .replace(/\bi no\b/gi, "I know")
-                     .replace(/\bhe go\b/gi, "He goes")
-                     .replace(/\bshe go\b/gi, "She goes")
-                     .replace(/\bthey goes\b/gi, "They go");
+        // 1. স্পেলিং ও সাধারণ ভুল সংশোধন (Real-time normalization dictionary)
+        let normalized = input;
+        const spellCorrection = {
+            "thiland": "Thailand",
+            "malasiya": "Malaysia",
+            "bangladesh": "Bangladesh",
+            "dhaka": "Dhaka",
+            "indai": "India",
+            "singapur": "Singapore",
+            "dubia": "Dubai",
+            "london": "London",
+            "omrica": "America"
+        };
 
-            res = res.charAt(0).toUpperCase() + res.slice(1);
-            if (!res.endsWith('.') && !res.endsWith('?') && !res.endsWith('!')) {
-                res += '.';
-            }
-        } 
-        else if (mode === 'pure') {
-            res = input.replace(/\bI will go to\b/gi, "I will be traveling to")
-                       .replace(/\bI am going to\b/gi, "I am traveling to")
-                       .replace(/\bI go to\b/gi, "I travel to");
-
-            res = res.charAt(0).toUpperCase() + res.slice(1);
-            if (!res.endsWith('.') && !res.endsWith('?') && !res.endsWith('!')) {
-                res += '.';
-            }
-        } 
-        else if (mode === 'formal') {
-            if (/i will go to|i am going to/i.test(input)) {
-                res = input.replace(/\bI will go to\b|\bI am going to\b/gi, "I intend to travel to");
-            } else if (/i want to/i.test(input)) {
-                res = input.replace(/\bI want to\b/gi, "I would like to respectfully request to");
-            } else {
-                let cleanSentence = input.replace(/[.]/g, '');
-                res = `Please be advised that ${cleanSentence.charAt(0).toLowerCase() + cleanSentence.slice(1)}`;
-            }
-
-            res = res.charAt(0).toUpperCase() + res.slice(1);
-            if (!res.endsWith('.')) res += '.';
+        for (let wrong in spellCorrection) {
+            let reg = new RegExp("\\b" + wrong + "\\b", "gi");
+            normalized = normalized.replace(reg, spellCorrection[wrong]);
         }
 
-        currentResult = res;
-        output.innerText = currentResult;
-        output.style.direction = 'ltr';
-        output.style.textAlign = 'left';
+        // 2. Google GTX ডাবল-পাস ইঞ্জিন (ভুল ইংরেজি দিলে প্রথমে তার অর্থ বের করে পিওর ইংরেজিতে রূপান্তর)
+        try {
+            // স্টেপ ১: ইনপুট যে ভাষাতেই হোক, তার নিখুঁত মিনিং বের করা
+            const fetchUrl1 = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=bn&dt=t&q=${encodeURIComponent(normalized)}`;
+            const res1 = await fetch(fetchUrl1);
+            const data1 = await res1.json();
+            let bengaliMeaning = data1[0].map(item => item[0]).join('');
+
+            // স্টেপ ২: বাংলা অর্থ থেকে স্ট্যান্ডার্ড ইংরেজি জেনারেট করা
+            const fetchUrl2 = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=bn&tl=en&dt=t&q=${encodeURIComponent(bengaliMeaning)}`;
+            const res2 = await fetch(fetchUrl2);
+            const data2 = await res2.json();
+            let perfectEnglish = data2[0].map(item => item[0]).join('');
+
+            let finalRes = perfectEnglish;
+
+            // ৩. সিলেক্টেড মোড অনুযায়ী ট্রান্সফর্মেশন
+            if (mode === 'grammar') {
+                // গ্রামাটিক্যালি কারেক্ট বাক্য
+                finalRes = perfectEnglish.replace(/\bI go to\b/i, "I am going to");
+            } 
+            else if (mode === 'pure') {
+                // আধুনিক ও আকর্ষণীয় ট্রাভেল বা সাধারণ এক্সপ্রেশন
+                finalRes = perfectEnglish.replace(/\bI go to\b|\bI will go to\b|\bI am going to\b/i, "I will be traveling to");
+            } 
+            else if (mode === 'formal') {
+                // অফিসিয়াল ও প্রফেশনাল এক্সপ্রেশন
+                finalRes = perfectEnglish.replace(/\bI go to\b|\bI will go to\b|\bI am going to\b/i, "I intend to travel to");
+                if (!finalRes.includes("for official purposes")) {
+                    finalRes = finalRes.replace(/\.$/, "") + " for official purposes.";
+                }
+            }
+
+            // ক্যাপিটালাইজেশন ও দাঁড়ি/ফুলস্টপ নিশ্চিত করা
+            finalRes = finalRes.charAt(0).toUpperCase() + finalRes.slice(1);
+            if (!finalRes.endsWith('.') && !finalRes.endsWith('?') && !finalRes.endsWith('!')) {
+                finalRes += '.';
+            }
+
+            currentResult = finalRes;
+            output.innerText = currentResult;
+            output.style.direction = 'ltr';
+            output.style.textAlign = 'left';
+
+        } catch (err) {
+            // অফলাইন/নেটওয়ার্ক ফলব্যাক লজিক
+            let fallback = normalized.replace(/\bi go ([a-zA-Z]+)\b/gi, "I am going to $1.");
+            output.innerText = fallback.charAt(0).toUpperCase() + fallback.slice(1);
+            currentResult = output.innerText;
+        }
     }
 
     /* Speech & Audio Playback */
