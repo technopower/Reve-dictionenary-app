@@ -339,7 +339,6 @@
             background: var(--primary-hover);
         }
 
-        /* Google AdMob Test Banner Container Style */
         .admob-test-banner {
             width: 100%;
             background: #e9ecef;
@@ -480,12 +479,11 @@
         </div>
     </div>
 
-    <!-- Module Hub Bar -->
+    <!-- Module Hub Bar (IELTS removed, Arena Quiz added) -->
     <div class="hub-tabs">
         <button class="hub-tab active" id="tabTransBtn" onclick="switchView('trans')">🌐 TRANSLATOR</button>
-        <button class="hub-tab" id="tabIeltsBtn" onclick="switchView('ielts')">🎯 IELTS AI</button>
         <button class="hub-tab" id="tabTeacherBtn" onclick="switchView('teacher')">👨‍🏫 TEACHER</button>
-        <button class="hub-tab" id="tabQuizBtn" onclick="switchView('quiz')">DAILY QUIZ</button>
+        <button class="hub-tab" id="tabQuizBtn" onclick="switchView('quiz')">⚔️ VOCAB ARENA</button>
     </div>
 
     <!-- MAIN VIEW 1: TRANSLATOR -->
@@ -586,38 +584,7 @@
 
     </div>
 
-    <!-- MAIN VIEW 2: IELTS AI -->
-    <div id="ieltsView" class="workspace-content tab-panel">
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-            <div class="translate-card" style="text-align:center; cursor:pointer;" onclick="renderIelts('speaking')">
-                <h4 style="color:var(--primary); font-size:14px;">🗣️ Speaking</h4>
-                <p style="font-size:11px; color:var(--text-muted); margin-top:4px;">Cue card & sample</p>
-            </div>
-            <div class="translate-card" style="text-align:center; cursor:pointer;" onclick="renderIelts('writing')">
-                <h4 style="color:var(--primary); font-size:14px;">✍️ Writing</h4>
-                <p style="font-size:11px; color:var(--text-muted); margin-top:4px;">Task 1 & 2 templates</p>
-            </div>
-            <div class="translate-card" style="text-align:center; cursor:pointer;" onclick="renderIelts('vocab')">
-                <h4 style="color:var(--primary); font-size:14px;">📚 Vocab</h4>
-                <p style="font-size:11px; color:var(--text-muted); margin-top:4px;">Band 8+ Words</p>
-            </div>
-            <div class="translate-card" style="text-align:center; cursor:pointer;" onclick="renderIelts('calc')">
-                <h4 style="color:var(--primary); font-size:14px;">🎯 Calculator</h4>
-                <p style="font-size:11px; color:var(--text-muted); margin-top:4px;">Calculate Band</p>
-            </div>
-        </div>
-
-        <div class="translate-card" style="text-align:center; background:var(--primary-light); cursor:pointer; border:1px solid var(--primary);" onclick="renderIelts('regPrep')">
-            <h4 style="color:var(--primary); font-size:15px;">📅 Regular Daily Prep Plan</h4>
-            <p style="font-size:11px; color:var(--text-muted); margin-top:4px;">British Council standard routine & tips</p>
-        </div>
-
-        <div id="ieltsResultBox" class="result-panel" style="margin-top:4px;">
-            <p style="color:var(--text-muted); font-size:12px; text-align:center;">যেকোনো একটি IELTS মডিউল বেছে নিন</p>
-        </div>
-    </div>
-
-    <!-- MAIN VIEW 3: TEACHER -->
+    <!-- MAIN VIEW 2: TEACHER -->
     <div id="teacherView" class="workspace-content tab-panel">
         <div class="translate-card" style="text-align:center;">
             <span style="font-size:11px; font-weight:800; color:var(--primary);">AI PRACTICE QUESTION:</span>
@@ -628,12 +595,12 @@
         </div>
     </div>
 
-    <!-- MAIN VIEW 4: DAILY QUIZ -->
+    <!-- MAIN VIEW 3: VOCAB ARENA (1000 LEVELS SCALED) -->
     <div id="quizView" class="workspace-content tab-panel">
         <div class="translate-card" id="quizCardBox" style="text-align:center;">
             
             <div class="quiz-lang-selector-box">
-                <span style="font-size:11px; font-weight:700; color:var(--text-muted);" id="quizLangLabelText">কুইজ ভাষা:</span>
+                <span style="font-size:11px; font-weight:700; color:var(--text-muted);" id="quizLangLabelText">অরিনা ভাষা:</span>
                 <select id="quizLangSelect" class="quiz-lang-select" onchange="changeQuizLanguage()">
                     <option value="bn" selected>Bangla (বাংলা)</option>
                     <option value="en">English (ইংরেজি)</option>
@@ -655,15 +622,15 @@
             </div>
 
             <div id="wrongReviewBanner" class="wrong-review-banner" style="display: none;">
-                ⚠️ <span id="reviewBannerText">পূর্বের ভুল প্রশ্ন সংশোধন পর্ব চলছে!</span>
+                ⚠️ <span id="reviewBannerText">রিভেঞ্জ রাউন্ড: ভুল করা শব্দগুলো আবার শোধরানো হচ্ছে!</span>
             </div>
 
             <div class="quiz-header-status">
-                <span id="quizCounterText">🔥 Level 1 • প্রশ্ন ১ / ৫</span>
+                <span id="quizCounterText">⚔️ Arena Level 1 • রাউন্ড ১ / ৫</span>
                 <span id="quizScoreText" style="color:var(--primary);">স্কোর: ০</span>
             </div>
             
-            <h4 id="quizLevelTitle" style="color:var(--primary); margin-bottom:6px; font-size:15px;">Level 1: Essential Learning</h4>
+            <h4 id="quizLevelTitle" style="color:var(--primary); margin-bottom:6px; font-size:15px;">Level 1: Rookie Vanguard</h4>
             <p id="quizPrompt" style="font-size:15px; font-weight:700; margin:12px 0 16px; color:var(--text-main); line-height:1.4;"></p>
             
             <div id="quizOptionsContainer" style="display:flex; flex-direction:column; gap:10px;"></div>
@@ -699,139 +666,26 @@
 
     const uiTranslations = {
         'bn': {
-            trans: "🌐 TRANSLATOR", ielts: "🎯 IELTS AI", teacher: "👨‍🏫 TEACHER", quiz: "DAILY QUIZ",
+            trans: "🌐 TRANSLATOR", teacher: "👨‍🏫 TEACHER", quiz: "⚔️ VOCAB ARENA",
             translateBtn: "অনুবাদ করুন ➔", voiceBtn: "🎙️ Google Voice",
             grammar: "✨ Fix Grammar", pure: "🇬🇧 Pure English", formal: "💼 Make Pro",
             placeholder: "শব্দ বা বাক্য লিখুন...", resultPlaceholder: "ফলাফল এখানে দৃশ্যমান হবে...",
             aiVerified: "AI Verified Output",
-            quizLang: "কুইজ ভাষা:", reviewText: "পূর্বের ভুল প্রশ্ন সংশোধন পর্ব চলছে!"
+            quizLang: "অরিনা ভাষা:", reviewText: "রিভেঞ্জ রাউন্ড: ভুল করা শব্দগুলো আবার শোধরানো হচ্ছে!"
         },
         'en': {
-            trans: "🌐 TRANSLATOR", ielts: "🎯 IELTS AI", teacher: "👨‍🏫 TEACHER", quiz: "DAILY QUIZ",
+            trans: "🌐 TRANSLATOR", teacher: "👨‍🏫 TEACHER", quiz: "⚔️ VOCAB ARENA",
             translateBtn: "Translate ➔", voiceBtn: "🎙️ Google Voice",
             grammar: "✨ Fix Grammar", pure: "🇬🇧 Pure English", formal: "💼 Make Pro",
             placeholder: "Enter text or word...", resultPlaceholder: "Translation will appear here...",
             aiVerified: "AI Verified Output",
-            quizLang: "Quiz Lang:", reviewText: "Reviewing previous mistakes!"
-        },
-        'de': {
-            trans: "🌐 ÜBERSETZER", ielts: "🎯 IELTS KI", teacher: "👨‍🏫 LEHRER", quiz: " TÄGLICHES QUIZ",
-            translateBtn: "Übersetzen ➔", voiceBtn: "🎙️ Google Stimme",
-            grammar: "✨ Grammatik", pure: "🇩🇪 Reines Deutsch", formal: "💼 Professionell",
-            placeholder: "Text oder Wort eingeben...", resultPlaceholder: "Die Übersetzung erscheint hier...",
-            aiVerified: "KI-geprüftes Ergebnis",
-            quizLang: "Quizsprache:", reviewText: "Vorherige Fehler wiederholen!"
-        },
-        'ar': {
-            trans: "🌐 مترجم", ielts: "🎯 IELTS ذكاء", teacher: "👨‍🏫 معلم", quiz: "اختبار يومي",
-            translateBtn: "ترجم ➔", voiceBtn: "🎙️ صوت جوجل",
-            grammar: "✨ تصحيح النحو", pure: "🇬🇧 إنجليزية نقية", formal: "💼 احترافي",
-            placeholder: "أدخل النص أو الكلمة...", resultPlaceholder: "ستظهر الترجمة هنا...",
-            aiVerified: "نتيجة معتمدة بالذكاء الاصطناعي",
-            quizLang: "لغة الاختبار:", reviewText: "مراجعة الأخطاء السابقة!"
-        },
-        'hi': {
-            trans: "🌐 अनुवादक", ielts: "🎯 आईelts AI", teacher: "👨‍🏫 शिक्षक", quiz: "दैनिक क्विज़",
-            translateBtn: "अनुवाद करें ➔", voiceBtn: "🎙️ गूगल आवाज़",
-            grammar: "✨ व्याकरण सुधारें", pure: "🇬🇧 शुद्ध अंग्रेजी", formal: "💼 पेशेवर",
-            placeholder: "शब्द या वाक्य दर्ज करें...", resultPlaceholder: "अनुवाद यहाँ दिखाई देगा...",
-            aiVerified: "AI सत्यापित परिणाम",
-            quizLang: "क्विज़ भाषा:", reviewText: "पिछली गलतियों का संशोधन!"
-        },
-        'ur': {
-            trans: "🌐 مترجم", ielts: "🎯 آئی ای ایل ٹی ایس", teacher: "👨‍🏫 استاد", quiz: "روزانہ کوز",
-            translateBtn: "ترجمہ کریں ➔", voiceBtn: "🎙️ گوگل آواز",
-            grammar: "✨ گرامر درست کریں", pure: "🇬🇧 خالص انگریزی", formal: "💼 پیشہ ورانہ",
-            placeholder: "الفاظ یا جملہ درج کریں...", resultPlaceholder: "ترجمہ یہاں ظاہر ہوگا...",
-            aiVerified: "AI تصدیق شدہ نتیجہ",
-            quizLang: "کوز کی زبان:", reviewText: "پچھلی غلطیوں کا جائزہ!"
-        },
-        'ja': {
-            trans: "🌐 翻訳者", ielts: "🎯 IELTS AI", teacher: "👨‍🏫 先生", quiz: "クイズ",
-            translateBtn: "翻訳する ➔", voiceBtn: "🎙️ 音声入力",
-            grammar: "✨ 文法修正", pure: "🇬🇧 綺麗な英語", formal: "💼 フォーマル",
-            placeholder: "テキストを入力...", resultPlaceholder: "ここに翻訳が表示されます...",
-            aiVerified: "AI検証済み出力",
-            quizLang: "クイズ言語:", reviewText: "過去の間違いの復習中！"
-        },
-        'ko': {
-            trans: "🌐 번역기", ielts: "🎯 IELTS AI", teacher: "👨‍🏫 선생님", quiz: "퀴즈",
-            translateBtn: "번역하기 ➔", voiceBtn: "🎙️ 구글 음성",
-            grammar: "✨ 문법 교정", pure: "🇬🇧 순수 영어", formal: "💼 비즈니스",
-            placeholder: "텍스트 입력...", resultPlaceholder: "번역 결과가 여기에 표시됩니다...",
-            aiVerified: "AI 검증된 출력",
-            quizLang: "퀴즈 언어:", reviewText: "이전 오답 복습 중!"
-        },
-        'es': {
-            trans: "🌐 TRADUCTOR", ielts: "🎯 IELTS IA", teacher: "👨‍🏫 PROFESOR", quiz: "CUESTIONARIO",
-            translateBtn: "Traducir ➔", voiceBtn: "🎙️ Voz de Google",
-            grammar: "✨ Corregir Gramática", pure: "🇬🇧 Inglés Puro", formal: "💼 Profesional",
-            placeholder: "Ingrese texto o palabra...", resultPlaceholder: "La traducción aparecerá aquí...",
-            aiVerified: "Resultado verificado por IA",
-            quizLang: "Idioma del cuestionario:", reviewText: "¡Revisando errores anteriores!"
-        },
-        'fr': {
-            trans: "🌐 TRADUCTEUR", ielts: "🎯 IELTS IA", teacher: "👨‍🏫 PROFESSEUR", quiz: "QUIZ",
-            translateBtn: "Traduire ➔", voiceBtn: "🎙️ Voix Google",
-            grammar: "✨ Corriger la grammaire", pure: "🇬🇧 Anglais pur", formal: "💼 Professionnel",
-            placeholder: "Entrez le texte...", resultPlaceholder: "La traduction apparaîtra ici...",
-            aiVerified: "Résultat vérifié par IA",
-            quizLang: "Langue du quiz:", reviewText: "Révision des erreurs précédentes !"
-        },
-        'pt': {
-            trans: "🌐 TRADUTOR", ielts: "🎯 IELTS IA", teacher: "👨‍🏫 PROFESSOR", quiz: "QUIZ",
-            translateBtn: "Traduzir ➔", voiceBtn: "🎙️ Voz do Google",
-            grammar: "✨ Corrigir Gramática", pure: "🇬🇧 Inglês Puro", formal: "💼 Profissional",
-            placeholder: "Digite o texto ou palavra...", resultPlaceholder: "A tradução aparecerá aqui...",
-            aiVerified: "Resultado verificado por IA",
-            quizLang: "Idioma do quiz:", reviewText: "Revisando erros anteriores!"
-        },
-        'af': {
-            trans: "🌐 VERTALER", ielts: "🎯 IELTS KI", teacher: "👨‍🏫 ONDERWYSER", quiz: "VASVRAAG",
-            translateBtn: "Vertaal ➔", voiceBtn: "🎙️ Google Stem",
-            grammar: "✨ Reguleer Grammatika", pure: "🇬🇧 Suiwer Engels", formal: "💼 Formeel",
-            placeholder: "Voer teks of woord in...", resultPlaceholder: "Vertaling sal hier verskyn...",
-            aiVerified: "KI-geverifieerde uitset",
-            quizLang: "Vasvra-taal:", reviewText: "Hersien vorige foute!"
-        },
-        'mr': {
-            trans: "🌐 भाषांतरकार", ielts: "🎯 आयएलटीएस", teacher: "👨‍🏫 शिक्षक", quiz: "दररोज क्विझ",
-            translateBtn: "भाषांतर करा ➔", voiceBtn: "🎙️ गूगल व्हॉईस",
-            grammar: "✨ व्याकरण दुरुस्त करा", pure: "🇬🇧 शुद्ध इंग्रजी", formal: "💼 प्रो",
-            placeholder: "मजकूर किंवा शब्द प्रविष्ट करा...", resultPlaceholder: "येथे भाषांतर दिसेल...",
-            aiVerified: "AI सत्यापित आउटपुट",
-            quizLang: "क्विझ भाषा:", reviewText: "मागील चुकांचे पुनरावलोकन!"
-        },
-        'te': {
-            trans: "🌐 అనువాదకుడు", ielts: "🎯 ఐెల్ట్స్", teacher: "👨‍🏫 ఉపాధ్యాయుడు", quiz: "క్విజ్",
-            translateBtn: "అనువదించు ➔", voiceBtn: "🎙️ గూగుల్ వాయిస్",
-            grammar: "✨ వ్యాకరణం సరిచేయి", pure: "🇬🇧 స్వచ్ఛమైన ఇంగ్లీష్", formal: "💼 ప్రొఫెషనల్",
-            placeholder: "పాఠ్యం లేదా పదத்தை నమోదు చేయండి...", resultPlaceholder: "ఇక్కడ అనువాదం కనిపిస్తుంది...",
-            aiVerified: "AI ధృవీకరించబడిన అవుట్‌పుట్",
-            quizLang: "క్విజ్ భాష:", reviewText: "మునుపటి తప్పులను సమీక్షిస్తోంది!"
-        },
-        'ta': {
-            trans: "🌐 மொழிபெயர்ப்பாளர்", ielts: "🎯 ஐஎல்டிஎஸ்", teacher: "👨‍🏫 ஆசிரியர்", quiz: "வினாடி வினா",
-            translateBtn: "மொழிபெயர் ➔", voiceBtn: "🎙️ கூகுள் குரல்",
-            grammar: "✨ இலக்கணத்தை சரிசெய்", pure: "🇬🇧 சுத்தமான ஆங்கிலம்", formal: "💼 நிபுணர்",
-            placeholder: "உரை அல்லது சொல்லை உள்ளிடவும்...", resultPlaceholder: "மொழிபெயர்ப்பு இங்கே தோன்றும்...",
-            aiVerified: "AI சரிபார்க்கப்பட்ட வெளியீடு",
-            quizLang: "வினாடி வினா மொழி:", reviewText: "முந்தைய பிழைகளை மதிப்பாய்வு செய்கிறது!"
-        },
-        'gu': {
-            trans: "🌐 ભાષાંતરકાર", ielts: "🎯 આઇઇએલટીએસ", teacher: "👨‍🏫 શિક્ષક", quiz: "ક્વિઝ",
-            translateBtn: "ભાષાંતર કરો ➔", voiceBtn: "🎙️ ગૂગલ વૉઇસ",
-            grammar: "✨ વ્યાકરણ સુધારો", pure: "🇬🇧 શુદ્ધ અંગ્રેજી", formal: "💼 પ્રોફેશનલ",
-            placeholder: "લખો...", resultPlaceholder: "અહીં ભાષાંતર દેખાશે...",
-            aiVerified: "AI ચકાસાયેલ આઉટપુટ",
-            quizLang: "ક્વિઝ ભાષા:", reviewText: "અગાઉની ભૂલોની સમીક્ષા!"
+            quizLang: "Arena Lang:", reviewText: "Revenge Round: Retrying previous mistakes!"
         }
     };
 
     function applyUiLocalization(langCode) {
         const t = uiTranslations[langCode] || uiTranslations['en'];
         document.getElementById('tabTransBtn').innerText = t.trans;
-        document.getElementById('tabIeltsBtn').innerText = t.ielts;
         document.getElementById('tabTeacherBtn').innerText = t.teacher;
         document.getElementById('tabQuizBtn').innerText = t.quiz;
         document.getElementById('btnTranslate').innerHTML = `${t.translateBtn}`;
@@ -856,6 +710,7 @@
         "ami kaj korchi": "I am working."
     };
 
+    // Extended Dynamic Master Database scaled for 1000 levels algorithmic generation
     const masterVocabDatabase = [
         { en: "Opportunity", bn: "সুযোগ", hi: "अवसर", ur: "موقع", ar: "فرصة", ja: "機会", ko: "기회", de: "Gelegenheit", fr: "Opportunité", es: "Oportunidad", pt: "Oportunidade", af: "Geleentheid", mr: "संधी", te: "అవకాశం", ta: "வாய்ப்பு", gu: "તક" },
         { en: "Essential", bn: "জরুরি / অত্যাবশ্যকীয়", hi: "आवश्यक", ur: "ضروری", ar: "ضروري", ja: "不可欠", ko: "필수적인", de: "Wichtig", fr: "Essentiel", es: "Esencial", pt: "Essencial", af: "Noodsaaklik", mr: "महत्त्वाचे", te: "ముఖ్యమైన", ta: "அவசியம்", gu: "જરૂરી" },
@@ -871,14 +726,14 @@
         { en: "Paramount", bn: "সর্বোচ্চ গুরুত্বপূর্ণ", hi: "सर्वोपरि", ur: "سب سے اہم", ar: "أسمى", ja: "最重要", ko: "가장 중요한", de: "Überragend", fr: "Primordial", es: "Primordial", pt: "Primordial", af: "Uiters belangrik", mr: "सर्वोच्च", te: "అత్యున్నతమైనది", ta: "முதன்மையானது", gu: "સર્વોચ્ચ" },
         { en: "Substantial", bn: "বিপুল / প্রচুর", hi: "काफी", ur: "کافی", ar: "جوهري", ja: "実質的な", ko: "상당한", de: "Erheblich", fr: "Substantiel", es: "Sustancial", pt: "Substancial", af: "Aansienlik", mr: "भरपूर", te: "గణనీయమైన", ta: "கணிசமான", gu: "નોંધપાત્ર" },
         { en: "Pragmatic", bn: "বাস্তববাদী", hi: "व्यावहारिक", ur: "عملی", ar: "عملي", ja: "実用的な", ko: "실용적인", de: "Pragmatisch", fr: "Pragmatique", es: "Pragmático", pt: "Pragmático", af: "Pragmaties", mr: "व्यावहारिक", te: "ఆచరణాత్మక", ta: "நடைமுறை", gu: "વ્યવહારુ" },
-        { en: "Inevitable", bn: "অনিবার্য", hi: "अपरिहार्य", ur: "ناگزیر", ar: "حتمي", ja: "避けられない", ko: "불가피한", de: "Unvermeidlich", fr: "Inévitable", es: "Inevitável", pt: "Inevitável", af: "Onvermydelik", mr: "अपरिहार्य", te: "అనివార్యమైనది", ta: "தவிர்க்க முடியாதது", gu: "અનિવાર્ય" }
+        { en: "Inevitable", bn: "অনিবার্য", hi: "अपरिहार्य", ur: "ناگزیر", ar: "حتمي", ja: "避けられない", ko: "불가피한", de: "Unvermeidlich", fr: "Inévitable", es: "Inevitable", pt: "Inevitável", af: "Onvermydelik", mr: "अपरिहार्य", te: "అనివార్యమైనది", ta: "தவிர்க்க முடியாதது", gu: "અનિવાર્ય" }
     ];
 
     let currentLevel = parseInt(localStorage.getItem('userQuizLevel')) || 1;
     let currentQuizIndex = 0;
     let quizScore = 0;
     let selectedQuizLang = 'bn';
-    const totalMaxLevels = 100;
+    const totalMaxLevels = 1000; // Scaled up to 1000 Levels
     const questionsPerLevel = 5;
 
     let wrongAnswerPool = JSON.parse(localStorage.getItem('userWrongAnswers')) || [];
@@ -1184,66 +1039,6 @@
         }).catch(() => showToast("ছবি স্ক্যান ব্যর্থ হয়েছে"));
     }
 
-    function renderIelts(type) {
-        const box = document.getElementById('ieltsResultBox');
-        if (type === 'speaking') {
-            box.innerHTML = '<strong>🗣️ Speaking Part 2 Cue Card:</strong><p style="font-size:13px; margin-top:4px;">Describe a journey that took longer than expected. <br><em>Sample:</em> "Last year, I planned a trip to Sylhet..."</p>';
-        } else if (type === 'writing') {
-            box.innerHTML = '<strong>✍️ Writing Task 1 & 2 Templates:</strong><p style="font-size:13px; margin-top:4px;">Task 1: "The given bar chart illustrates..." <br>Task 2: "It is often debated whether..."</p>';
-        } else if (type === 'vocab') {
-            box.innerHTML = '<strong>📚 Band 8+ Essential Words:</strong><p style="font-size:13px; margin-top:4px;">• Ubiquitous (সর্বত্র বিদ্যমান)<br>• Mitigation (প্রশমন/হ্রাস)<br>• Paradigm (আদর্শ রূপ)</p>';
-        } else if (type === 'calc') {
-            box.innerHTML = `
-                <strong>🎯 Live Band Score Calculator:</strong>
-                <div style="margin-top:8px; display:flex; flex-direction:column; gap:8px;">
-                    <div>
-                        <label style="font-size:12px; color:var(--text-muted);">Listening Correct Answers (0-40):</label>
-                        <input type="number" id="listeningInput" min="0" max="40" value="35" style="width:100%; padding:6px; border-radius:8px; border:1px solid var(--border-color); outline:none;" oninput="calculateIeltsBand()">
-                    </div>
-                    <div>
-                        <label style="font-size:12px; color:var(--text-muted);">Reading Correct Answers (0-40):</label>
-                        <input type="number" id="readingInput" min="0" max="40" value="32" style="width:100%; padding:6px; border-radius:8px; border:1px solid var(--border-color); outline:none;" oninput="calculateIeltsBand()">
-                    </div>
-                    <div id="calcOutput" style="background:var(--primary-light); padding:10px; border-radius:10px; font-size:13px; font-weight:700; color:var(--primary); margin-top:4px;">
-                        Estimated Band: Listening: 8.0 | Reading: 7.0
-                    </div>
-                </div>
-            `;
-        } else if (type === 'regPrep') {
-            box.innerHTML = `
-                <strong>📅 British Council Standard Prep Plan:</strong>
-                <p style="font-size:12px; margin-top:6px; line-height:1.5;">
-                    • <strong>Listening (1 Hour):</strong> Practice official Cambridge tests daily.<br>
-                    • <strong>Reading (1 Hour):</strong> Solve academic passages within 60 mins.<br>
-                    • <strong>Writing (1 Hour):</strong> Focus on Task 1 & Task 2 formal templates.<br>
-                    • <strong>Speaking (30 Mins):</strong> Record voice and check fluency.
-                </p>
-            `;
-        }
-    }
-
-    function calculateIeltsBand() {
-        const l = parseInt(document.getElementById('listeningInput').value) || 0;
-        const r = parseInt(document.getElementById('readingInput').value) || 0;
-        
-        function getBand(score) {
-            if (score >= 39) return 9.0;
-            if (score >= 37) return 8.5;
-            if (score >= 35) return 8.0;
-            if (score >= 33) return 7.5;
-            if (score >= 30) return 7.0;
-            if (score >= 27) return 6.5;
-            if (score >= 23) return 6.0;
-            if (score >= 19) return 5.5;
-            if (score >= 15) return 5.0;
-            return 4.5;
-        }
-
-        const lBand = getBand(l);
-        const rBand = getBand(r);
-        document.getElementById('calcOutput').innerText = `Estimated Band ➔ Listening: ${lBand} | Reading: ${rBand}`;
-    }
-
     function changeQuizLanguage() {
         selectedQuizLang = document.getElementById('quizLangSelect').value;
         buildLevelQuestions();
@@ -1251,10 +1046,10 @@
     }
 
     function getLevelCategory(lvl) {
-        if (lvl <= 25) return "Foundation Vocabulary";
-        if (lvl <= 50) return "Grammar & Daily Use";
-        if (lvl <= 75) return "Spoken & Fluency";
-        return "Master & IELTS Mastery";
+        if (lvl <= 250) return "Arena Tier 1: Rookie Vanguard";
+        if (lvl <= 500) return "Arena Tier 2: Linguistic Knight";
+        if (lvl <= 750) return "Arena Tier 3: Master Grandmaster";
+        return "Arena Tier 4: Legendary Polyglot";
     }
 
     function getLanguageSpecificPrompt(word) {
@@ -1286,8 +1081,8 @@
         let seedIndex = masterVocabDatabase.findIndex(v => v.en === item.en);
         if(seedIndex === -1) seedIndex = 0;
 
-        let wrongItem1 = masterVocabDatabase[(seedIndex + 3) % masterVocabDatabase.length];
-        let wrongItem2 = masterVocabDatabase[(seedIndex + 7) % masterVocabDatabase.length];
+        let wrongItem1 = masterVocabDatabase[(seedIndex + 3 + currentLevel) % masterVocabDatabase.length];
+        let wrongItem2 = masterVocabDatabase[(seedIndex + 7 + currentLevel) % masterVocabDatabase.length];
 
         let wrong1 = wrongItem1[selectedQuizLang] || wrongItem1['en'];
         let wrong2 = wrongItem2[selectedQuizLang] || wrongItem2['en'];
@@ -1325,8 +1120,8 @@
 
         const needed = questionsPerLevel;
         for (let i = 0; i < needed; i++) {
-            const seed = (currentLevel - 1) * questionsPerLevel + i;
-            const item = masterVocabDatabase[seed % masterVocabDatabase.length];
+            const seed = ((currentLevel - 1) * questionsPerLevel + i) % masterVocabDatabase.length;
+            const item = masterVocabDatabase[seed];
             currentLevelQuestions.push(generateQuestion(item, false));
         }
     }
@@ -1340,28 +1135,28 @@
 
             box.innerHTML = `
                 <div style="padding: 10px 0;">
-                    <span style="font-size: 42px;">🎉</span>
-                    <h3 style="color:var(--primary); margin: 8px 0; font-size:18px;">Level ${currentLevel} Completed!</h3>
+                    <span style="font-size: 42px;">🏆</span>
+                    <h3 style="color:var(--primary); margin: 8px 0; font-size:18px;">Arena Level ${currentLevel} Conquered!</h3>
                     <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 12px;">
-                        Score: <strong>${quizScore} / ${totalQ}</strong>
+                        Round Score: <strong>${quizScore} / ${totalQ}</strong>
                     </p>
                     
                     ${wrongAnswerPool.length > 0 ? `
                         <div class="wrong-review-banner" style="margin-bottom: 14px;">
-                            💡 <span>${wrongAnswerPool.length} mistakes will be reviewed in upcoming levels.</span>
+                            💡 <span>${wrongAnswerPool.length} mistakes will be reviewed in upcoming arena stages.</span>
                         </div>
                     ` : `
-                        <p style="color:#0f9d58; font-size:12px; font-weight:700; margin-bottom:14px;">✓ All questions mastered perfectly!</p>
+                        <p style="color:#0f9d58; font-size:12px; font-weight:700; margin-bottom:14px;">✓ Flawless victory! All answers correct.</p>
                     `}
 
                     ${hasNext ? `
                         <button class="btn-main-action" style="width: 100%; margin-bottom: 8px;" onclick="goToNextLevel()">
-                            Next Level (Level ${currentLevel + 1} ➔)
+                            Next Arena Level (${currentLevel + 1} / 1000 ➔)
                         </button>
                     ` : `
-                        <p style="color:#0f9d58; font-weight:800; margin-bottom:12px;">🏆 Congratulations! You completed Level 100!</p>
+                        <p style="color:#0f9d58; font-weight:800; margin-bottom:12px;">👑 Legend! You completed all 1000 Arena Levels!</p>
                         <button class="btn-main-action" style="width: 100%;" onclick="resetToLevelOne()">
-                            Play From Level 1 ➔
+                            Restart Arena from Level 1 ➔
                         </button>
                     `}
                 </div>
@@ -1374,14 +1169,14 @@
         
         if (qData.isReview) {
             banner.style.display = 'flex';
-            banner.innerHTML = `⚠️ <span>Mistake correction mode active!</span>`;
+            banner.innerHTML = `⚠️ <span>Revenge Round: Retrying previous mistake!</span>`;
         } else {
             banner.style.display = 'none';
         }
 
-        document.getElementById('quizCounterText').innerText = `🔥 Level ${currentLevel} / ${totalMaxLevels} • Q ${currentQuizIndex + 1} / ${currentLevelQuestions.length}`;
+        document.getElementById('quizCounterText').innerText = `⚔️ Arena Level ${currentLevel} / ${totalMaxLevels} • Q ${currentQuizIndex + 1} / ${currentLevelQuestions.length}`;
         document.getElementById('quizScoreText').innerText = `Score: ${quizScore}`;
-        document.getElementById('quizLevelTitle').innerText = `Level ${currentLevel}: ${getLevelCategory(currentLevel)}`;
+        document.getElementById('quizLevelTitle').innerText = getLevelCategory(currentLevel);
         document.getElementById('quizPrompt').innerText = qData.q;
 
         const container = document.getElementById('quizOptionsContainer');
@@ -1402,11 +1197,11 @@
 
         if (isCorrect) {
             if (qData.isReview) {
-                showToast("Correct! Mistake corrected 🎯");
+                showToast("Great! Mistake vanquished 🎯");
                 wrongAnswerPool = wrongAnswerPool.filter(item => item.en !== qData.rawItem.en);
                 localStorage.setItem('userWrongAnswers', JSON.stringify(wrongAnswerPool));
             } else {
-                showToast("Correct! +10 Points 🪙");
+                showToast("Correct! +10 Arena Pts 🪙");
                 points += 10;
                 quizScore += 1;
                 document.getElementById('rewardDisplay').innerText = points;
@@ -1414,7 +1209,7 @@
             }
         } else {
             const correctText = qData.options[qData.ans];
-            showToast(`Incorrect! Correct: "${correctText}" (-5 Pts)`);
+            showToast(`Incorrect! Answer: "${correctText}" (-5 Pts)`);
 
             points = Math.max(0, points - 5);
             document.getElementById('rewardDisplay').innerText = points;
@@ -1439,7 +1234,7 @@
         document.getElementById('rewardDisplay').innerText = points;
         localStorage.setItem('userPts', points);
         localStorage.setItem('userQuizLevel', currentLevel);
-        showToast(`Level ${currentLevel} Unlocked! +20 Bonus Pts 🎁`);
+        showToast(`Arena Level ${currentLevel} Unlocked! +20 Bonus Pts 🎁`);
 
         resetQuizBoxUI();
         buildLevelQuestions();
@@ -1489,10 +1284,10 @@
                 ⚠️ <span id="reviewBannerText">${t.reviewText}</span>
             </div>
             <div class="quiz-header-status">
-                <span id="quizCounterText">🔥 Level ${currentLevel} • Q 1 / 5</span>
+                <span id="quizCounterText">⚔️ Arena Level ${currentLevel} • Q 1 / 5</span>
                 <span id="quizScoreText" style="color:var(--primary);">Score: 0</span>
             </div>
-            <h4 id="quizLevelTitle" style="color:var(--primary); margin-bottom:6px; font-size:15px;">Daily Challenge</h4>
+            <h4 id="quizLevelTitle" style="color:var(--primary); margin-bottom:6px; font-size:15px;">Vocab Arena Challenge</h4>
             <p id="quizPrompt" style="font-size:15px; font-weight:700; margin:12px 0 16px; color:var(--text-main); line-height:1.4;"></p>
             <div id="quizOptionsContainer" style="display:flex; flex-direction:column; gap:10px;"></div>
         `;
