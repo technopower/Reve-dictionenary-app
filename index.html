@@ -485,7 +485,7 @@
             <span>REVE</span> AI Translate
         </div>
         <div class="nav-actions">
-            <span class="user-pts">🪙 <span id="rewardDisplay">50</span> Pts</span>
+            <span class="user-pts">🪙 <span id="rewardDisplay">21</span> Pts</span>
             <button class="nav-icon-btn" onclick="toggleTheme()" id="themeBtn" title="Theme">✨</button>
         </div>
     </div>
@@ -505,19 +505,26 @@
                 <span id="srcLabel">Bangla</span> ▾
                 <select id="srcLang" onchange="updateLangLabel()">
                     <option value="bn" selected>Bangla (বাংলা / বাংলিশ)</option>
-                    <option value="it">Italian (Italiano - ইতালিয়ান)</option>
-                    <option value="ms">Malaysian (മലേഷ്യൻ)</option>
-                    <option value="dv">Maldives (ދިވެހި - মালদ্বীপ)</option>
-                    <option value="zh">Chinese (中文 - চাইনিজ)</option>
-                    <option value="si">Srilonka (සිංහල - শ্রীলঙ্কান)</option>
-                    <option value="ne">Nepal (नेपाली - নেপালি)</option>
-                    <option value="as">Asomia (অসমীয়া - অসমিয়া)</option>
                     <option value="en">English (ইংরেজি)</option>
-                    <option value="hi">Hindi (हिन्दी - হিন্দি)</option>
-                    <option value="ur">Urdu (اردو - উর্দু)</option>
-                    <option value="ar">Arabic (العربية - আরবি)</option>
-                    <option value="es">Spanish (Español - স্প্যানিশ)</option>
-                    <option value="fr">French (Français - ফ্রেঞ্চ)</option>
+                    <option value="it">Italian (ইতালিয়ান)</option>
+                    <option value="ms">Malaysian (মালয়েশিয়ান)</option>
+                    <option value="dv">Maldives (মালদ্বীপ)</option>
+                    <option value="zh">Chinese (চাইনিজ)</option>
+                    <option value="si">Srilonka (শ্রীলঙ্কান)</option>
+                    <option value="ne">Nepal (নেপালি)</option>
+                    <option value="as">Asomia (অসমীয়া)</option>
+                    <option value="de">German (জার্মান)</option>
+                    <option value="pt">Portuguese (পর্তুগিজ)</option>
+                    <option value="af">Afrikaans (আফ্রিকান)</option>
+                    <option value="mr">Marathi (মারাঠি)</option>
+                    <option value="te">Telugu (তেলেগু)</option>
+                    <option value="ta">Tamil (তামিল)</option>
+                    <option value="gu">Gujarati (গুজরাটি)</option>
+                    <option value="ur">Urdu (উর্দু)</option>
+                    <option value="ja">Japanese (জাপানি)</option>
+                    <option value="ko">Korean (কোরিয়ান)</option>
+                    <option value="hi">Hindi (হিন্দি)</option>
+                    <option value="ar">Arabic (আরবি)</option>
                 </select>
             </div>
 
@@ -528,18 +535,25 @@
                 <select id="targetLang" onchange="updateLangLabel()">
                     <option value="en" selected>English (ইংরেজি)</option>
                     <option value="bn">Bangla (বাংলা)</option>
-                    <option value="it">Italian (Italiano - ইতালিয়ান)</option>
-                    <option value="ms">Malaysian (മലേഷ്യൻ)</option>
-                    <option value="dv">Maldives (ދިވެހި - মালদ্বীপ)</option>
-                    <option value="zh">Chinese (中文 - চাইনিজ)</option>
-                    <option value="si">Srilonka (සිංහල - শ্রীলঙ্কান)</option>
-                    <option value="ne">Nepal (नेपाली - নেপালি)</option>
-                    <option value="as">Asomia (অসমীয়া - অসমিয়া)</option>
-                    <option value="hi">Hindi (हिन्दी - হিন্দি)</option>
-                    <option value="ur">Urdu (اردو - উর্দু)</option>
-                    <option value="ar">Arabic (العربية - আরবি)</option>
-                    <option value="es">Spanish (Español - স্প্যানিশ)</option>
-                    <option value="fr">French (Français - ফ্রেঞ্চ)</option>
+                    <option value="it">Italian (ইতালিয়ান)</option>
+                    <option value="ms">Malaysian (মালয়েশিয়ান)</option>
+                    <option value="dv">Maldives (মালদ্বীপ)</option>
+                    <option value="zh">Chinese (চাইনিজ)</option>
+                    <option value="si">Srilonka (শ্রীলঙ্কান)</option>
+                    <option value="ne">Nepal (নেপালি)</option>
+                    <option value="as">Asomia (অসমীয়া)</option>
+                    <option value="de">German (জার্মান)</option>
+                    <option value="pt">Portuguese (পর্তুগিজ)</option>
+                    <option value="af">Afrikaans (আফ্রিকান)</option>
+                    <option value="mr">Marathi (মারাঠি)</option>
+                    <option value="te">Telugu (তেলেগু)</option>
+                    <option value="ta">Tamil (তামিল)</option>
+                    <option value="gu">Gujarati (গুজরাটি)</option>
+                    <option value="ur">Urdu (উর্দু)</option>
+                    <option value="ja">Japanese (জাপানি)</option>
+                    <option value="ko">Korean (কোরিয়ান)</option>
+                    <option value="hi">Hindi (হিন্দি)</option>
+                    <option value="ar">Arabic (আরবি)</option>
                 </select>
             </div>
         </div>
@@ -609,6 +623,7 @@
                 <span style="font-size:11px; font-weight:700; color:var(--text-muted);" id="quizLangLabelText">কুইজ ভাষা:</span>
                 <select id="quizLangSelect" class="quiz-lang-select" onchange="changeQuizLanguage()">
                     <option value="bn" selected>Bangla (বাংলা)</option>
+                    <option value="en">English (ইংরেজি)</option>
                     <option value="it">Italian (ইতালিয়ান)</option>
                     <option value="ms">Malaysian (মালয়েশিয়ান)</option>
                     <option value="dv">Maldives (মালদ্বীপ)</option>
@@ -616,10 +631,18 @@
                     <option value="si">Srilonka (শ্রীলঙ্কান)</option>
                     <option value="ne">Nepal (নেপালি)</option>
                     <option value="as">Asomia (অসমীয়া)</option>
-                    <option value="en">English (ইংরেজি)</option>
-                    <option value="hi">Hindi (हिन्दी)</option>
-                    <option value="ur">Urdu (اردو)</option>
-                    <option value="ar">Arabic (العربية)</option>
+                    <option value="de">German (জার্মান)</option>
+                    <option value="pt">Portuguese (পর্তুগিজ)</option>
+                    <option value="af">Afrikaans (আফ্রিকান)</option>
+                    <option value="mr">Marathi (মারাঠি)</option>
+                    <option value="te">Telugu (তেলেগু)</option>
+                    <option value="ta">Tamil (তামিল)</option>
+                    <option value="gu">Gujarati (গুজরাটি)</option>
+                    <option value="ur">Urdu (উর্দু)</option>
+                    <option value="ja">Japanese (জাপানি)</option>
+                    <option value="ko">Korean (কোরিয়ান)</option>
+                    <option value="hi">Hindi (হিন্দি)</option>
+                    <option value="ar">Arabic (আরবি)</option>
                 </select>
             </div>
 
@@ -655,14 +678,16 @@
 </div>
 
 <script>
-    let points = parseInt(localStorage.getItem('userPts')) || 50;
+    let points = parseInt(localStorage.getItem('userPts')) || 21;
     let globalRecognition = null;
     let currentResult = "";
 
     const langVoiceMap = {
-        'bn': 'bn-BD', 'it': 'it-IT', 'ms': 'ms-MY', 'dv': 'dv-MV', 'zh': 'zh-CN',
-        'si': 'si-LK', 'ne': 'ne-NP', 'as': 'as-IN', 'en': 'en-US',
-        'hi': 'hi-IN', 'ur': 'ur-PK', 'ar': 'ar-SA'
+        'bn': 'bn-BD', 'en': 'en-US', 'it': 'it-IT', 'ms': 'ms-MY', 'dv': 'dv-MV', 'zh': 'zh-CN',
+        'si': 'si-LK', 'ne': 'ne-NP', 'as': 'as-IN', 'de': 'de-DE', 'pt': 'pt-PT',
+        'af': 'af-ZA', 'mr': 'mr-IN', 'te': 'te-IN', 'ta': 'ta-IN',
+        'gu': 'gu-IN', 'ur': 'ur-PK', 'ja': 'ja-JP', 'ko': 'ko-KR',
+        'hi': 'hi-IN', 'ar': 'ar-SA'
     };
 
     const uiTranslations = {
@@ -712,14 +737,14 @@
     };
 
     const masterVocabDatabase = [
-        { en: "Opportunity", bn: "সুযোগ", it: "Opportunità", ms: "Peluang", dv: "ފުރުޞަތު", zh: "机会", si: "अवसर / අවස්ථාව", ne: "अवसर", as: "সুযোগ", hi: "अवसर", ur: "موقع", ar: "فرصة" },
-        { en: "Essential", bn: "জরুরি", it: "Essenziale", ms: "Penting", dv: "މުހިންމު", zh: "必要的", si: "අත්‍යවශ්‍ය", ne: "आवश्यक", as: "আৱশ্যকীয়", hi: "आवश्यक", ur: "ضروری", ar: "ضروري" },
-        { en: "Improve", bn: "উন্নতি করা", it: "Migliorare", ms: "Meningkatkan", dv: "ރަނގަޅުކުރުން", zh: "改进", si: "දියුණු කිරීම", ne: "सुधार्नु", as: "উন্নতি কৰা", hi: "सुधारना", ur: "بہتر بنانا", ar: "تحسين" },
-        { en: "Difficult", bn: "কঠিন", it: "Difficile", ms: "Sukar", dv: "އަދަގޫ", zh: "困难", si: "අපහසු", ne: "कठिन", as: "কঠিন", hi: "कठिन", ur: "مشکل", ar: "صعب" },
-        { en: "Comfortable", bn: "আরামদায়ক", it: "Comodo", ms: "Selesa", dv: "ފަސޭހަ", zh: "舒适的", si: "සුවපහසු", ne: "आरामदायक", as: "আরামদায়ক", hi: "আरामदायक", ur: "آرام دہ", ar: "ᱢᱩ" },
-        { en: "Success", bn: "সাফল্য", it: "Successo", ms: "Kejayaan", dv: "ކާމިޔާބީ", zh: "成功", si: "සාර්ථකත්වය", ne: "सफलता", as: "সাফল্য", hi: "सफलता", ur: "کامیابی", ar: "نجاح" },
-        { en: "Challenge", bn: "চ্যালেঞ্জ", it: "Sfida", ms: "Cabaran", dv: "ޗެލެންޖް", zh: "挑战", si: "අභියෝගය", ne: "चुनौती", as: "আহ্বান", hi: "चुनौती", ur: "چیلنج", ar: "تحدي" },
-        { en: "Important", bn: "গুরুত্বপূর্ণ", it: "Importante", ms: "Penting", dv: "މުހިންމު", zh: "重要的", si: "වැදගත්", ne: "महत्वपूर्ण", as: "গুৰুত্বপূৰ্ণ", hi: "महत्वपूर्ण", ur: "اہم", ar: "مهم" }
+        { en: "Opportunity", bn: "সুযোগ", it: "Opportunità", ms: "Peluang", dv: "ފުރުޞަތު", zh: "机会", si: "अवसर / අවස්ථාව", ne: "अवसर", as: "সুযোগ", de: "Gelegenheit", pt: "Oportunidade", af: "Geleentheid", mr: "संधी", te: "అవకాశం", ta: "வாய்ப்பு", gu: "તક", ur: "موقع", ja: "機会", ko: "기회", hi: "अवसर", ar: "فرصة" },
+        { en: "Essential", bn: "জরুরি", it: "Essenziale", ms: "Penting", dv: "މުހިންމު", zh: "必要的", si: "අත්‍යවශ්‍ය", ne: "आवश्यक", as: "আৱশ্যকীয়", de: "Wichtig", pt: "Essencial", af: "Noodsaaklik", mr: "महत्त्वाचे", te: "ముఖ్యమైన", ta: "அவசியம்", gu: "જરૂરી", ur: "ضروری", ja: "不可欠", ko: "필수적인", hi: "आवश्यक", ar: "ضروري" },
+        { en: "Improve", bn: "উন্নতি করা", it: "Migliorare", ms: "Meningkatkan", dv: "ރަނގަޅުކުރުން", zh: "改进", si: "දියුණු කිරීම", ne: "सुधार्नु", as: "উন্নতি কৰা", de: "Verbessern", pt: "Melhorar", af: "Verbeter", mr: "सुधारणे", te: "మెరుగుపరచడం", ta: "மேம்படுத்த", gu: "સુધારવું", ur: "بہتر بنانا", ja: "改善する", ko: "향상시키다", hi: "सुधारना", ar: "تحسين" },
+        { en: "Difficult", bn: "কঠিন", it: "Difficile", ms: "Sukar", dv: "އަދަގޫ", zh: "困难", si: "අපහසු", ne: "कठिन", as: "কঠিন", de: "Schwierig", pt: "Difícil", af: "Moeilik", mr: "कठीण", te: "కష్టమైన", ta: "கடினம்", gu: "મુશ્કેલ", ur: "مشکل", ja: "難しい", ko: "어려운", hi: "कठिन", ar: "صعب" },
+        { en: "Comfortable", bn: "আরামদায়ক", it: "Comodo", ms: "Selesa", dv: "ފަސޭހަ", zh: "舒适的", si: "සුවපහසු", ne: "आरामदायक", as: "আরামদায়ক", de: "Bequem", pt: "Confortável", af: "Gemaklik", mr: "आरामदायी", te: "సౌకర్యవంతమైన", ta: "சௌகரியமான", gu: "આરામદાયક", ur: "آرام دہ", ja: "快適な", ko: "편안한", hi: "आरामदायक", ar: "مريح" },
+        { en: "Success", bn: "সাফল্য", it: "Successo", ms: "Kejayaan", dv: "ކާމިޔާބީ", zh: "成功", si: "සාර්ථකත්වය", ne: "सफलता", as: "সাফল্য", de: "Erfolg", pt: "Sucesso", af: "Sukses", mr: "यश", te: "విజయం", ta: "வெற்றி", gu: "સફળતા", ur: "کامیابی", ja: "成功", ko: "성공", hi: "सफलता", ar: "نجاح" },
+        { en: "Challenge", bn: "চ্যালেঞ্জ", it: "Sfida", ms: "Cabaran", dv: "ޗެލެންޖް", zh: "挑战", si: "අභියෝගය", ne: "चुनौती", as: "আহ্বান", de: "Herausforderung", pt: "Desafio", af: "Uitdaging", mr: "आव्हानात्मक", te: "సవాలు", ta: "சவால்", gu: "પડકાર", ur: "چیلنج", ja: "挑戦", ko: "도전", hi: "चुनौती", ar: "تحدي" },
+        { en: "Important", bn: "গুরুত্বপূর্ণ", it: "Importante", ms: "Penting", dv: "މުހިންމު", zh: "重要的", si: "වැදගත්", ne: "महत्वपूर्ण", as: "গুৰুত্বপূৰ্ণ", de: "Wichtig", pt: "Importante", af: "Belangrik", mr: "महत्त्वाचे", te: "ముఖ్యమైనది", ta: "முக்கியமானது", gu: "મહત્વપૂર્ણ", ur: "اہم", ja: "重要", ko: "중요한", hi: "महत्वपूर्ण", ar: "مهم" }
     ];
 
     let currentLevel = parseInt(localStorage.getItem('userQuizLevel')) || 1;
@@ -1237,6 +1262,7 @@
                 <span style="font-size:11px; font-weight:700; color:var(--text-muted);" id="quizLangLabelText">${t.quizLang}</span>
                 <select id="quizLangSelect" class="quiz-lang-select" onchange="changeQuizLanguage()">
                     <option value="bn" ${selectedQuizLang === 'bn' ? 'selected' : ''}>Bangla (বাংলা)</option>
+                    <option value="en" ${selectedQuizLang === 'en' ? 'selected' : ''}>English (ইংরেজি)</option>
                     <option value="it" ${selectedQuizLang === 'it' ? 'selected' : ''}>Italian (ইতালিয়ান)</option>
                     <option value="ms" ${selectedQuizLang === 'ms' ? 'selected' : ''}>Malaysian (মালয়েশিয়ান)</option>
                     <option value="dv" ${selectedQuizLang === 'dv' ? 'selected' : ''}>Maldives (মালদ্বীপ)</option>
@@ -1244,10 +1270,18 @@
                     <option value="si" ${selectedQuizLang === 'si' ? 'selected' : ''}>Srilonka (শ্রীলঙ্কান)</option>
                     <option value="ne" ${selectedQuizLang === 'ne' ? 'selected' : ''}>Nepal (নেপালি)</option>
                     <option value="as" ${selectedQuizLang === 'as' ? 'selected' : ''}>Asomia (অসমীয়া)</option>
-                    <option value="en" ${selectedQuizLang === 'en' ? 'selected' : ''}>English (ইংরেজি)</option>
-                    <option value="hi" ${selectedQuizLang === 'hi' ? 'selected' : ''}>Hindi (हिन्दी)</option>
-                    <option value="ur" ${selectedQuizLang === 'ur' ? 'selected' : ''}>Urdu (اردو)</option>
-                    <option value="ar" ${selectedQuizLang === 'ar' ? 'selected' : ''}>Arabic (العربية)</option>
+                    <option value="de" ${selectedQuizLang === 'de' ? 'selected' : ''}>German (জার্মান)</option>
+                    <option value="pt" ${selectedQuizLang === 'pt' ? 'selected' : ''}>Portuguese (পর্তুগিজ)</option>
+                    <option value="af" ${selectedQuizLang === 'af' ? 'selected' : ''}>Afrikaans (আফ্রিকান)</option>
+                    <option value="mr" ${selectedQuizLang === 'mr' ? 'selected' : ''}>Marathi (মারাঠি)</option>
+                    <option value="te" ${selectedQuizLang === 'te' ? 'selected' : ''}>Telugu (তেলেগু)</option>
+                    <option value="ta" ${selectedQuizLang === 'ta' ? 'selected' : ''}>Tamil (তামিল)</option>
+                    <option value="gu" ${selectedQuizLang === 'gu' ? 'selected' : ''}>Gujarati (গুজরাটি)</option>
+                    <option value="ur" ${selectedQuizLang === 'ur' ? 'selected' : ''}>Urdu (উর্দু)</option>
+                    <option value="ja" ${selectedQuizLang === 'ja' ? 'selected' : ''}>Japanese (জাপানি)</option>
+                    <option value="ko" ${selectedQuizLang === 'ko' ? 'selected' : ''}>Korean (কোরিয়ান)</option>
+                    <option value="hi" ${selectedQuizLang === 'hi' ? 'selected' : ''}>Hindi (হিন্দি)</option>
+                    <option value="ar" ${selectedQuizLang === 'ar' ? 'selected' : ''}>Arabic (আরবি)</option>
                 </select>
             </div>
             <div id="wrongReviewBanner" class="wrong-review-banner" style="display: none;">
