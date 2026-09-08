@@ -566,7 +566,7 @@
 
     </div>
 
-    <!-- MAIN VIEW 2: IELTS AI -->
+    <!-- MAIN VIEW 2: IELTS AI (ADVANCED MODULES) -->
     <div id="ieltsView" class="workspace-content tab-panel">
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
             <div class="translate-card" style="text-align:center; cursor:pointer;" onclick="renderIelts('speaking')">
@@ -602,7 +602,7 @@
         </div>
     </div>
 
-    <!-- MAIN VIEW 4: DAILY QUIZ -->
+    <!-- MAIN VIEW 4: DAILY QUIZ (100 LEVELS & MISTAKE CORRECTION) -->
     <div id="quizView" class="workspace-content tab-panel">
         <div class="translate-card" id="quizCardBox" style="text-align:center;">
             
@@ -671,7 +671,6 @@
         'hi': 'hi-IN', 'ar': 'ar-SA', 'es': 'es-ES', 'fr': 'fr-FR'
     };
 
-    /* DYNAMIC UI LOCALIZATION DICTIONARY */
     const uiTranslations = {
         'bn': {
             trans: "🌐 TRANSLATOR", ielts: "🎯 IELTS AI", teacher: "👨‍🏫 TEACHER", quiz: "DAILY QUIZ",
@@ -846,7 +845,7 @@
         { en: "Paramount", bn: "সর্বোচ্চ গুরুত্বপূর্ণ", hi: "सर्वोपरि", ur: "سب سے اہم", ar: "أسمى", ja: "最重要", ko: "가장 중요한", de: "Überragend", fr: "Primordial", es: "Primordial", pt: "Primordial", af: "Uiters belangrik", mr: "सर्वोच्च", te: "అత్యున్నతమైనది", ta: "முதன்மையானது", gu: "સર્વોચ્ચ" },
         { en: "Substantial", bn: "বিপুল / প্রচুর", hi: "काफी", ur: "کافی", ar: "جوهري", ja: "実質的な", ko: "상당한", de: "Erheblich", fr: "Substantiel", es: "Sustancial", pt: "Substancial", af: "Aansienlik", mr: "भरपूर", te: "గణనీయమైన", ta: "கணிசமான", gu: "નોંધપાત્ર" },
         { en: "Pragmatic", bn: "বাস্তববাদী", hi: "व्यावहारिक", ur: "عملی", ar: "عملي", ja: "実用的な", ko: "실용적인", de: "Pragmatisch", fr: "Pragmatique", es: "Pragmático", pt: "Pragmático", af: "Pragmaties", mr: "व्यावहारिक", te: "ఆచరణాత్మక", ta: "நடைமுறை", gu: "વ્યવહારુ" },
-        { en: "Inevitable", bn: "অনিবার্য", hi: "अपरिहार्य", ur: "ناگزیر", ar: "حتمي", ja: "避けられない", ko: "불가피한", de: "Unvermeidlich", fr: "Inévitable", es: "Inevitable", pt: "Inevitável", af: "Onvermydelik", mr: "अपरिहार्य", te: "అనివార్యమైనది", ta: "தவிர்க்க முடியாதது", gu: "અનિવાર્ય" }
+        { en: "Inevitable", bn: "অনিবার্য", hi: "अपरिहार्य", ur: "ناگزیر", ar: "حتمي", ja: "避けられない", ko: "불가피한", de: "Unvermeidlich", fr: "Inévitable", es: "Inevitável", pt: "Inevitável", af: "Onvermydelik", mr: "अपरिहार्य", te: "అనివార్యమైనది", ta: "தவிர்க்க முடியாதது", gu: "અનિવાર્ય" }
     ];
 
     let currentLevel = parseInt(localStorage.getItem('userQuizLevel')) || 1;
@@ -1159,16 +1158,17 @@
         }).catch(() => showToast("ছবি স্ক্যান ব্যর্থ হয়েছে"));
     }
 
+    /* IELTS Interactive Advanced Render */
     function renderIelts(type) {
         const box = document.getElementById('ieltsResultBox');
         if (type === 'speaking') {
-            box.innerHTML = '<strong>🗣️ Speaking Part 2 Cue Card:</strong><p style="font-size:13px; margin-top:4px;">Describe a journey that took longer than expected.</p>';
+            box.innerHTML = '<strong>🗣️ Speaking Part 2 Cue Card:</strong><p style="font-size:13px; margin-top:4px;">Describe a journey that took longer than expected. <br><em>Sample:</em> "Last year, I planned a trip to Sylhet..."</p>';
         } else if (type === 'writing') {
-            box.innerHTML = '<strong>✍️ Writing Task 2 Topic:</strong><p style="font-size:13px; margin-top:4px;">Some people believe that university education should be free. To what extent do you agree?</p>';
+            box.innerHTML = '<strong>✍️ Writing Task 1 & 2 Templates:</strong><p style="font-size:13px; margin-top:4px;">Task 1: "The given bar chart illustrates..." <br>Task 2: "It is often debated whether..."</p>';
         } else if (type === 'vocab') {
-            box.innerHTML = '<strong>📚 Band 8+ Vocabulary:</strong><p style="font-size:13px; margin-top:4px;">Resilient (সহনশীল), Paramount (সর্বোচ্চ গুরুত্বপূর্ণ), Substantial (উল্লেখযোগ্য)।</p>';
+            box.innerHTML = '<strong>📚 Band 8+ Essential Words:</strong><p style="font-size:13px; margin-top:4px;">• Ubiquitous (সর্বত্র বিদ্যমান)<br>• Mitigation (প্রশমন/হ্রাস)<br>• Paradigm (আদর্শ রূপ)</p>';
         } else if (type === 'calc') {
-            box.innerHTML = '<strong>🎯 Band Calculator:</strong><p style="font-size:13px; margin-top:4px;">Listening: 30/40 = Band 7.0 | Reading: 30/40 = Band 7.0</p>';
+            box.innerHTML = '<strong>🎯 Band Score Calculator:</strong><p style="font-size:13px; margin-top:4px;">Listening: 35/40 = <strong>Band 8.0</strong> | Reading: 34/40 = <strong>Band 7.5</strong></p>';
         }
     }
 
