@@ -519,14 +519,6 @@
             border-radius: 12px;
             margin-bottom: 12px;
             border: 1px solid var(--border-color);
-        }
-        .quiz-lang-select {
-            background: none;
-            border: none;
-            font-size: 12px;
-            font-weight: 700;
-            color: #60a5fa;
-            outline: none;
             cursor: pointer;
         }
 
@@ -668,12 +660,9 @@
     <div id="quizView" class="workspace-content tab-panel">
         <div class="translate-card" id="quizCardBox" style="text-align:center;">
             
-            <div class="quiz-lang-selector-box">
+            <div class="quiz-lang-selector-box" onclick="openLangModal('quiz')">
                 <span style="font-size:11px; font-weight:700; color:var(--text-muted);" id="quizLangLabelText">কুইজ ভাষা:</span>
-                <!-- Updated Arena Language Selector with All 131 Languages -->
-                <select id="quizLangSelect" class="quiz-lang-select" onchange="changeQuizLanguage()">
-                    <!-- Populated dynamically via JS -->
-                </select>
+                <span id="quizLangLabel" style="font-size: 12px; font-weight: 700; color: #60a5fa;">Bengali — বাংলা ▾</span>
             </div>
 
             <div id="wrongReviewBanner" class="wrong-review-banner" style="display: none;">
@@ -775,7 +764,7 @@
     let points = parseInt(localStorage.getItem('userPts')) || 21;
     let globalRecognition = null;
     let currentResult = "";
-    let activeLangType = 'src'; // 'src' or 'target'
+    let activeLangType = 'src'; // 'src', 'target', or 'quiz'
 
     // Complete 131 Languages Database with Native Name & English Name
     const languagesDB = [
@@ -944,23 +933,11 @@
 
     window.addEventListener('DOMContentLoaded', () => {
         updateLanguageDisplay();
-        populateArenaLanguages(); // Automatically populate all 131 languages into Arena dropdown
+        updateArenaLangDisplay();
         buildLevelQuestions();
         loadLevelEngine();
         loadDailyChallenge();
     });
-
-    function populateArenaLanguages() {
-        const select = document.getElementById('quizLangSelect');
-        select.innerHTML = '';
-        languagesDB.forEach(l => {
-            const opt = document.createElement('option');
-            opt.value = l.code;
-            opt.innerText = `${l.en} — ${l.native}`;
-            if (l.code === 'bn') opt.selected = true;
-            select.appendChild(opt);
-        });
-    }
 
     function updateLanguageDisplay() {
         const srcObj = languagesDB.find(l => l.code === currentSourceLang) || languagesDB[6]; 
@@ -971,8 +948,13 @@
         applyUiLocalization(currentSourceLang);
     }
 
+    function updateArenaLangDisplay() {
+        const qObj = languagesDB.find(l => l.code === selectedQuizLang) || languagesDB[6];
+        document.getElementById('quizLangLabel').innerText = `${qObj.en} — ${qObj.native} ▾`;
+    }
+
     function openLangModal(type) {
-        activeLangType = type;
+        activeLangType = type; // 'src', 'target', or 'quiz'
         document.getElementById('langModal').style.display = 'flex';
         document.getElementById('langSearchBox').value = '';
         renderLangList(languagesDB);
@@ -1014,10 +996,16 @@
     function selectLanguage(code) {
         if (activeLangType === 'src') {
             currentSourceLang = code;
-        } else {
+            updateLanguageDisplay();
+        } else if (activeLangType === 'target') {
             currentTargetLang = code;
+            updateLanguageDisplay();
+        } else if (activeLangType === 'quiz') {
+            selectedQuizLang = code;
+            updateArenaLangDisplay();
+            buildLevelQuestions();
+            loadLevelEngine();
         }
-        updateLanguageDisplay();
         closeLangModal();
     }
 
@@ -1071,7 +1059,7 @@
         { en: "Challenge", bn: "চ্যালেঞ্জ", hi: "चुनौती", ar: "تحدي", zh: "挑战", ja: "挑戦", ko: "도전", de: "Herausforderung", fr: "Défi", es: "Desafío", it: "Sfida", pt: "Desafio" },
         { en: "Important", bn: "গুরুত্বপূর্ণ", hi: "महत्वपूर्ण", ar: "مهم", zh: "重要的", ja: "重要", ko: "중요한", de: "Wichtig", fr: "Important", es: "Importante", it: "Importante", pt: "Importante" },
         { en: "Experience", bn: "অভিজ্ঞতা", hi: "अनुभव", ar: "خبرة", zh: "经验", ja: "経験", ko: "경험", de: "Erfahrung", fr: "Expérience", es: "Experiencia", it: "Esperienza", pt: "Experiência" },
-        { en: "Resilient", bn: "সহনশীল", hi: "लचीला", ar: "مرن", zh: "有弹性の", ja: "回復力のある", ko: "회복력 있는", de: "Widerstandsfähig", fr: "Résilient", es: "Resiliente", it: "Resiliente", pt: "Resiliente" },
+        { en: "Resilient", bn: "সহনশীল", hi: "लचीला", ar: "مرن", zh: "有弹性的", ja: "回復力のある", ko: "회복력 있는", de: "Widerstandsfähig", fr: "Résilient", es: "Resiliente", it: "Resiliente", pt: "Resiliente" },
         { en: "Confidence", bn: "আত্মবিশ্বাস", hi: "आत्मविश्वास", ar: "ثقة", zh: "信心", ja: "自信", ko: "자신감", de: "Vertrauen", fr: "Confiance", es: "Confianza", it: "Fiducia", pt: "Confiança" },
         { en: "Knowledge", bn: "জ্ঞান", hi: "ज्ञान", ar: "معرفة", zh: "知识", ja: "知識", ko: "지식", de: "Wissen", fr: "Connaissance", es: "Conocimiento", it: "Conoscenza", pt: "Conhecimento" },
         { en: "Freedom", bn: "স্বাধীনতা", hi: "स्वतंत्रता", ar: "حرية", zh: "自由", ja: "自由", ko: "자유", de: "Freiheit", fr: "Liberté", es: "Libertad", it: "Libertà", pt: "Liberdade" },
@@ -1087,7 +1075,6 @@
     let currentLevel = parseInt(localStorage.getItem('userQuizLevel')) || 1;
     let currentQuizIndex = 0;
     let quizScore = 0;
-    let selectedQuizLang = 'bn';
     const totalMaxLevels = 1000;
     const questionsPerLevel = 5;
 
@@ -1407,12 +1394,6 @@
         loadDailyChallenge();
     }
 
-    function changeQuizLanguage() {
-        selectedQuizLang = document.getElementById('quizLangSelect').value;
-        buildLevelQuestions();
-        loadLevelEngine();
-    }
-
     function getLevelCategory(lvl) {
         if (lvl <= 250) return "Arena Tier 1: Rookie Vanguard";
         if (lvl <= 500) return "Arena Tier 2: Linguistic Knight";
@@ -1617,11 +1598,9 @@
     function resetQuizBoxUI() {
         const box = document.getElementById('quizCardBox');
         box.innerHTML = `
-            <div class="quiz-lang-selector-box">
+            <div class="quiz-lang-selector-box" onclick="openLangModal('quiz')">
                 <span style="font-size:11px; font-weight:700; color:var(--text-muted);">কুইজ ভাষা:</span>
-                <select id="quizLangSelect" class="quiz-lang-select" onchange="changeQuizLanguage()">
-                    <!-- Populated dynamically -->
-                </select>
+                <span id="quizLangLabel" style="font-size: 12px; font-weight: 700; color: #60a5fa;">Bengali — বাংলা ▾</span>
             </div>
             <div id="wrongReviewBanner" class="wrong-review-banner" style="display: none;">
                 ⚠️ <span id="reviewBannerText">রিভেঞ্জ রাউন্ড: ভুলগুলো আবার ঝালাই করা হচ্ছে!</span>
@@ -1634,7 +1613,7 @@
             <p id="quizPrompt" style="font-size:15px; font-weight:700; margin:12px 0 16px; color:var(--text-main); line-height:1.4;"></p>
             <div id="quizOptionsContainer" style="display:flex; flex-direction:column; gap:10px;"></div>
         `;
-        populateArenaLanguages();
+        updateArenaLangDisplay();
     }
 </script>
 </body>
