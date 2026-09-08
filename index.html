@@ -150,25 +150,22 @@
             background: rgba(30, 41, 59, 0.4);
             border-bottom: 1px solid var(--border-color);
         }
-        .lang-pill-box {
-            background: rgba(15, 23, 42, 0.6);
+        .custom-lang-pill {
+            background: rgba(15, 23, 42, 0.8);
             border: 1px solid var(--border-color);
             border-radius: 24px;
-            padding: 6px 14px;
+            padding: 8px 16px;
             display: flex;
             align-items: center;
             gap: 6px;
             font-size: 13px;
             font-weight: 700;
             color: #60a5fa;
-            position: relative;
             cursor: pointer;
+            transition: border-color 0.2s;
         }
-        .lang-pill-box select {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            opacity: 0;
-            cursor: pointer;
+        .custom-lang-pill:hover {
+            border-color: #60a5fa;
         }
         .swap-circle-btn {
             background: rgba(37, 99, 235, 0.2);
@@ -188,6 +185,80 @@
             transform: scale(1.05);
             background: var(--primary);
             color: #ffffff;
+        }
+
+        /* Custom Searchable Language Modal Styles */
+        .lang-modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(8px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 99999;
+            padding: 15px;
+        }
+        .lang-modal-card {
+            background: #0f172a;
+            border: 1px solid var(--border-color);
+            width: 100%;
+            max-width: 420px;
+            height: 80vh;
+            border-radius: 24px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: var(--shadow-elevation-2);
+            animation: zoomIn 0.2s ease-out;
+        }
+        .lang-modal-header {
+            padding: 16px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background: rgba(30, 41, 59, 0.5);
+        }
+        .lang-search-input {
+            width: 100%;
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 10px 14px;
+            color: white;
+            font-size: 14px;
+            outline: none;
+        }
+        .lang-search-input:focus {
+            border-color: #60a5fa;
+        }
+        .lang-list-container {
+            overflow-y: auto;
+            flex: 1;
+            padding: 8px;
+        }
+        .lang-item {
+            padding: 12px 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.15s;
+            color: var(--text-main);
+            font-size: 14px;
+        }
+        .lang-item:hover {
+            background: rgba(37, 99, 235, 0.2);
+            color: #60a5fa;
+        }
+        .lang-item-native {
+            font-weight: 700;
+        }
+        .lang-item-en {
+            font-size: 12px;
+            color: var(--text-muted);
         }
 
         .workspace-content {
@@ -525,330 +596,14 @@
     <div id="transView" class="workspace-content tab-panel active">
         
         <div class="lang-switch-container">
-            <div class="lang-pill-box">
-                <span id="srcLabel">Bangla</span> ▾
-                <select id="srcLang" onchange="updateLangLabel()">
-                    <option value="bn" selected>Bengali — বাংলা</option>
-                    <option value="en">English — ইংরেজি</option>
-                    <option value="af">Afrikaans — আফ্রিকান্স</option>
-                    <option value="sq">Albanian — আলবেনিয়ান</option>
-                    <option value="am">Amharic — আমহারিক</option>
-                    <option value="ar">Arabic — আরবি</option>
-                    <option value="hy">Armenian — আর্মেনিয়ান</option>
-                    <option value="as">Assamese — অসমীয়া</option>
-                    <option value="de-AT">Austrian German — অস্ট্রিয়ান জার্মান</option>
-                    <option value="en-AU">Australian English — অস্ট্রেলিয়ান ইংরেজি</option>
-                    <option value="az">Azerbaijani — আজারবাইজানি</option>
-                    <option value="az-N">Azerbaijani (North) — উত্তর আজারবাইজানি</option>
-                    <option value="bm">Bambara — বামবারা</option>
-                    <option value="eu">Basque — বাস্ক</option>
-                    <option value="be">Belarusian — বেলারুশিয়ান</option>
-                    <option value="bn">Bengali — বাংলা</option>
-                    <option value="bh">Bhojpuri — ভোজপুরি</option>
-                    <option value="brx">Bodo — বড়ো</option>
-                    <option value="bs">Bosnian — বসনিয়ান</option>
-                    <option value="pt-BR">Brazilian Portuguese — ব্রাজিলিয়ান পর্তুগিজ</option>
-                    <option value="br">Breton — ব্রেটন</option>
-                    <option value="bg">Bulgarian — বুলগেরিয়ান</option>
-                    <option value="my">Burmese — বার্মিজ</option>
-                    <option value="en-CA">Canadian English — কানাডিয়ান ইংরেজি</option>
-                    <option value="fr-CA">Canadian French — কানাডিয়ান ফরাসি</option>
-                    <option value="ca">Catalan — কাতালান</option>
-                    <option value="ceb">Cebuano — সেবুয়ানো</option>
-                    <option value="ny">Chichewa — চিচেওয়া</option>
-                    <option value="zh">Mandarin Chinese — ম্যান্ডারিন চীনা</option>
-                    <option value="co">Corsican — কর্সিকান</option>
-                    <option value="hr">Croatian — ক্রোয়েশিয়ান</option>
-                    <option value="cs">Czech — চেক</option>
-                    <option value="da">Danish — ড্যানিশ</option>
-                    <option value="prs">Persian Dari — দারি</option>
-                    <option value="dv">Dhivehi — ধিভেহি</option>
-                    <option value="doi">Dogri — ডোগরি</option>
-                    <option value="nl">Dutch — ডাচ</option>
-                    <option value="en">English — ইংরেজি</option>
-                    <option value="eo">Esperanto — এস্পেরান্তো</option>
-                    <option value="et">Estonian — এস্তোনিয়ান</option>
-                    <option value="ee">Ewe — ইভে</option>
-                    <option value="fj">Fijian — ফিজিয়ান</option>
-                    <option value="fil">Filipino — ফিলিপিনো</option>
-                    <option value="fi">Finnish — ফিনিশ</option>
-                    <option value="fy">Flemish — ফ্লেমিশ</option>
-                    <option value="fr">French — ফরাসি</option>
-                    <option value="gl">Galician — গ্যালিশিয়ান</option>
-                    <option value="ka">Georgian — জর্জিয়ান</option>
-                    <option value="de">German — জার্মান</option>
-                    <option value="el">Greek — গ্রিক</option>
-                    <option value="kl">Greenlandic — গ্রিনল্যান্ডিক</option>
-                    <option value="gn">Guarani — গুয়ারানি</option>
-                    <option value="gu">Gujarati — গুজরাটি</option>
-                    <option value="ht">Haitian Creole — হাইতিয়ান ক্রেওল</option>
-                    <option value="ha">Hausa — হাউসা</option>
-                    <option value="haw">Hawaiian — হাওয়াইয়ান</option>
-                    <option value="he">Hebrew — হিব্রু</option>
-                    <option value="hi">Hindi — হিন্দি</option>
-                    <option value="hmn">Hmong — মং</option>
-                    <option value="hu">Hungarian — হাঙ্গেরিয়ান</option>
-                    <option value="is">Icelandic — আইসল্যান্ডিক</option>
-                    <option value="ig">Igbo — ইগবো</option>
-                    <option value="id">Indonesian — ইন্দোনেশিয়ান</option>
-                    <option value="ga">Irish — আইরিশ</option>
-                    <option value="fa">Iranian Persian — ইরানি ফারসি</option>
-                    <option value="it">Italian — ইতালিয়ান</option>
-                    <option value="ja">Japanese — জাপানি</option>
-                    <option value="jv">Javanese — জাভানিজ</option>
-                    <option value="ee">Jin Chinese — জিন চীনা</option>
-                    <option value="kn">Kannada — কন্নড়</option>
-                    <option value="kk">Kazakh — কাজাখ</option>
-                    <option value="km">Khmer — খেমার</option>
-                    <option value="ki">Kikuyu — কিকুয়ু</option>
-                    <option value="rw">Kinyarwanda — কিনিয়ারওয়ান্ডা</option>
-                    <option value="gom">Konkani — কোঙ্কনি</option>
-                    <option value="ko">Korean — কোরিয়ান</option>
-                    <option value="kri">Krio — ক্রিয়ো</option>
-                    <option value="ku">Kurdish — কুর্দি</option>
-                    <option value="ky">Kyrgyz — কিরগিজ</option>
-                    <option value="lo">Lao — লাও</option>
-                    <option value="la">Latin — ল্যাটিন</option>
-                    <option value="lv">Latvian — লাটভিয়ান</option>
-                    <option value="ln">Lingala — লিঙ্গালা</option>
-                    <option value="lt">Lithuanian — লিথুয়ানিয়ান</option>
-                    <option value="lb">Luxembourgish — লুক্সেমবার্গিশ</option>
-                    <option value="mk">Macedonian — মেসিডোনিয়ান</option>
-                    <option value="mg">Malagasy — মালাগাসি</option>
-                    <option value="ms">Malay — মালয়</option>
-                    <option value="ml">Malayalam — মালয়ালম</option>
-                    <option value="mt">Maltese — মাল্টিজ</option>
-                    <option value="mi">Maori — মাওরি</option>
-                    <option value="mr">Marathi — মারাঠি</option>
-                    <option value="gom-K">Marathi Konkani — মারাঠি-কোঙ্কনি</option>
-                    <option value="es-MX">Mexican Spanish — মেক্সিকান স্প্যানিশ</option>
-                    <option value="mni">Manipuri — মণিপুরি</option>
-                    <option value="lus">Mizo — মিজো</option>
-                    <option value="mn">Mongolian — মঙ্গোলিয়ান</option>
-                    <option value="ne">Nepali — নেপালি</option>
-                    <option value="pcm">Nigerian Pidgin — নাইজেরিয়ান পিজিন</option>
-                    <option value="no">Norwegian — নরওয়েজিয়ান</option>
-                    <option value="oc">Occitan — অক্সিতান</option>
-                    <option value="or">Odia — ওড়িয়া</option>
-                    <option value="om">Oromo — ওরোমো</option>
-                    <option value="ng">Oshiwambo — ওশিওয়াম্বো</option>
-                    <option value="ps">Pashto — পশতু</option>
-                    <option value="pl">Polish — পোলিশ</option>
-                    <option value="pt">Portuguese — পর্তুগিজ</option>
-                    <option value="pa">Eastern Punjabi — পূর্ব পাঞ্জাবি</option>
-                    <option value="pnt">Western Punjabi — পশ্চিম পাঞ্জাবি</option>
-                    <option value="qu">Quechua — কেচুয়া</option>
-                    <option value="ro">Romanian — রোমানিয়ান</option>
-                    <option value="rom">Romani — রোমানি</option>
-                    <option value="ru">Russian — রুশ</option>
-                    <option value="sm">Samoan — সামোয়ান</option>
-                    <option value="sa">Sanskrit — সংস্কৃত</option>
-                    <option value="gd">Scots Gaelic — স্কটস গ্যালিক</option>
-                    <option value="sr">Serbian — সার্বিয়ান</option>
-                    <option value="st">Sesotho — সেসোথো</option>
-                    <option value="tn">Setswana — সেতসোয়ানা</option>
-                    <option value="sn">Shona — শোনা</option>
-                    <option value="sd">Sindhi — সিন্ধি</option>
-                    <option value="si">Sinhala — সিংহলি</option>
-                    <option value="sk">Slovak — স্লোভাক</option>
-                    <option value="sl">Slovenian — স্লোভেনিয়ান</option>
-                    <option value="so">Somali — সোমালি</option>
-                    <option value="st-ZA">Southern Sotho — সেসোথো</option>
-                    <option value="nan">Southern Min — সাউদার্ন মিন</option>
-                    <option value="es">Spanish — স্প্যানিশ</option>
-                    <option value="su">Sundanese — সুন্দানিজ</option>
-                    <option value="sw">Swahili — সোয়াহিলি</option>
-                    <option value="ss">Swati — সোয়اتی</option>
-                    <option value="sv">Swedish — সুইডিশ</option>
-                    <option value="tg">Tajik — তাজিক</option>
-                    <option value="ta">Tamil — তামিল</option>
-                    <option value="tt">Tatar — তাতার</option>
-                    <option value="te">Telugu — তেলুগু</option>
-                    <option value="th">Thai — থাই</option>
-                    <option value="bo">Tibetan — তিব্বতি</option>
-                    <option value="ti">Tigrinya — তিগরিনিয়া</option>
-                    <option value="to">Tongan — টোঙ্গান</option>
-                    <option value="ts">Tsonga — সঙ্গা</option>
-                    <option value="tr">Turkish — তুর্কি</option>
-                    <option value="tk">Turkmen — তুর্কমেন</option>
-                    <option value="tw">Twi — টুই</option>
-                    <option value="uk">Ukrainian — ইউক্রেনীয়</option>
-                    <option value="ur">Urdu — উর্দু</option>
-                    <option value="ug">Uyghur — উইঘুর</option>
-                    <option value="uz">Uzbek — উজবেক</option>
-                    <option value="vi">Vietnamese — ভিয়েতনামি</option>
-                    <option value="cy">Welsh — ওয়েলশ</option>
-                    <option value="wo">Wolof — উলফ</option>
-                    <option value="xh">Xhosa — খোসা</option>
-                    <option value="yi">Yiddish — ইদ্দিশ</option>
-                    <option value="yo">Yoruba — ইয়োরুবা</option>
-                    <option value="yue">Yue Chinese (Cantonese) — ক্যান্টনিজ</option>
-                    <option value="zu">Zulu — জুলু</option>
-                </select>
+            <div class="custom-lang-pill" onclick="openLangModal('src')">
+                <span id="srcLabel">বাংলা</span> ▾
             </div>
 
             <button class="swap-circle-btn" onclick="swapLanguages()" title="Swap Languages">⇄</button>
 
-            <div class="lang-pill-box">
+            <div class="custom-lang-pill" onclick="openLangModal('target')">
                 <span id="targetLabel">English</span> ▾
-                <select id="targetLang" onchange="updateLangLabel()">
-                    <option value="en" selected>English — ইংরেজি</option>
-                    <option value="bn">Bengali — বাংলা</option>
-                    <option value="af">Afrikaans — আফ্রিকান্স</option>
-                    <option value="sq">Albanian — আলবেনিয়ান</option>
-                    <option value="am">Amharic — আমহারিক</option>
-                    <option value="ar">Arabic — আরবি</option>
-                    <option value="hy">Armenian — আর্মেনিয়ান</option>
-                    <option value="as">Assamese — অসমীয়া</option>
-                    <option value="de-AT">Austrian German — অস্ট্রিয়ান জার্মান</option>
-                    <option value="en-AU">Australian English — অস্ট্রেলিয়ান ইংরেজি</option>
-                    <option value="az">Azerbaijani — আজারবাইজানি</option>
-                    <option value="az-N">Azerbaijani (North) — উত্তর আজারবাইজানি</option>
-                    <option value="bm">Bambara — বামবারা</option>
-                    <option value="eu">Basque — বাস্ক</option>
-                    <option value="be">Belarusian — বেলারুশিয়ান</option>
-                    <option value="bn">Bengali — বাংলা</option>
-                    <option value="bh">Bhojpuri — ভোজপুরি</option>
-                    <option value="brx">Bodo — বড়ো</option>
-                    <option value="bs">Bosnian — বসনিয়ান</option>
-                    <option value="pt-BR">Brazilian Portuguese — ব্রাজিলিয়ান পর্তুগিজ</option>
-                    <option value="br">Breton — ব্রেটন</option>
-                    <option value="bg">Bulgarian — বুলগেরিয়ান</option>
-                    <option value="my">Burmese — বার্মিজ</option>
-                    <option value="en-CA">Canadian English — কানাডিয়ান ইংরেজি</option>
-                    <option value="fr-CA">Canadian French — কানাডিয়ান ফরাসি</option>
-                    <option value="ca">Catalan — কাতালান</option>
-                    <option value="ceb">Cebuano — সেবুয়ানো</option>
-                    <option value="ny">Chichewa — চিচেওয়া</option>
-                    <option value="zh">Mandarin Chinese — ম্যান্ডারিন চীনা</option>
-                    <option value="co">Corsican — কর্সিকান</option>
-                    <option value="hr">Croatian — ক্রোয়েশিয়ান</option>
-                    <option value="cs">Czech — চেক</option>
-                    <option value="da">Danish — ড্যানিশ</option>
-                    <option value="prs">Persian Dari — দারি</option>
-                    <option value="dv">Dhivehi — ধিভেহি</option>
-                    <option value="doi">Dogri — ডোগরি</option>
-                    <option value="nl">Dutch — ডাচ</option>
-                    <option value="en">English — ইংরেজি</option>
-                    <option value="eo">Esperanto — এস্পেরান্তো</option>
-                    <option value="et">Estonian — এস্তোনিয়ান</option>
-                    <option value="ee">Ewe — ইভে</option>
-                    <option value="fj">Fijian — ফিজিয়ান</option>
-                    <option value="fil">Filipino — ফিলিপিনো</option>
-                    <option value="fi">Finnish — ফিনিশ</option>
-                    <option value="fy">Flemish — ফ্লেমিশ</option>
-                    <option value="fr">French — ফরাসি</option>
-                    <option value="gl">Galician — গ্যালিশিয়ান</option>
-                    <option value="ka">Georgian — জর্জিয়ান</option>
-                    <option value="de">German — জার্মান</option>
-                    <option value="el">Greek — গ্রিক</option>
-                    <option value="kl">Greenlandic — গ্রিনল্যান্ডিক</option>
-                    <option value="gn">Guarani — গুয়ারানি</option>
-                    <option value="gu">Gujarati — গুজরাটি</option>
-                    <option value="ht">Haitian Creole — হাইতিয়ান ক্রেওল</option>
-                    <option value="ha">Hausa — হাউসা</option>
-                    <option value="haw">Hawaiian — হাওয়াইয়ান</option>
-                    <option value="he">Hebrew — হিব্রু</option>
-                    <option value="hi">Hindi — হিন্দি</option>
-                    <option value="hmn">Hmong — মং</option>
-                    <option value="hu">Hungarian — হাঙ্গেরিয়ান</option>
-                    <option value="is">Icelandic — আইসল্যান্ডিক</option>
-                    <option value="ig">Igbo — ইগবো</option>
-                    <option value="id">Indonesian — ইন্দোনেশিয়ান</option>
-                    <option value="ga">Irish — আইরিশ</option>
-                    <option value="fa">Iranian Persian — ইরানি ফারসি</option>
-                    <option value="it">Italian — ইতালিয়ান</option>
-                    <option value="ja">Japanese — জাপানি</option>
-                    <option value="jv">Javanese — জাভানিজ</option>
-                    <option value="ee">Jin Chinese — জিন চীনা</option>
-                    <option value="kn">Kannada — কন্নড়</option>
-                    <option value="kk">Kazakh — কাজাখ</option>
-                    <option value="km">Khmer — খেমার</option>
-                    <option value="ki">Kikuyu — কিকুয়ু</option>
-                    <option value="rw">Kinyarwanda — কিনিয়ারওয়ান্ডা</option>
-                    <option value="gom">Konkani — কোঙ্কনি</option>
-                    <option value="ko">Korean — কোরিয়ান</option>
-                    <option value="kri">Krio — ক্রিয়ো</option>
-                    <option value="ku">Kurdish — কুর্দি</option>
-                    <option value="ky">Kyrgyz — কিরগিজ</option>
-                    <option value="lo">Lao — লাও</option>
-                    <option value="la">Latin — ল্যাটিন</option>
-                    <option value="lv">Latvian — লাটভিয়ান</option>
-                    <option value="ln">Lingala — লিঙ্গালা</option>
-                    <option value="lt">Lithuanian — লিথুয়ানিয়ান</option>
-                    <option value="lb">Luxembourgish — লুক্সেমবার্গিশ</option>
-                    <option value="mk">Macedonian — মেসিডোনিয়ান</option>
-                    <option value="mg">Malagasy — মালাগাসি</option>
-                    <option value="ms">Malay — মালয়</option>
-                    <option value="ml">Malayalam — মালয়ালম</option>
-                    <option value="mt">Maltese — মাল্টিজ</option>
-                    <option value="mi">Maori — মাওরি</option>
-                    <option value="mr">Marathi — মারাঠি</option>
-                    <option value="gom-K">Marathi Konkani — মারাঠি-কোঙ্কনি</option>
-                    <option value="es-MX">Mexican Spanish — মেক্সিকান স্প্যানিশ</option>
-                    <option value="mni">Manipuri — মণিপুরি</option>
-                    <option value="lus">Mizo — মিজো</option>
-                    <option value="mn">Mongolian — মঙ্গোলিয়ান</option>
-                    <option value="ne">Nepali — নেপালি</option>
-                    <option value="pcm">Nigerian Pidgin — নাইজেরিয়ান পিজিন</option>
-                    <option value="no">Norwegian — নরওয়েজিয়ান</option>
-                    <option value="oc">Occitan — অক্সিতান</option>
-                    <option value="or">Odia — ওড়িয়া</option>
-                    <option value="om">Oromo — ওরোমো</option>
-                    <option value="ng">Oshiwambo — ওশিওয়াম্বো</option>
-                    <option value="ps">Pashto — পশতু</option>
-                    <option value="pl">Polish — পোলিশ</option>
-                    <option value="pt">Portuguese — পর্তুগিজ</option>
-                    <option value="pa">Eastern Punjabi — পূর্ব পাঞ্জাবি</option>
-                    <option value="pnt">Western Punjabi — পশ্চিম পাঞ্জাবি</option>
-                    <option value="qu">Quechua — কেচুয়া</option>
-                    <option value="ro">Romanian — রোমানিয়ান</option>
-                    <option value="rom">Romani — রোমানি</option>
-                    <option value="ru">Russian — রুশ</option>
-                    <option value="sm">Samoan — সামোয়ান</option>
-                    <option value="sa">Sanskrit — সংস্কৃত</option>
-                    <option value="gd">Scots Gaelic — স্কটস গ্যালিক</option>
-                    <option value="sr">Serbian — সার্বিয়ান</option>
-                    <option value="st">Sesotho — সেসোথো</option>
-                    <option value="tn">Setswana — সেতসোয়ানা</option>
-                    <option value="sn">Shona — শোনা</option>
-                    <option value="sd">Sindhi — সিন্ধি</option>
-                    <option value="si">Sinhala — সিংহলি</option>
-                    <option value="sk">Slovak — স্লোভাক</option>
-                    <option value="sl">Slovenian — স্লোভেনিয়ান</option>
-                    <option value="so">Somali — সোমালি</option>
-                    <option value="st-ZA">Southern Sotho — সেসোথো</option>
-                    <option value="nan">Southern Min — সাউদার্ন মিন</option>
-                    <option value="es">Spanish — স্প্যানিশ</option>
-                    <option value="su">Sundanese — সুন্দানিজ</option>
-                    <option value="sw">Swahili — সোয়াহিলি</option>
-                    <option value="ss">Swati — সোয়اتی</option>
-                    <option value="sv">Swedish — সুইডিশ</option>
-                    <option value="tg">Tajik — তাজিক</option>
-                    <option value="ta">Tamil — তামিল</option>
-                    <option value="tt">Tatar — তাতার</option>
-                    <option value="te">Telugu — তেলুগু</option>
-                    <option value="th">Thai — থাই</option>
-                    <option value="bo">Tibetan — তিব্বতি</option>
-                    <option value="ti">Tigrinya — তিগরিনিয়া</option>
-                    <option value="to">Tongan — টোঙ্গান</option>
-                    <option value="ts">Tsonga — সঙ্গা</option>
-                    <option value="tr">Turkish — তুর্কি</option>
-                    <option value="tk">Turkmen — তুর্কমেন</option>
-                    <option value="tw">Twi — টুই</option>
-                    <option value="uk">Ukrainian — ইউক্রেনীয়</option>
-                    <option value="ur">Urdu — উর্দু</option>
-                    <option value="ug">Uyghur — উইঘুর</option>
-                    <option value="uz">Uzbek — উজবেক</option>
-                    <option value="vi">Vietnamese — ভিয়েতনামি</option>
-                    <option value="cy">Welsh — ওয়েলশ</option>
-                    <option value="wo">Wolof — উলফ</option>
-                    <option value="xh">Xhosa — খোসা</option>
-                    <option value="yi">Yiddish — ইদ্দিশ</option>
-                    <option value="yo">Yoruba — ইয়োরুবা</option>
-                    <option value="yue">Yue Chinese (Cantonese) — ক্যান্টনিজ</option>
-                    <option value="zu">Zulu — জুলু</option>
-                </select>
             </div>
         </div>
 
@@ -920,12 +675,6 @@
                     <option value="en">English — ইংরেজি</option>
                     <option value="hi">Hindi — হিন্দি</option>
                     <option value="ar">Arabic — আরবি</option>
-                    <option value="zh">Mandarin Chinese — ম্যান্ডারিন চীনা</option>
-                    <option value="es">Spanish — স্প্যানিশ</option>
-                    <option value="fr">French — ফরাসি</option>
-                    <option value="de">German — জার্মান</option>
-                    <option value="ja">Japanese — জাপানি</option>
-                    <option value="ko">Korean — কোরিয়ান</option>
                 </select>
             </div>
 
@@ -995,6 +744,22 @@
 
 </div>
 
+<!-- Custom Searchable Language Selection Modal -->
+<div id="langModal" class="lang-modal-overlay">
+    <div class="lang-modal-card">
+        <div class="lang-modal-header">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="color: #60a5fa; font-size: 16px;">Select Language</h3>
+                <button onclick="closeLangModal()" style="background:none; border:none; color:white; font-size:18px; cursor:pointer;">✖</button>
+            </div>
+            <input type="text" id="langSearchBox" class="lang-search-input" placeholder="🔍 Search language..." oninput="filterLanguages()">
+        </div>
+        <div class="lang-list-container" id="langListContainer">
+            <!-- Dynamically populated 131 languages with Native + English names -->
+        </div>
+    </div>
+</div>
+
 <!-- Google Style Voice Modal -->
 <div id="voiceModal" class="voice-overlay">
     <div class="voice-card">
@@ -1012,31 +777,148 @@
     let points = parseInt(localStorage.getItem('userPts')) || 21;
     let globalRecognition = null;
     let currentResult = "";
+    let activeLangType = 'src'; // 'src' or 'target'
+
+    // Complete 131 Languages Database with Native Name & English Name
+    const languagesDB = [
+        { code: "en", en: "English", native: "ইংরেজি" },
+        { code: "zh", en: "Mandarin Chinese", native: "ম্যান্ডারিন চীনা" },
+        { code: "hi", en: "Hindi", native: "হিন্দি" },
+        { code: "es", en: "Spanish", native: "স্প্যানিশ" },
+        { code: "fr", en: "French", native: "ফরাসি" },
+        { code: "ar", en: "Arabic", native: "আরবি" },
+        { code: "bn", en: "Bengali", native: "বাংলা" },
+        { code: "pt", en: "Portuguese", native: "পর্তুগিজ" },
+        { code: "ru", en: "Russian", native: "রুশ" },
+        { code: "ur", en: "Urdu", native: "উর্দু" },
+        { code: "id", en: "Indonesian", native: "ইন্দোনেশিয়ান" },
+        { code: "de", en: "German", native: "জার্মান" },
+        { code: "ja", en: "Japanese", native: "জাপানি" },
+        { code: "pcm", en: "Nigerian Pidgin", native: "নাইজেরিয়ান পিজিন" },
+        { code: "mr", en: "Marathi", native: "মারাঠি" },
+        { code: "te", en: "Telugu", native: "তেলুগু" },
+        { code: "tr", en: "Turkish", native: "তুর্কি" },
+        { code: "ta", en: "Tamil", native: "তামিল" },
+        { code: "yue", en: "Yue Chinese (Cantonese)", native: "ক্যান্টনিজ" },
+        { code: "vi", en: "Vietnamese", native: "ভিয়েতনামি" },
+        { code: "fil", en: "Tagalog", native: "তাগালগ" },
+        { code: "ee", en: "Wu Chinese", native: "উ চীনা" },
+        { code: "ko", en: "Korean", native: "কোরিয়ান" },
+        { code: "fa", en: "Iranian Persian", native: "ইরানি ফারসি" },
+        { code: "ha", en: "Hausa", native: "হাউসা" },
+        { code: "ar-EG", en: "Egyptian Arabic", native: "মিশরীয় আরবি" },
+        { code: "sw", en: "Swahili", native: "সোয়াহিলি" },
+        { code: "jv", en: "Javanese", native: "জাভানিজ" },
+        { code: "it", en: "Italian", native: "ইতালিয়ান" },
+        { code: "pa", en: "Western Punjabi", native: "পশ্চিম পাঞ্জাবি" },
+        { code: "kn", en: "Kannada", native: "কন্নড়" },
+        { code: "gu", en: "Gujarati", native: "গুজরাটি" },
+        { code: "th", en: "Thai", native: "থাই" },
+        { code: "am", en: "Amharic", native: "আমহারিক" },
+        { code: "bh", en: "Bhojpuri", native: "ভোজপুরি" },
+        { code: "pa-IN", en: "Eastern Punjabi", native: "পূর্ব পাঞ্জাবি" },
+        { code: "zh-Jin", en: "Jin Chinese", native: "জিন চীনা" },
+        { code: "nan", en: "Southern Min", native: "সাউদার্ন মিন" },
+        { code: "gom-K", en: "Marathi Konkani", native: "মারাঠি-কোঙ্কনি" },
+        { code: "fil-PH", en: "Filipino", native: "ফিলিপিনো" },
+        { code: "my", en: "Burmese", native: "বার্মিজ" },
+        { code: "yo", en: "Yoruba", native: "ইয়োরুবা" },
+        { code: "ml", en: "Malayalam", native: "মালয়ালম" },
+        { code: "or", en: "Odia", native: "ওড়িয়া" },
+        { code: "su", en: "Sundanese", native: "সুন্দানিজ" },
+        { code: "pl", en: "Polish", native: "পোলিশ" },
+        { code: "uk", en: "Ukrainian", native: "ইউক্রেনীয়" },
+        { code: "ms", en: "Malay", native: "মালয়" },
+        { code: "uz", en: "Uzbek", native: "উজবেক" },
+        { code: "sd", en: "Sindhi", native: "সিন্ধি" },
+        { code: "ne", en: "Nepali", native: "নেপালি" },
+        { code: "ro", en: "Romanian", native: "রোমানিয়ান" },
+        { code: "nl", en: "Dutch", native: "ডাচ" },
+        { code: "ps", en: "Pashto", native: "পশতু" },
+        { code: "as", en: "Assamese", native: "অসমীয়া" },
+        { code: "mg", en: "Malagasy", native: "মালাগাসি" },
+        { code: "nso", en: "Saraiki", native: "সারাইকি" },
+        { code: "so", en: "Somali", native: "সোমালি" },
+        { code: "az", en: "Azerbaijani", native: "আজারবাইজানি" },
+        { code: "si", en: "Sinhala", native: "সিংহলি" },
+        { code: "km", en: "Khmer", native: "খেমার" },
+        { code: "za", en: "Zhuang", native: "ঝুয়াং" },
+        { code: "cs", en: "Czech", native: "চেক" },
+        { code: "el", en: "Greek", native: "গ্রিক" },
+        { code: "sv", en: "Swedish", native: "সুইডিশ" },
+        { code: "hu", en: "Hungarian", native: "হাঙ্গেরিয়ান" },
+        { code: "kk", en: "Kazakh", native: "কাজাখ" },
+        { code: "be", en: "Belarusian", native: "বেলারুশিয়ান" },
+        { code: "he", en: "Hebrew", native: "হিব্রু" },
+        { code: "bg", en: "Bulgarian", native: "বুলগেরিয়ান" },
+        { code: "tg", en: "Tajik", native: "তাজিক" },
+        { code: "sr", en: "Serbian", native: "সার্বিয়ান" },
+        { code: "de-AT", en: "Austrian German", native: "অস্ট্রিয়ান জার্মান" },
+        { code: "da", en: "Danish", native: "ড্যানিশ" },
+        { code: "fi", en: "Finnish", native: "ফিনিশ" },
+        { code: "sk", en: "Slovak", native: "স্লোভাক" },
+        { code: "no", en: "Norwegian", native: "নরওয়েজিয়ান" },
+        { code: "ca", en: "Catalan", native: "কাতালান" },
+        { code: "hr", en: "Croatian", native: "ক্রোয়েশিয়ান" },
+        { code: "ka", en: "Georgian", native: "জর্জিয়ান" },
+        { code: "hy", en: "Armenian", native: "আর্মেনিয়ান" },
+        { code: "az-N", en: "Azerbaijani (North)", native: "উত্তর আজারবাইজানি" },
+        { code: "lt", en: "Lithuanian", native: "লিথুয়ানিয়ান" },
+        { code: "sl", en: "Slovenian", native: "স্লোভেনিয়ান" },
+        { code: "lv", en: "Latvian", native: "লাটভিয়ান" },
+        { code: "et", en: "Estonian", native: "এস্তোনিয়ান" },
+        { code: "sq", en: "Albanian", native: "আলবেনিয়ান" },
+        { code: "mk", en: "Macedonian", native: "মেসিডোনিয়ান" },
+        { code: "bs", en: "Bosnian", native: "বসনিয়ান" },
+        { code: "is", en: "Icelandic", native: "আইসল্যান্ডিক" },
+        { code: "ga", en: "Irish", native: "আইরিশ" },
+        { code: "cy", en: "Welsh", native: "ওয়েলশ" },
+        { code: "gl", en: "Galician", native: "গ্যালিশিয়ান" },
+        { code: "eu", en: "Basque", native: "বাস্ক" },
+        { code: "af", en: "Afrikaans", native: "আফ্রিকান্স" },
+        { code: "zu", en: "Zulu", native: "জুলু" },
+        { code: "xh", en: "Xhosa", native: "খোসা" },
+        { code: "st", en: "Sesotho", native: "সেসোথো" },
+        { code: "tn", en: "Setswana", native: "সেতসোয়ানা" },
+        { code: "rw", en: "Kinyarwanda", native: "কিনিয়ারওয়ান্ডা" },
+        { code: "ti", en: "Tigrinya", native: "তিগরিনিয়া" },
+        { code: "om", en: "Oromo", native: "ওরোমো" },
+        { code: "ig", en: "Igbo", native: "ইগবো" },
+        { code: "tw", en: "Twi", native: "টুই" },
+        { code: "sn", en: "Shona", native: "শোনা" },
+        { code: "wo", en: "Wolof", native: "উলফ" },
+        { code: "bm", en: "Bambara", native: "বামবারা" },
+        { code: "ln", en: "Lingala", native: "লিঙ্গালা" },
+        { code: "ny", en: "Chichewa", native: "চিচেওয়া" },
+        { code: "ky", en: "Kyrgyz", native: "কিরগিজ" },
+        { code: "tk", en: "Turkmen", native: "তুর্কমেন" },
+        { code: "mn", en: "Mongolian", native: "মঙ্গোলিয়ান" },
+        { code: "ug", en: "Uyghur", native: "উইঘুর" },
+        { code: "bo", en: "Tibetan", native: "তিব্বতি" },
+        { code: "lo", en: "Lao", native: "লাও" },
+        { code: "dv", en: "Dhivehi", native: "ধিভেহি" },
+        { code: "fj", en: "Fijian", native: "ফিজিয়ান" },
+        { code: "sm", en: "Samoan", native: "সামোয়ান" },
+        { code: "to", en: "Tongan", native: "টোঙ্গান" },
+        { code: "ht", en: "Haitian Creole", native: "হাইতিয়ান ক্রেওল" },
+        { code: "qu", en: "Quechua", native: "কেচুয়া" },
+        { code: "gn", en: "Guarani", native: "গুয়ারানি" },
+        { code: "eo", en: "Esperanto", native: "স্পেরান্তো" },
+        { code: "prs", en: "Persian Dari", native: "দারি" },
+        { code: "ku", en: "Kurdish", native: "কুর্দি" },
+        { code: "ryu", en: "Japanese Ryukyuan", native: "রিউকিউয়ান" },
+        { code: "gom", en: "Konkani", native: "কোঙ্কনি" },
+        { code: "mai", en: "Maithili", native: "মৈথিলি" },
+        { code: "sa", en: "Sanskrit", native: "সংস্কৃত" }
+    ];
+
+    let currentSourceLang = 'bn';
+    let currentTargetLang = 'en';
 
     const langVoiceMap = {
         'bn': 'bn-BD', 'en': 'en-US', 'hi': 'hi-IN', 'ar': 'ar-SA', 'zh': 'zh-CN', 'ja': 'ja-JP',
         'ko': 'ko-KR', 'de': 'de-DE', 'fr': 'fr-FR', 'es': 'es-ES', 'it': 'it-IT', 'pt': 'pt-PT',
-        'ru': 'ru-RU', 'tr': 'tr-TR', 'fa': 'fa-IR', 'ur': 'ur-PK', 'pa': 'pa-IN', 'gu': 'gu-IN',
-        'mr': 'mr-IN', 'te': 'te-IN', 'ta': 'ta-IN', 'kn': 'kn-IN', 'ml': 'ml-IN', 'as': 'as-IN',
-        'ne': 'ne-NP', 'si': 'si-LK', 'ms': 'ms-MY', 'id': 'id-ID', 'th': 'th-TH', 'vi': 'vi-VN',
-        'fil': 'fil-PH', 'my': 'my-MM', 'km': 'km-KH', 'lo': 'lo-LA', 'mn': 'mn-MN', 'kk': 'kk-KZ',
-        'uz': 'uz-UZ', 'az': 'az-AZ', 'ka': 'ka-GE', 'hy': 'hy-AM', 'he': 'he-IL', 'el': 'el-GR',
-        'sq': 'sq-AL', 'sr': 'sr-RS', 'hr': 'hr-HR', 'bs': 'bs-BA', 'sl': 'sl-SI', 'mk': 'mk-MK',
-        'bg': 'bg-BG', 'ro': 'ro-RO', 'hu': 'hu-HU', 'pl': 'pl-PL', 'cs': 'cs-CZ', 'sk': 'sk-SK',
-        'uk': 'uk-UA', 'be': 'be-BY', 'lt': 'lt-LT', 'lv': 'lv-LV', 'et': 'et-EE', 'fi': 'fi-FI',
-        'sv': 'sv-SE', 'no': 'no-NO', 'da': 'da-DK', 'is': 'is-IS', 'nl': 'nl-NL', 'fy': 'nl-NL',
-        'ga': 'ga-IE', 'cy': 'cy-GB', 'mt': 'mt-MT', 'gom': 'gom-IN', 'sd': 'sd-PK', 'ks': 'ks-IN',
-        'sa': 'sa-IN', 'or': 'or-IN', 'mai': 'mai-IN', 'doi': 'doi-IN', 'mni': 'mni-IN', 'brx': 'brx-IN',
-        'sat': 'sat-IN', 'ps': 'ps-AF', 'prs': 'fa-AF', 'tg': 'tg-TJ', 'ky': 'ky-KG', 'tk': 'tk-TM',
-        'sw': 'sw-TZ', 'zu': 'zu-ZA', 'xh': 'xh-ZA', 'af': 'af-ZA', 'so': 'so-SO', 'am': 'am-ET',
-        'yo': 'yo-NG', 'ig': 'ig-NG', 'ha': 'ha-NG', 'ki': 'ki-KE', 'rw': 'rw-RW', 'mg': 'mg-MG',
-        'bm': 'bm-ML', 'wo': 'wo-SN', 'ti': 'ti-ER', 'ak': 'ak-GH', 'sn': 'sn-ZW', 'kg': 'kg-CD',
-        'ht': 'ht-HT', 'nah': 'nah-MX', 'qu': 'qu-PE', 'gn': 'gn-PY', 'eu': 'eu-ES', 'ca': 'ca-ES',
-        'gl': 'gl-ES', 'oc': 'oc-FR', 'br': 'br-FR', 'co': 'co-FR', 'scn': 'it-IT', 'sc': 'it-IT',
-        'rm': 'rm-CH', 'lb': 'lb-LU', 'rom': 'ro-RO', 'pt-BR': 'pt-BR', 'es-MX': 'es-MX',
-        'fr-CA': 'fr-CA', 'en-AU': 'en-AU', 'en-US': 'en-US', 'en-CA': 'en-CA', 'st': 'st-ZA',
-        'tn': 'tn-BW', 'ng': 'ng-NA', 'dv': 'dv-MV', 'fj': 'fj-FJ', 'sm': 'sm-WS', 'to': 'to-TO',
-        'kl': 'kl-GL'
+        'ru': 'ru-RU', 'tr': 'tr-TR', 'fa': 'fa-IR', 'ur': 'ur-PK'
     };
 
     const multiLangUI = {
@@ -1048,8 +930,7 @@
             placeholder: "শব্দ বা বাক্য লিখুন...", resultPlaceholder: "ফলাফল এখানে দৃশ্যমান হবে...",
             aiVerified: "AI Smart Corrected Output",
             quizLang: "কুইজ ভাষা:", reviewText: "রিভেঞ্জ রাউন্ড: ভুলগুলো আবার ঝালাই করা হচ্ছে!",
-            listening: "Smart Listening...", voiceSub: "কথা বলুন, এআই স্বয়ংক্রিয়ভাবে শুধরে অনুবাদ করছে...",
-            toastCopy: "অনুবাদ কপি করা হয়েছে! 📋", toastMic: "দয়া করে মাইক্রোফোন ব্যবহারের অনুমতি দিন।"
+            toastCopy: "অনুবাদ কপি করা হয়েছে! 📋"
         },
         'en': {
             transTab: "🌐 TRANSLATOR", teacherTab: "👨‍🏫 TEACHER", quizTab: "⚔️ ARENA",
@@ -1059,10 +940,87 @@
             placeholder: "Enter text or word...", resultPlaceholder: "Translation will appear here...",
             aiVerified: "AI Smart Corrected Output",
             quizLang: "Quiz Language:", reviewText: "Revenge Round: Retrying previous mistakes!",
-            listening: "Smart Listening...", voiceSub: "Speak now, AI is correcting and translating...",
-            toastCopy: "Translation copied! 📋", toastMic: "Please allow microphone access."
+            toastCopy: "Translation copied! 📋"
         }
     };
+
+    window.addEventListener('DOMContentLoaded', () => {
+        updateLanguageDisplay();
+        buildLevelQuestions();
+        loadLevelEngine();
+        loadDailyChallenge();
+    });
+
+    function updateLanguageDisplay() {
+        const srcObj = languagesDB.find(l => l.code === currentSourceLang) || languagesDB[6]; // default bn
+        const targetObj = languagesDB.find(l => l.code === currentTargetLang) || languagesDB[0]; // default en
+
+        document.getElementById('srcLabel').innerText = `${srcObj.en} — ${srcObj.native}`;
+        document.getElementById('targetLabel').innerText = `${targetObj.en} — ${targetObj.native}`;
+        applyUiLocalization(currentSourceLang);
+    }
+
+    function openLangModal(type) {
+        activeLangType = type;
+        document.getElementById('langModal').style.display = 'flex';
+        document.getElementById('langSearchBox').value = '';
+        renderLangList(languagesDB);
+        setTimeout(() => document.getElementById('langSearchBox').focus(), 100);
+    }
+
+    function closeLangModal() {
+        document.getElementById('langModal').style.display = 'none';
+    }
+
+    function renderLangList(list) {
+        const container = document.getElementById('langListContainer');
+        container.innerHTML = '';
+        list.forEach(item => {
+            const div = document.createElement('div');
+            div.className = 'lang-item';
+            div.innerHTML = `
+                <div>
+                    <div class="lang-item-native">${item.native}</div>
+                    <div class="lang-item-en">${item.en}</div>
+                </div>
+                <span style="color: #60a5fa; font-size: 12px;">${item.code}</span>
+            `;
+            div.onclick = () => selectLanguage(item.code);
+            container.appendChild(div);
+        });
+    }
+
+    function filterLanguages() {
+        const query = document.getElementById('langSearchBox').value.toLowerCase();
+        const filtered = languagesDB.filter(l => 
+            l.en.toLowerCase().includes(query) || 
+            l.native.toLowerCase().includes(query) || 
+            l.code.toLowerCase().includes(query)
+        );
+        renderLangList(filtered);
+    }
+
+    function selectLanguage(code) {
+        if (activeLangType === 'src') {
+            currentSourceLang = code;
+        } else {
+            currentTargetLang = code;
+        }
+        updateLanguageDisplay();
+        closeLangModal();
+    }
+
+    function swapLanguages() {
+        const temp = currentSourceLang;
+        currentSourceLang = currentTargetLang;
+        currentTargetLang = temp;
+        updateLanguageDisplay();
+
+        if (currentResult && currentResult !== "অনুবাদে সমস্যা হয়েছে, ইন্টারনেট সংযোগ পরীক্ষা করুন।") {
+            document.getElementById('sourceInput').value = currentResult;
+            translateText();
+        }
+    }
 
     function applyUiLocalization(langCode) {
         const t = multiLangUI[langCode] || multiLangUI['en'];
@@ -1080,8 +1038,6 @@
         document.getElementById('sourceInput').placeholder = t.placeholder;
         document.getElementById('resPlaceholder').innerText = t.resultPlaceholder;
         document.getElementById('aiVerifiedText').innerText = t.aiVerified;
-        document.getElementById('quizLangLabelText').innerText = t.quizLang;
-        document.getElementById('reviewBannerText').innerText = t.reviewText;
     }
 
     const banglishMap = {
@@ -1166,39 +1122,6 @@
         } catch (e) {}
     }
 
-    function updateLangLabel() {
-        const s = document.getElementById('srcLang');
-        const t = document.getElementById('targetLang');
-        const sText = s.options[s.selectedIndex].text.split(' — ')[0];
-        const tText = t.options[t.selectedIndex].text.split(' — ')[0];
-        document.getElementById('srcLabel').innerText = sText;
-        document.getElementById('targetLabel').innerText = tText;
-        applyUiLocalization(s.value);
-    }
-
-    window.addEventListener('DOMContentLoaded', () => {
-        document.getElementById('srcLang').value = 'bn';
-        document.getElementById('targetLang').value = 'en';
-        updateLangLabel();
-        buildLevelQuestions();
-        loadLevelEngine();
-        loadDailyChallenge();
-    });
-
-    function swapLanguages() {
-        const s = document.getElementById('srcLang');
-        const t = document.getElementById('targetLang');
-        const temp = s.value;
-        s.value = t.value;
-        t.value = temp;
-        updateLangLabel();
-        
-        if (currentResult && currentResult !== "অনুবাদে সমস্যা হয়েছে, ইন্টারনেট সংযোগ পরীক্ষা করুন।") {
-            document.getElementById('sourceInput').value = currentResult;
-            translateText();
-        }
-    }
-
     function switchView(tabId) {
         document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
         document.querySelectorAll('.hub-tab').forEach(b => b.classList.remove('active'));
@@ -1236,8 +1159,7 @@
     function clearAll() {
         document.getElementById('sourceInput').value = '';
         document.getElementById('charCount').innerText = '0 / 5000';
-        const srcVal = document.getElementById('srcLang').value;
-        const t = multiLangUI[srcVal] || multiLangUI['en'];
+        const t = multiLangUI[currentSourceLang] || multiLangUI['en'];
         document.getElementById('targetOutput').innerHTML = `<span class="result-placeholder">${t.resultPlaceholder}</span>`;
         currentResult = "";
     }
@@ -1255,7 +1177,6 @@
     async function translateText() {
         const input = document.getElementById('sourceInput').value.trim();
         const output = document.getElementById('targetOutput');
-        const target = document.getElementById('targetLang').value;
 
         if (!input) {
             showToast("দয়া করে কিছু লিখুন");
@@ -1280,7 +1201,7 @@
 
         const clean = cleanText.toLowerCase().replace(/[।?!.]/g, '').trim();
 
-        if (banglishMap[clean] && target === 'en') {
+        if (banglishMap[clean] && currentTargetLang === 'en') {
             currentResult = banglishMap[clean];
             output.innerText = currentResult;
             output.className = "result-text-area text-glow-effect";
@@ -1289,7 +1210,7 @@
         }
 
         try {
-            const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${target}&dt=t&q=${encodeURIComponent(cleanText)}`;
+            const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${currentTargetLang}&dt=t&q=${encodeURIComponent(cleanText)}`;
             const res = await fetch(url);
             const data = await res.json();
             if (data && data[0]) {
@@ -1298,7 +1219,7 @@
                 output.className = "result-text-area text-glow-effect";
                 playTranslateSound();
                 
-                if (target === 'ur' || target === 'ar' || target === 'fa' || target === 'he' || target === 'ps') {
+                if (currentTargetLang === 'ur' || currentTargetLang === 'ar' || currentTargetLang === 'fa' || currentTargetLang === 'he' || currentTargetLang === 'ps') {
                     output.style.direction = 'rtl';
                     output.style.textAlign = 'right';
                 } else {
@@ -1344,8 +1265,7 @@
 
     function speakOutput() {
         if (!currentResult) return;
-        const target = document.getElementById('targetLang').value;
-        const langVoice = langVoiceMap[target] || 'en-US';
+        const langVoice = langVoiceMap[currentTargetLang] || 'en-US';
         speakCustom(currentResult, langVoice);
     }
 
@@ -1382,13 +1302,12 @@
 
         const modal = document.getElementById('voiceModal');
         const status = document.getElementById('voiceStatus');
-        const sLang = document.getElementById('srcLang').value;
         modal.style.display = 'flex';
         status.innerText = "Smart Listening...";
 
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         globalRecognition = new SpeechRecognition();
-        globalRecognition.lang = langVoiceMap[sLang] || 'en-US';
+        globalRecognition.lang = langVoiceMap[currentSourceLang] || 'en-US';
         globalRecognition.interimResults = true;
 
         globalRecognition.onresult = function(e) {
@@ -1550,7 +1469,7 @@
             } while (usedIndices.has(randomIndex) && attempts < 20);
 
             usedIndices.add(randomIndex);
-            const item = masterVocubDatabase[randomIndex];
+            const item = masterVocabDatabase[randomIndex];
             currentLevelQuestions.push(generateQuestion(item, false));
         }
     }
@@ -1689,7 +1608,7 @@
         box.innerHTML = `
             <div class="quiz-lang-selector-box">
                 <span style="font-size:11px; font-weight:700; color:var(--text-muted);">কুইজ ভাষা:</span>
-                <select id="quizLangSelect" class="quiz-lang-select" onchange="changeQuizLanguage()">
+                <select id="quizLangSelect" class="quiz-lang-select" onclick="changeQuizLanguage()">
                     <option value="bn" selected>Bengali — বাংলা</option>
                     <option value="en">English — ইংরেজি</option>
                     <option value="hi">Hindi — হিন্দি</option>
