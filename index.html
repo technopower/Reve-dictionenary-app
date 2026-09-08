@@ -670,11 +670,9 @@
             
             <div class="quiz-lang-selector-box">
                 <span style="font-size:11px; font-weight:700; color:var(--text-muted);" id="quizLangLabelText">কুইজ ভাষা:</span>
+                <!-- Updated Arena Language Selector with All 131 Languages -->
                 <select id="quizLangSelect" class="quiz-lang-select" onchange="changeQuizLanguage()">
-                    <option value="bn" selected>Bengali — বাংলা</option>
-                    <option value="en">English — ইংরেজি</option>
-                    <option value="hi">Hindi — হিন্দি</option>
-                    <option value="ar">Arabic — আরবি</option>
+                    <!-- Populated dynamically via JS -->
                 </select>
             </div>
 
@@ -946,14 +944,27 @@
 
     window.addEventListener('DOMContentLoaded', () => {
         updateLanguageDisplay();
+        populateArenaLanguages(); // Automatically populate all 131 languages into Arena dropdown
         buildLevelQuestions();
         loadLevelEngine();
         loadDailyChallenge();
     });
 
+    function populateArenaLanguages() {
+        const select = document.getElementById('quizLangSelect');
+        select.innerHTML = '';
+        languagesDB.forEach(l => {
+            const opt = document.createElement('option');
+            opt.value = l.code;
+            opt.innerText = `${l.en} — ${l.native}`;
+            if (l.code === 'bn') opt.selected = true;
+            select.appendChild(opt);
+        });
+    }
+
     function updateLanguageDisplay() {
-        const srcObj = languagesDB.find(l => l.code === currentSourceLang) || languagesDB[6]; // default bn
-        const targetObj = languagesDB.find(l => l.code === currentTargetLang) || languagesDB[0]; // default en
+        const srcObj = languagesDB.find(l => l.code === currentSourceLang) || languagesDB[6]; 
+        const targetObj = languagesDB.find(l => l.code === currentTargetLang) || languagesDB[0]; 
 
         document.getElementById('srcLabel').innerText = `${srcObj.en} — ${srcObj.native}`;
         document.getElementById('targetLabel').innerText = `${targetObj.en} — ${targetObj.native}`;
@@ -1060,7 +1071,7 @@
         { en: "Challenge", bn: "চ্যালেঞ্জ", hi: "चुनौती", ar: "تحدي", zh: "挑战", ja: "挑戦", ko: "도전", de: "Herausforderung", fr: "Défi", es: "Desafío", it: "Sfida", pt: "Desafio" },
         { en: "Important", bn: "গুরুত্বপূর্ণ", hi: "महत्वपूर्ण", ar: "مهم", zh: "重要的", ja: "重要", ko: "중요한", de: "Wichtig", fr: "Important", es: "Importante", it: "Importante", pt: "Importante" },
         { en: "Experience", bn: "অভিজ্ঞতা", hi: "अनुभव", ar: "خبرة", zh: "经验", ja: "経験", ko: "경험", de: "Erfahrung", fr: "Expérience", es: "Experiencia", it: "Esperienza", pt: "Experiência" },
-        { en: "Resilient", bn: "সহনশীল", hi: "लचीला", ar: "مرن", zh: "有弹性的", ja: "回復力のある", ko: "회복력 있는", de: "Widerstandsfähig", fr: "Résilient", es: "Resiliente", it: "Resiliente", pt: "Resiliente" },
+        { en: "Resilient", bn: "সহনশীল", hi: "लचीला", ar: "مرن", zh: "有弹性の", ja: "回復力のある", ko: "회복력 있는", de: "Widerstandsfähig", fr: "Résilient", es: "Resiliente", it: "Resiliente", pt: "Resiliente" },
         { en: "Confidence", bn: "আত্মবিশ্বাস", hi: "आत्मविश्वास", ar: "ثقة", zh: "信心", ja: "自信", ko: "자신감", de: "Vertrauen", fr: "Confiance", es: "Confianza", it: "Fiducia", pt: "Confiança" },
         { en: "Knowledge", bn: "জ্ঞান", hi: "ज्ञान", ar: "معرفة", zh: "知识", ja: "知識", ko: "지식", de: "Wissen", fr: "Connaissance", es: "Conocimiento", it: "Conoscenza", pt: "Conhecimento" },
         { en: "Freedom", bn: "স্বাধীনতা", hi: "स्वतंत्रता", ar: "حرية", zh: "自由", ja: "自由", ko: "자유", de: "Freiheit", fr: "Liberté", es: "Libertad", it: "Libertà", pt: "Liberdade" },
@@ -1608,11 +1619,8 @@
         box.innerHTML = `
             <div class="quiz-lang-selector-box">
                 <span style="font-size:11px; font-weight:700; color:var(--text-muted);">কুইজ ভাষা:</span>
-                <select id="quizLangSelect" class="quiz-lang-select" onclick="changeQuizLanguage()">
-                    <option value="bn" selected>Bengali — বাংলা</option>
-                    <option value="en">English — ইংরেজি</option>
-                    <option value="hi">Hindi — হিন্দি</option>
-                    <option value="ar">Arabic — আরবি</option>
+                <select id="quizLangSelect" class="quiz-lang-select" onchange="changeQuizLanguage()">
+                    <!-- Populated dynamically -->
                 </select>
             </div>
             <div id="wrongReviewBanner" class="wrong-review-banner" style="display: none;">
@@ -1626,6 +1634,7 @@
             <p id="quizPrompt" style="font-size:15px; font-weight:700; margin:12px 0 16px; color:var(--text-main); line-height:1.4;"></p>
             <div id="quizOptionsContainer" style="display:flex; flex-direction:column; gap:10px;"></div>
         `;
+        populateArenaLanguages();
     }
 </script>
 </body>
