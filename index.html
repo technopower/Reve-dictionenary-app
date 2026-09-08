@@ -234,8 +234,8 @@
         <div class="lang-select-box">
             <label for="sourceLang">থেকে (From):</label>
             <select id="sourceLang" class="lang-select">
-                <option value="bn" selected>Bangla (বাংলা)</option>
-                <option value="en">English</option>
+                <option value="en" selected>English / Banglish</option>
+                <option value="bn">Bangla (বাংলা)</option>
                 <option value="auto">🌐 Auto Detect</option>
             </select>
         </div>
@@ -245,8 +245,8 @@
         <div class="lang-select-box">
             <label for="targetLang">অনুবাদ (To):</label>
             <select id="targetLang" class="lang-select">
-                <option value="en" selected>English</option>
-                <option value="bn">Bangla (বাংলা)</option>
+                <option value="bn" selected>Bangla (বাংলা)</option>
+                <option value="en">English</option>
             </select>
         </div>
     </div>
@@ -264,7 +264,7 @@
     <div id="dictSection" class="section active">
         <div class="search-container">
             <div class="search-input-group">
-                <input type="text" id="wordInput" placeholder="শব্দ বা বাক্য লিখুন (যেমন: আমি ঢাকা যাব বা Crucial)">
+                <input type="text" id="wordInput" placeholder="শব্দ বা বাক্য লিখুন (যেমন: Where do you live বা ami dhaka jabo)">
             </div>
             <div class="search-input-group">
                 <button id="micBtn" class="icon-btn" onclick="startVoiceSearch()">🎙️ কথা বলুন</button>
@@ -294,7 +294,7 @@
         </div>
     </div>
 
-    <!-- SECTION 3: AI WRITING ASSISTANT (FIXED GRAMMAR ENGINE) -->
+    <!-- SECTION 3: AI WRITING ASSISTANT -->
     <div id="writerSection" class="section">
         <div style="margin-bottom: 10px;">
             <label style="font-size: 12px; font-weight: bold; color: #8e44ad; display: block; margin-bottom: 4px;">✍️ আপনার যেকোনো ভুল বা অসম্পূর্ণ বাক্য লিখুন:</label>
@@ -431,13 +431,13 @@
 
     // Local Banglish Dictionary Fallback
     const banglishDict = {
-        "ami dhaka jabo": "I will go to Dhaka.",
-        "ami dhaka jai": "I go to Dhaka.",
-        "amar nam rahim": "My name is Rahim.",
-        "kemon acho": "How are you?",
-        "kemon achen": "How are you?",
-        "ami valo achi": "I am fine.",
-        "ami kaj korchi": "I am working."
+        "ami dhaka jabo": "আমি ঢাকা যাব।",
+        "ami dhaka jai": "আমি ঢাকা যাই।",
+        "amar nam rahim": "আমার নাম রহিম।",
+        "kemon acho": "কেমন আছো?",
+        "kemon achen": "কেমন আছেন?",
+        "ami valo achi": "আমি ভালো আছি।",
+        "ami kaj korchi": "আমি কাজ করছি।"
     };
 
     let currentStepWords = [];
@@ -522,7 +522,7 @@
         targetSelect.value = temp;
     }
 
-    function speakText(text, langCode = 'en-US') {
+    function speakText(text, langCode = 'bn-BD') {
         if (!('speechSynthesis' in window)) return;
         window.speechSynthesis.cancel();
         const utterance = new SpeechSynthesisUtterance(text);
@@ -535,29 +535,29 @@
         return array.slice().sort(() => Math.random() - 0.5);
     }
 
-    /* REAL-TIME DICTIONARY & TRANSLATION WITH BANGLISH SMART DETECTION */
+    /* GOOGLE DYNAMIC FREE TRANSLATION ENGINE */
     async function searchWord() {
         const input = document.getElementById('wordInput').value.trim();
         const resCard = document.getElementById('resultContainer');
-        const sourceLang = document.getElementById('sourceLang').value;
-        const targetLang = document.getElementById('targetLang').value;
+        let sourceLang = document.getElementById('sourceLang').value;
+        let targetLang = document.getElementById('targetLang').value;
 
         if (!input) {
             resCard.innerHTML = `<p style="color:red; text-align:center;">দয়া করে একটি শব্দ বা বাক্য লিখুন।</p>`;
             return;
         }
 
-        resCard.innerHTML = `<p style="text-align:center; color:var(--subtext-color);">🔍 অনুসন্ধান করা হচ্ছে...</p>`;
+        resCard.innerHTML = `<p style="text-align:center; color:var(--subtext-color);">🔍 অনুবাদ করা হচ্ছে...</p>`;
 
         const cleanInput = input.toLowerCase();
 
-        // 1. Banglish Check
+        // 1. Banglish Dictionary Check
         if (banglishDict[cleanInput]) {
             const tr = banglishDict[cleanInput];
             resCard.innerHTML = `
                 <div style="display:flex; justify-content:space-between; align-items:center;">
                     <h3 style="color:#27ae60; font-size:16px;">${input}</h3>
-                    <button class="speak-btn" onclick="speakText('${tr}', 'en-US')">🔊</button>
+                    <button class="speak-btn" onclick="speakText('${tr}', 'bn-BD')">🔊</button>
                 </div>
                 <p style="margin-top:8px; font-size:15px;"><strong>অনুবাদ (Translation):</strong> <span style="color:#16a085; font-weight:bold;">${tr}</span></p>
                 <button class="copy-btn" style="margin-top:10px;" onclick="copyToClipboard('${tr}')">📋 কপি করুন</button>
@@ -565,68 +565,62 @@
             return;
         }
 
-        // 2. Local Vocab Check
-        const matchedVocab = ieltsVocabList.find(v => v.word.toLowerCase() === cleanInput);
-        if (matchedVocab) {
-            resCard.innerHTML = `
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <h3 style="color:#27ae60;">${matchedVocab.word}</h3>
-                    <button class="speak-btn" onclick="speakText('${matchedVocab.word}', 'en-US')">🔊</button>
-                </div>
-                <p><strong>অর্থ:</strong> ${matchedVocab.meaning}</p>
-                <p><strong>সমার্থক শব্দ:</strong> ${matchedVocab.syn}</p>
-                <p><strong>IELTS ব্যবহার:</strong> ${matchedVocab.usage}</p>
-                <p><strong>উদাহরণ:</strong> <em>"${matchedVocab.example}"</em></p>
-                <button class="copy-btn" style="margin-top:8px;" onclick="copyToClipboard('${matchedVocab.word}: ${matchedVocab.meaning}')">📋 কপি করুন</button>
-            `;
-            return;
-        }
-
-        // 3. API Translation with Dual-Server Fallback
+        // 2. High-speed Google Translate Free Endpoint
         try {
-            let pair = sourceLang === 'auto' ? 'bn|en' : `${sourceLang}|${targetLang}`;
-            
-            // Check if input is written in English script but source selected as Bangla
-            if (/^[a-zA-Z\s]+$/.test(input) && sourceLang === 'bn') {
-                pair = 'en|bn';
+            let sl = sourceLang === 'auto' ? 'auto' : sourceLang;
+            let tl = targetLang;
+
+            // Auto fix: English script input -> translate to Bangla
+            if (/^[a-zA-Z\s?,.!]+$/.test(input) && sl === 'bn') {
+                sl = 'en';
+                tl = 'bn';
             }
 
-            const response = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(input)}&langpair=${pair}`);
+            const googleUrl = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sl}&tl=${tl}&dt=t&q=${encodeURIComponent(input)}`;
+            const response = await fetch(googleUrl);
             const data = await response.json();
 
-            if (data && data.responseData && data.responseData.translatedText) {
-                let translatedText = data.responseData.translatedText;
-                
-                // Smart client fix for common Banglish if MyMemory returned same text
-                if (translatedText.toLowerCase() === cleanInput) {
-                    if (cleanInput.includes("dhaka")) translatedText = "I will go to Dhaka.";
-                }
+            if (data && data[0]) {
+                let translatedText = data[0].map(item => item[0]).join('');
 
                 resCard.innerHTML = `
                     <div style="display:flex; justify-content:space-between; align-items:center;">
                         <h3 style="color:#27ae60; font-size:16px;">${input}</h3>
-                        <button class="speak-btn" onclick="speakText('${translatedText}', 'en-US')">🔊</button>
+                        <button class="speak-btn" onclick="speakText('${translatedText}', '${tl === 'bn' ? 'bn-BD' : 'en-US'}')">🔊</button>
                     </div>
                     <p style="margin-top:8px; font-size:15px;"><strong>অনুবাদ (Translation):</strong> <span style="color:#16a085; font-weight:bold;">${translatedText}</span></p>
                     <div style="margin-top:10px;">
                         <button class="copy-btn" onclick="copyToClipboard('${translatedText}')">📋 উত্তর কপি করুন</button>
                     </div>
                 `;
-            } else {
-                throw new Error("Translation failed");
+                return;
             }
+            throw new Error("Translation error");
         } catch (error) {
-            // Offline/API Fallback Output
-            let smartFallback = input;
-            if (cleanInput.includes("go dhaka") || cleanInput.includes("jabo")) smartFallback = "I will go to Dhaka.";
+            // Secondary MyMemory Backup
+            try {
+                const pair = `${sourceLang}|${targetLang}`;
+                const res2 = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(input)}&langpair=${pair}`);
+                const data2 = await res2.json();
+                if (data2 && data2.responseData && data2.responseData.translatedText) {
+                    let trText = data2.responseData.translatedText;
+                    resCard.innerHTML = `
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <h3 style="color:#27ae60; font-size:16px;">${input}</h3>
+                            <button class="speak-btn" onclick="speakText('${trText}', 'bn-BD')">🔊</button>
+                        </div>
+                        <p style="margin-top:8px; font-size:15px;"><strong>অনুবাদ (Translation):</strong> <span style="color:#16a085; font-weight:bold;">${trText}</span></p>
+                        <button class="copy-btn" style="margin-top:10px;" onclick="copyToClipboard('${trText}')">📋 কপি করুন</button>
+                    `;
+                    return;
+                }
+            } catch(e) {}
 
             resCard.innerHTML = `
                 <div style="display:flex; justify-content:space-between; align-items:center;">
                     <h3 style="color:#27ae60;">${input}</h3>
-                    <button class="speak-btn" onclick="speakText('${smartFallback}', 'en-US')">🔊</button>
                 </div>
-                <p style="margin-top:8px; font-size:15px;"><strong>অনুবাদ (Translation):</strong> <span style="color:#16a085; font-weight:bold;">${smartFallback}</span></p>
-                <p style="font-size:11px; color:var(--subtext-color); margin-top:4px;">(স্মার্ট এআই অফলাইন আউটপুট)</p>
+                <p style="margin-top:8px; font-size:14px; color:red;">নেটওয়ার্ক সমস্যা হয়েছে। অনুগ্রহ করে আপনার ইন্টারনেট কানেকশন পরীক্ষা করে আবার চেষ্টা করুন।</p>
             `;
         }
     }
@@ -670,7 +664,7 @@
             });
     }
 
-    /* FULLY FUNCTIONAL IELTS AI TOOLS */
+    /* FUNCTIONAL IELTS AI TOOLS */
     function openIeltsInteractive(type) {
         const display = document.getElementById('ieltsToolDisplay');
         
@@ -820,8 +814,8 @@
         };
     }
 
-    /* SMART DYNAMIC AI WRITER & GRAMMAR ENGINE (FULLY FIXED) */
-    function processAiWriting(mode) {
+    /* DYNAMIC AI WRITER & GRAMMAR ENGINE */
+    async function processAiWriting(mode) {
         const input = document.getElementById('aiWriteInput').value.trim();
         const resBox = document.getElementById('aiWritingResult');
         if (!input) {
@@ -834,17 +828,15 @@
         if (mode === 'grammar') {
             let text = input;
             
-            // Grammatical Corrections
+            // Common Grammar Auto-fixes
             text = text.replace(/\bi go dhaka\b/gi, "I go to Dhaka.");
             text = text.replace(/\bi go office\b/gi, "I go to the office.");
             text = text.replace(/\bi no\b/gi, "I know");
             text = text.replace(/\bi not go\b/gi, "I will not go");
             text = text.replace(/\bhe go\b/gi, "He goes");
             text = text.replace(/\bshe go\b/gi, "She goes");
-            text = text.replace(/\bme go\b/gi, "I go");
 
             if (text === input) {
-                // Rule-based capitalization & period
                 text = text.charAt(0).toUpperCase() + text.slice(1);
                 if (!text.endsWith('.')) text += '.';
             }
@@ -852,7 +844,7 @@
             outputText = `<strong>সঠিক রূপ (Grammar Corrected):</strong><br>"<span style="color:#27ae60; font-weight:bold;">${text}</span>"`;
         } 
         else if (mode === 'professional') {
-            outputText = `<strong>Professional Form:</strong><br>"<span style="color:#3498db; font-weight:bold;">I am writing to inform you that ${input.toLowerCase()}.</span>"`;
+            outputText = `<strong>Professional Form:</strong><br>"<span style="color:#3498db; font-weight:bold;">I would like to inform you that ${input.toLowerCase()}.</span>"`;
         } 
         else if (mode === 'simple') {
             outputText = `<strong>Simple Sentence:</strong><br>"<span>${input.replace(/furthermore|moreover|consequently/gi, 'so')}</span>"`;
@@ -862,14 +854,16 @@
             outputText = `<strong>Shortened Form:</strong><br>"<span>${shortText}...</span>"`;
         } 
         else if (mode === 'translate') {
-            if (/^[a-zA-Z\s]+$/.test(input)) {
-                if (input.toLowerCase().includes("go dhaka")) {
-                    outputText = `<strong>বাংলা অনুবাদ:</strong><br>"<span style="color:#16a085; font-weight:bold;">আমি ঢাকা যাচ্ছি / যাবো।</span>"`;
-                } else {
-                    outputText = `<strong>বাংলা অনুবাদ:</strong><br>"<span style="color:#16a085; font-weight:bold;">${input} (অনুবাদ প্রসেস করা হয়েছে)</span>"`;
+            try {
+                const gUrl = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=bn&dt=t&q=${encodeURIComponent(input)}`;
+                const response = await fetch(gUrl);
+                const data = await response.json();
+                if(data && data[0]){
+                    const tr = data[0].map(item => item[0]).join('');
+                    outputText = `<strong>অনুবাদ (Translation):</strong><br>"<span style="color:#16a085; font-weight:bold;">${tr}</span>"`;
                 }
-            } else {
-                outputText = `<strong>English Translation:</strong><br>"<span style="color:#16a085; font-weight:bold;">I will go to Dhaka.</span>"`;
+            } catch(e) {
+                outputText = `<strong>অনুবাদ (Translation):</strong><br>"<span style="color:#16a085; font-weight:bold;">${input}</span>"`;
             }
         }
 
