@@ -479,7 +479,7 @@
         </div>
     </div>
 
-    <!-- Module Hub Bar (IELTS removed, Arena Quiz added) -->
+    <!-- Module Hub Bar -->
     <div class="hub-tabs">
         <button class="hub-tab active" id="tabTransBtn" onclick="switchView('trans')">🌐 TRANSLATOR</button>
         <button class="hub-tab" id="tabTeacherBtn" onclick="switchView('teacher')">👨‍🏫 TEACHER</button>
@@ -577,7 +577,6 @@
             </div>
         </div>
 
-        <!-- Official Google AdMob Test Banner Integration -->
         <div class="admob-test-banner">
             <span>📢 [AdMob Test Banner Ad]<br>Ad Unit ID: ca-app-pub-3940256099942544/6300978111</span>
         </div>
@@ -600,7 +599,7 @@
         <div class="translate-card" id="quizCardBox" style="text-align:center;">
             
             <div class="quiz-lang-selector-box">
-                <span style="font-size:11px; font-weight:700; color:var(--text-muted);" id="quizLangLabelText">অরিনা ভাষা:</span>
+                <span style="font-size:11px; font-weight:700; color:var(--text-muted);" id="quizLangLabelText">কুইজ ভাষা:</span>
                 <select id="quizLangSelect" class="quiz-lang-select" onchange="changeQuizLanguage()">
                     <option value="bn" selected>Bangla (বাংলা)</option>
                     <option value="en">English (ইংরেজি)</option>
@@ -671,7 +670,7 @@
             grammar: "✨ Fix Grammar", pure: "🇬🇧 Pure English", formal: "💼 Make Pro",
             placeholder: "শব্দ বা বাক্য লিখুন...", resultPlaceholder: "ফলাফল এখানে দৃশ্যমান হবে...",
             aiVerified: "AI Verified Output",
-            quizLang: "অরিনা ভাষা:", reviewText: "রিভেঞ্জ রাউন্ড: ভুল করা শব্দগুলো আবার শোধরানো হচ্ছে!"
+            quizLang: "কুইজ ভাষা:", reviewText: "রিভেঞ্জ রাউন্ড: ভুল করা শব্দগুলো আবার শোধরানো হচ্ছে!"
         },
         'en': {
             trans: "🌐 TRANSLATOR", teacher: "👨‍🏫 TEACHER", quiz: "⚔️ VOCAB ARENA",
@@ -679,7 +678,7 @@
             grammar: "✨ Fix Grammar", pure: "🇬🇧 Pure English", formal: "💼 Make Pro",
             placeholder: "Enter text or word...", resultPlaceholder: "Translation will appear here...",
             aiVerified: "AI Verified Output",
-            quizLang: "Arena Lang:", reviewText: "Revenge Round: Retrying previous mistakes!"
+            quizLang: "Quiz Language:", reviewText: "Revenge Round: Retrying previous mistakes!"
         }
     };
 
@@ -710,7 +709,6 @@
         "ami kaj korchi": "I am working."
     };
 
-    // Extended Dynamic Master Database scaled for 1000 levels algorithmic generation
     const masterVocabDatabase = [
         { en: "Opportunity", bn: "সুযোগ", hi: "अवसर", ur: "موقع", ar: "فرصة", ja: "機会", ko: "기회", de: "Gelegenheit", fr: "Opportunité", es: "Oportunidad", pt: "Oportunidade", af: "Geleentheid", mr: "संधी", te: "అవకాశం", ta: "வாய்ப்பு", gu: "તક" },
         { en: "Essential", bn: "জরুরি / অত্যাবশ্যকীয়", hi: "आवश्यक", ur: "ضروری", ar: "ضروري", ja: "不可欠", ko: "필수적인", de: "Wichtig", fr: "Essentiel", es: "Esencial", pt: "Essencial", af: "Noodsaaklik", mr: "महत्त्वाचे", te: "ముఖ్యమైన", ta: "அவசியம்", gu: "જરૂરી" },
@@ -726,18 +724,40 @@
         { en: "Paramount", bn: "সর্বোচ্চ গুরুত্বপূর্ণ", hi: "सर्वोपरि", ur: "سب سے اہم", ar: "أسمى", ja: "最重要", ko: "가장 중요한", de: "Überragend", fr: "Primordial", es: "Primordial", pt: "Primordial", af: "Uiters belangrik", mr: "सर्वोच्च", te: "అత్యున్నతమైనది", ta: "முதன்மையானது", gu: "સર્વોચ્ચ" },
         { en: "Substantial", bn: "বিপুল / প্রচুর", hi: "काफी", ur: "کافی", ar: "جوهري", ja: "実質的な", ko: "상당한", de: "Erheblich", fr: "Substantiel", es: "Sustancial", pt: "Substancial", af: "Aansienlik", mr: "भरपूर", te: "గణనీయమైన", ta: "கணிசமான", gu: "નોંધપાત્ર" },
         { en: "Pragmatic", bn: "বাস্তববাদী", hi: "व्यावहारिक", ur: "عملی", ar: "عملي", ja: "実用的な", ko: "실용적인", de: "Pragmatisch", fr: "Pragmatique", es: "Pragmático", pt: "Pragmático", af: "Pragmaties", mr: "व्यावहारिक", te: "ఆచరణాత్మక", ta: "நடைமுறை", gu: "વ્યવહારુ" },
-        { en: "Inevitable", bn: "অনিবার্য", hi: "अपरिहार्य", ur: "ناگزیر", ar: "حتمي", ja: "避けられない", ko: "불가피한", de: "Unvermeidlich", fr: "Inévitable", es: "Inevitable", pt: "Inevitável", af: "Onvermydelik", mr: "अपरिहार्य", te: "అనివార్యమైనది", ta: "தவிர்க்க முடியாதது", gu: "અનિવાર્ય" }
+        { en: "Inevitable", bn: "অনিবার্য", hi: "अपरिहार्य", ur: "ناگزیر", ar: "حتمي", ja: "避けられない", ko: "불가피한", de: "Unvermeidlich", fr: "Inévitable", es: "Inevitável", pt: "Inevitável", af: "Onvermydelik", mr: "अपरिहार्य", te: "అనివార్యమైనది", ta: "தவிர்க்க முடியாதது", gu: "અનિવાર્ય" }
     ];
 
     let currentLevel = parseInt(localStorage.getItem('userQuizLevel')) || 1;
     let currentQuizIndex = 0;
     let quizScore = 0;
     let selectedQuizLang = 'bn';
-    const totalMaxLevels = 1000; // Scaled up to 1000 Levels
+    const totalMaxLevels = 1000;
     const questionsPerLevel = 5;
 
     let wrongAnswerPool = JSON.parse(localStorage.getItem('userWrongAnswers')) || [];
     let currentLevelQuestions = [];
+
+    // Celebration Sound Effect using Web Audio API
+    function playVictorySound() {
+        try {
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+            notes.forEach((freq, index) => {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.value = freq;
+                gain.gain.setValueAtTime(0.15, audioCtx.currentTime + index * 0.12);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + index * 0.12 + 0.3);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(audioCtx.currentTime + index * 0.12);
+                osc.stop(audioCtx.currentTime + index * 0.12 + 0.3);
+            });
+        } catch (e) {
+            console.log("Audio not supported or blocked");
+        }
+    }
 
     function updateLangLabel() {
         const s = document.getElementById('srcLang');
@@ -1133,11 +1153,15 @@
             const hasNext = currentLevel < totalMaxLevels;
             const totalQ = currentLevelQuestions.length;
 
+            // Trigger Celebration Sound & Congratulation Banner
+            playVictorySound();
+
             box.innerHTML = `
                 <div style="padding: 10px 0;">
                     <span style="font-size: 42px;">🏆</span>
-                    <h3 style="color:var(--primary); margin: 8px 0; font-size:18px;">Arena Level ${currentLevel} Conquered!</h3>
-                    <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 12px;">
+                    <h3 style="color:var(--primary); margin: 6px 0; font-size:18px;">Congratulations!</h3>
+                    <p style="font-size: 15px; font-weight: 700; color:var(--text-main); margin-bottom: 4px;">Arena Level ${currentLevel} Conquered!</p>
+                    <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">
                         Round Score: <strong>${quizScore} / ${totalQ}</strong>
                     </p>
                     
