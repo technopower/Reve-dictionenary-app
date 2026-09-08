@@ -299,11 +299,11 @@
         .ai-pill-btn {
             flex: 1;
             background: var(--card-bg);
-            border: 1px solid var(--border-color);
+            border: 1.5px solid var(--border-color);
             color: var(--accent-purple);
-            padding: 8px 6px;
-            border-radius: 12px;
-            font-size: 11px;
+            padding: 12px 10px;
+            border-radius: 14px;
+            font-size: 13px;
             font-weight: 700;
             cursor: pointer;
             text-align: center;
@@ -400,6 +400,18 @@
 
         .tab-panel { display: none; }
         .tab-panel.active { display: flex; flex-direction: column; gap: 12px; }
+
+        /* Quiz UI Enhancements */
+        .quiz-header-status {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px dashed var(--border-color);
+        }
     </style>
 </head>
 <body>
@@ -454,7 +466,7 @@
                 </select>
             </div>
 
-            <button class="swap-circle-btn" onclick="swapLanguages()" title="Swap Bangla ⇄ English">⇄</button>
+            <button class="swap-circle-btn" onclick="swapLanguages()" title="Swap Languages">⇄</button>
 
             <div class="lang-btn">
                 <span id="targetLabel">English</span> ▾
@@ -561,16 +573,18 @@
         </div>
     </div>
 
-    <!-- MAIN VIEW 4: QUIZ -->
+    <!-- MAIN VIEW 4: DAILY QUIZ (DYNAMIC & FULLY FUNCTIONAL) -->
     <div id="quizView" class="workspace-content tab-panel">
-        <div class="translate-card" style="text-align:center;">
-            <h4 style="color:var(--primary); margin-bottom:10px;">Daily English Challenge</h4>
-            <p id="quizPrompt" style="font-size:14px; font-weight:700; margin-bottom:12px;">"Opportunity" এর অর্থ কী?</p>
-            <div style="display:flex; flex-direction:column; gap:8px;">
-                <button class="ai-pill-btn" onclick="checkQuizAns(true)">সুযোগ</button>
-                <button class="ai-pill-btn" onclick="checkQuizAns(false)">কঠিন কাজ</button>
-                <button class="ai-pill-btn" onclick="checkQuizAns(false)">দায়িত্ব</button>
+        <div class="translate-card" id="quizCardBox" style="text-align:center;">
+            <div class="quiz-header-status">
+                <span id="quizCounterText">প্রশ্ন ১ / ১০</span>
+                <span id="quizScoreText" style="color:var(--primary);">স্কোর: ০</span>
             </div>
+            
+            <h4 style="color:var(--primary); margin-bottom:6px; font-size:16px;">Daily English Challenge</h4>
+            <p id="quizPrompt" style="font-size:15px; font-weight:700; margin:12px 0 16px; color:var(--text-main);"></p>
+            
+            <div id="quizOptionsContainer" style="display:flex; flex-direction:column; gap:10px;"></div>
         </div>
     </div>
 
@@ -594,7 +608,7 @@
     let globalRecognition = null;
     let currentResult = "";
 
-    // Global Language Audio Code Mapping (16 Languages)
+    // Global Language Audio Code Mapping
     const langVoiceMap = {
         'bn': 'bn-BD',
         'en': 'en-US',
@@ -614,7 +628,7 @@
         'fr': 'fr-FR'
     };
 
-    // Banglish to English Mapping
+    // Banglish to English Dictionary
     const banglishMap = {
         "ami dhaka jabo": "I will go to Dhaka.",
         "ami dhaka jai": "I go to Dhaka.",
@@ -624,6 +638,23 @@
         "ami valo achi": "I am fine.",
         "ami kaj korchi": "I am working."
     };
+
+    /* Comprehensive Daily Quiz Questions Pool */
+    const dailyQuizPool = [
+        { q: '"Opportunity" শব্দের সঠিক বাংলা অর্থ কী?', options: ["সুযোগ", "কঠিন কাজ", "দায়িত্ব"], ans: 0 },
+        { q: 'She ___ to school every day. (সঠিক শব্দ বসান)', options: ["go", "goes", "gone"], ans: 1 },
+        { q: '"Resilient" শব্দের অর্থ কী?', options: ["সহনশীল / ঘুরে দাঁড়াতে সক্ষম", "দুর্বল", "অলস"], ans: 0 },
+        { q: '"I have ___ apple." শূন্যস্থানে কী বসবে?', options: ["a", "an", "the"], ans: 1 },
+        { q: '"Significant" শব্দের বাংলা অর্থ কী?', options: ["তুচ্ছ", "অল্প", "উল্লেখযোগ্য / গুরুত্বপূর্ণ"], ans: 2 },
+        { q: 'He is good ___ English. (সঠিক Preposition বসান)', options: ["in", "at", "on"], ans: 1 },
+        { q: '"Paramount" শব্দের অর্থ কী?', options: ["সর্বোচ্চ গুরুত্বপূর্ণ", "সহজ", "বিলম্বিত"], ans: 0 },
+        { q: 'They ___ playing football now.', options: ["is", "am", "are"], ans: 2 },
+        { q: '"Substantial" শব্দের অর্থ কী?', options: ["বিপুল / প্রচুর", "ক্ষুদ্র", "অপ্রয়োজনীয়"], ans: 0 },
+        { q: '"How are you doing?" এর সঠিক বাংলা কী?', options: ["আপনি কোথায় যাচ্ছেন?", "দিনকাল কেমন যাচ্ছে?", "আপনার নাম কী?"], ans: 1 }
+    ];
+
+    let currentQuizIndex = 0;
+    let quizScore = 0;
 
     function updateLangLabel() {
         const s = document.getElementById('srcLang');
@@ -637,6 +668,7 @@
         document.getElementById('srcLang').value = 'bn';
         document.getElementById('targetLang').value = 'en';
         updateLangLabel();
+        loadQuizQuestion();
     });
 
     function swapLanguages() {
@@ -647,9 +679,7 @@
         t.value = temp;
         updateLangLabel();
         
-        // যদি ইনপুটে কিছু থাকে এবং ফলাফল থাকে, তবে অদলবদল করে সাথে সাথে পুনরায় অনুবাদ করা
-        const currIn = document.getElementById('sourceInput').value.trim();
-        if (currentResult) {
+        if (currentResult && currentResult !== "অনুবাদে সমস্যা হয়েছে, ইন্টারনেট সংযোগ পরীক্ষা করুন।") {
             document.getElementById('sourceInput').value = currentResult;
             translateText();
         }
@@ -661,6 +691,9 @@
         
         document.getElementById(tabId + 'View').classList.add('active');
         event.target.classList.add('active');
+        if(tabId === 'quiz') {
+            loadQuizQuestion();
+        }
     }
 
     function showToast(msg) {
@@ -719,17 +752,21 @@
 
         const clean = input.toLowerCase().replace(/[।?!.]/g, '').trim();
 
-        // 1. Banglish to English Check
         if (banglishMap[clean] && target === 'en') {
             currentResult = banglishMap[clean];
             output.innerText = currentResult;
             return;
         }
 
-        // 2. Google Translate Multi-Language API
         try {
             const hasBangla = /[\u0980-\u09FF]/.test(input);
-            const sl = (src === 'bn' && !hasBangla) ? 'auto' : src;
+            let sl = src;
+            if (src === 'bn' && !hasBangla) {
+                sl = 'auto';
+            } else if (src === 'en' && hasBangla) {
+                sl = 'bn';
+            }
+
             const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sl}&tl=${target}&dt=t&q=${encodeURIComponent(input)}`;
             
             const res = await fetch(url);
@@ -761,18 +798,43 @@
         }
 
         let res = input;
+
         if (mode === 'grammar') {
-            res = res.replace(/\bi go dhaka\b/gi, "I go to Dhaka.")
-                     .replace(/\bi no this work\b/gi, "I know this work.")
-                     .replace(/\bhe go\b/gi, "He goes");
-            if (res === input) {
-                res = res.charAt(0).toUpperCase() + res.slice(1);
-                if (!res.endsWith('.')) res += '.';
+            res = res.replace(/\bi go ([a-zA-Z]+)\b/gi, "I go to $1")
+                     .replace(/\bi will go ([a-zA-Z]+)\b/gi, "I will go to $1")
+                     .replace(/\bi no this\b/gi, "I know this")
+                     .replace(/\bi no\b/gi, "I know")
+                     .replace(/\bhe go\b/gi, "He goes")
+                     .replace(/\bshe go\b/gi, "She goes")
+                     .replace(/\bthey goes\b/gi, "They go");
+
+            res = res.charAt(0).toUpperCase() + res.slice(1);
+            if (!res.endsWith('.') && !res.endsWith('?') && !res.endsWith('!')) {
+                res += '.';
             }
-        } else if (mode === 'pure') {
-            res = "I am traveling to Dhaka.";
-        } else if (mode === 'formal') {
-            res = "I intend to travel to Dhaka for professional engagements.";
+        } 
+        else if (mode === 'pure') {
+            res = input.replace(/\bI will go to\b/gi, "I will be traveling to")
+                       .replace(/\bI am going to\b/gi, "I am traveling to")
+                       .replace(/\bI go to\b/gi, "I travel to");
+
+            res = res.charAt(0).toUpperCase() + res.slice(1);
+            if (!res.endsWith('.') && !res.endsWith('?') && !res.endsWith('!')) {
+                res += '.';
+            }
+        } 
+        else if (mode === 'formal') {
+            if (/i will go to|i am going to/i.test(input)) {
+                res = input.replace(/\bI will go to\b|\bI am going to\b/gi, "I intend to travel to");
+            } else if (/i want to/i.test(input)) {
+                res = input.replace(/\bI want to\b/gi, "I would like to respectfully request to");
+            } else {
+                let cleanSentence = input.replace(/[.]/g, '');
+                res = `Please be advised that ${cleanSentence.charAt(0).toLowerCase() + cleanSentence.slice(1)}`;
+            }
+
+            res = res.charAt(0).toUpperCase() + res.slice(1);
+            if (!res.endsWith('.')) res += '.';
         }
 
         currentResult = res;
@@ -896,15 +958,70 @@
         }
     }
 
-    function checkQuizAns(isCorrect) {
-        if (isCorrect) {
+    /* DYNAMIC DAILY QUIZ ENGINE */
+    function loadQuizQuestion() {
+        const box = document.getElementById('quizCardBox');
+        if (currentQuizIndex >= dailyQuizPool.length) {
+            box.innerHTML = `
+                <div style="padding: 10px 0;">
+                    <span style="font-size: 40px;">🎉</span>
+                    <h3 style="color:var(--primary); margin: 8px 0;">চমৎকার! কুইজ সম্পন্ন হয়েছে</h3>
+                    <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 16px;">
+                        আপনার মোট স্কোর: <strong>${quizScore} / ${dailyQuizPool.length}</strong>
+                    </p>
+                    <button class="btn-main-action" style="width: 100%;" onclick="resetQuiz()">আবার শুরু করুন ➔</button>
+                </div>
+            `;
+            return;
+        }
+
+        const qData = dailyQuizPool[currentQuizIndex];
+        document.getElementById('quizCounterText').innerText = `প্রশ্ন ${currentQuizIndex + 1} / ${dailyQuizPool.length}`;
+        document.getElementById('quizScoreText').innerText = `স্কোর: ${quizScore}`;
+        document.getElementById('quizPrompt').innerText = qData.q;
+
+        const container = document.getElementById('quizOptionsContainer');
+        container.innerHTML = '';
+
+        qData.options.forEach((opt, idx) => {
+            const btn = document.createElement('button');
+            btn.className = 'ai-pill-btn';
+            btn.style.width = '100%';
+            btn.innerText = opt;
+            btn.onclick = () => submitQuizAnswer(idx, qData.ans);
+            container.appendChild(btn);
+        });
+    }
+
+    function submitQuizAnswer(selectedIdx, correctIdx) {
+        if (selectedIdx === correctIdx) {
             showToast("সঠিক উত্তর! +১০ পয়েন্ট 🪙");
             points += 10;
+            quizScore += 1;
             document.getElementById('rewardDisplay').innerText = points;
             localStorage.setItem('userPts', points);
         } else {
-            showToast("ভুল উত্তর, আবার চেষ্টা করুন");
+            showToast("ভুল উত্তর!");
         }
+
+        currentQuizIndex++;
+        setTimeout(loadQuizQuestion, 500);
+    }
+
+    function resetQuiz() {
+        currentQuizIndex = 0;
+        quizScore = 0;
+        const box = document.getElementById('quizCardBox');
+        box.innerHTML = `
+            <div class="quiz-header-status">
+                <span id="quizCounterText">প্রশ্ন ১ / ১০</span>
+                <span id="quizScoreText" style="color:var(--primary);">স্কোর: ০</span>
+            </div>
+            <h4 style="color:var(--primary); margin-bottom:6px; font-size:16px;">Daily English Challenge</h4>
+            <p id="quizPrompt" style="font-size:15px; font-weight:700; margin:12px 0 16px; color:var(--text-main);"></p>
+            <div id="quizOptionsContainer" style="display:flex; flex-direction:column; gap:10px;"></div>
+        `;
+        loadQuizQuestion();
     }
 </script>
 </body>
