@@ -566,12 +566,12 @@
 
     </div>
 
-    <!-- MAIN VIEW 2: IELTS AI -->
+    <!-- MAIN VIEW 2: IELTS AI (WITH REGULAR PREPARATION FEATURE) -->
     <div id="ieltsView" class="workspace-content tab-panel">
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
             <div class="translate-card" style="text-align:center; cursor:pointer;" onclick="renderIelts('speaking')">
                 <h4 style="color:var(--primary); font-size:14px;">🗣️ Speaking</h4>
-                <p style="font-size:11px; color:var(--text-muted); margin-top:4px;">Cue card & sample answer</p>
+                <p style="font-size:11px; color:var(--text-muted); margin-top:4px;">Cue card & sample</p>
             </div>
             <div class="translate-card" style="text-align:center; cursor:pointer;" onclick="renderIelts('writing')">
                 <h4 style="color:var(--primary); font-size:14px;">✍️ Writing</h4>
@@ -579,14 +579,21 @@
             </div>
             <div class="translate-card" style="text-align:center; cursor:pointer;" onclick="renderIelts('vocab')">
                 <h4 style="color:var(--primary); font-size:14px;">📚 Vocab</h4>
-                <p style="font-size:11px; color:var(--text-muted); margin-top:4px;">Band 8+ Essential Words</p>
+                <p style="font-size:11px; color:var(--text-muted); margin-top:4px;">Band 8+ Words</p>
             </div>
             <div class="translate-card" style="text-align:center; cursor:pointer;" onclick="renderIelts('calc')">
                 <h4 style="color:var(--primary); font-size:14px;">🎯 Calculator</h4>
-                <p style="font-size:11px; color:var(--text-muted); margin-top:4px;">Calculate Band Score</p>
+                <p style="font-size:11px; color:var(--text-muted); margin-top:4px;">Calculate Band</p>
             </div>
         </div>
-        <div id="ieltsResultBox" class="result-panel" style="margin-top:10px;">
+
+        <!-- NEW: Regular Preparation Button -->
+        <div class="translate-card" style="text-align:center; background:var(--primary-light); cursor:pointer; border:1px solid var(--primary);" onclick="renderIelts('regPrep')">
+            <h4 style="color:var(--primary); font-size:15px;">📅 Regular Daily Prep Plan</h4>
+            <p style="font-size:11px; color:var(--text-muted); margin-top:4px;">British Council standard routine & tips</p>
+        </div>
+
+        <div id="ieltsResultBox" class="result-panel" style="margin-top:4px;">
             <p style="color:var(--text-muted); font-size:12px; text-align:center;">যেকোনো একটি IELTS মডিউল বেছে নিন</p>
         </div>
     </div>
@@ -794,11 +801,11 @@
         },
         'gu': {
             trans: "🌐 ભાષાંતરકાર", ielts: "🎯 આઇઇએલટીએસ", teacher: "👨‍🏫 શિક્ષક", quiz: "ક્વિઝ",
-            translateBtn: "ભાષાંતર કરો ➔", voiceBtn: "🎙️ ગૂગල් વૉઇસ",
+            translateBtn: "ભાષાંતર કરો ➔", voiceBtn: "🎙️ ગૂગલ વૉઇસ",
             grammar: "✨ વ્યાકરણ સુધારો", pure: "🇬🇧 શુદ્ધ અંગ્રેજી", formal: "💼 પ્રોફેશનલ",
             placeholder: "લખો...", resultPlaceholder: "અહીં ભાષાંતર દેખાશે...",
             aiVerified: "AI ચકાસાયેલ આઉટપુટ",
-            quizLang: "ક્વિઝ ભાષા:", reviewText: "અગાઉની ભૂલોની સમીક્ષા!"
+            quizLang: "ક્विઝ ભાષા:", reviewText: "અગાઉની ભૂલોની સમીક્ષા!"
         }
     };
 
@@ -845,7 +852,7 @@
         { en: "Paramount", bn: "সর্বোচ্চ গুরুত্বপূর্ণ", hi: "सर्वोपरि", ur: "سب سے اہم", ar: "أسمى", ja: "最重要", ko: "가장 중요한", de: "Überragend", fr: "Primordial", es: "Primordial", pt: "Primordial", af: "Uiters belangrik", mr: "सर्वोच्च", te: "అత్యున్నతమైనది", ta: "முதன்மையானது", gu: "સર્વોચ્ચ" },
         { en: "Substantial", bn: "বিপুল / প্রচুর", hi: "काफी", ur: "کافی", ar: "جوهري", ja: "実質的な", ko: "상당한", de: "Erheblich", fr: "Substantiel", es: "Sustancial", pt: "Substancial", af: "Aansienlik", mr: "भरपूर", te: "గణనీయమైన", ta: "கணிசமான", gu: "નોંધપાત્ર" },
         { en: "Pragmatic", bn: "বাস্তববাদী", hi: "व्यावहारिक", ur: "عملی", ar: "عملي", ja: "実用的な", ko: "실용적인", de: "Pragmatisch", fr: "Pragmatique", es: "Pragmático", pt: "Pragmático", af: "Pragmaties", mr: "व्यावहारिक", te: "ఆచరణాత్మక", ta: "நடைமுறை", gu: "વ્યવહારુ" },
-        { en: "Inevitable", bn: "অনিবার্য", hi: "अपरिहार्य", ur: "ناگزیر", ar: "حتمي", ja: "避けられない", ko: "불가피한", de: "Unvermeidlich", fr: "Inévitable", es: "Inevitável", pt: "Inevitável", af: "Onvermydelik", mr: "अपरिहार्य", te: "అనివార్యమైనది", ta: "தவிர்க்க முடியாதது", gu: "અનિવાર્ય" }
+        { en: "Inevitable", bn: "অনিবার্য", hi: "अपरिहार्य", ur: "নাگزیر", ar: "حتمي", ja: "避けられない", ko: "불가피한", de: "Unvermeidlich", fr: "Inévitable", es: "Inevitável", pt: "Inevitável", af: "Onvermydelik", mr: "अपरिहार्य", te: "అనివార్యమైనది", ta: "தவிர்க்க முடியாதது", gu: "અનિવાર્ય" }
     ];
 
     let currentLevel = parseInt(localStorage.getItem('userQuizLevel')) || 1;
@@ -1158,7 +1165,7 @@
         }).catch(() => showToast("ছবি স্ক্যান ব্যর্থ হয়েছে"));
     }
 
-    /* IELTS Interactive Advanced Render with Live Calculator */
+    /* IELTS Interactive Advanced Render with Regular Prep Plan */
     function renderIelts(type) {
         const box = document.getElementById('ieltsResultBox');
         if (type === 'speaking') {
@@ -1183,6 +1190,16 @@
                         Estimated Band: Listening: 8.0 | Reading: 7.0
                     </div>
                 </div>
+            `;
+        } else if (type === 'regPrep') {
+            box.innerHTML = `
+                <strong>📅 British Council Standard Prep Plan:</strong>
+                <p style="font-size:12px; margin-top:6px; line-height:1.5;">
+                    • <strong>Listening (1 Hour):</strong> Practice official Cambridge tests daily.<br>
+                    • <strong>Reading (1 Hour):</strong> Solve academic passages within 60 mins.<br>
+                    • <strong>Writing (1 Hour):</strong> Focus on Task 1 & Task 2 formal templates.<br>
+                    • <strong>Speaking (30 Mins):</strong> Record voice and check fluency.
+                </p>
             `;
         }
     }
