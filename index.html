@@ -492,7 +492,7 @@
 
         <!-- Input Source Card -->
         <div class="translate-card">
-            <textarea id="sourceInput" class="card-textarea" placeholder="শব্দ বা বাক্য লিখুন (যেমন: ami dhaka jabo, I go thiland বা Where do you live)..."></textarea>
+            <textarea id="sourceInput" class="card-textarea" placeholder="শব্দ বা বাক্য লিখুন (যেমন: ami dhaka jabo বা Where do you live)..."></textarea>
             
             <div class="card-bottom-actions">
                 <span class="char-count" id="charCount">0 / 5000</span>
@@ -572,15 +572,15 @@
         </div>
     </div>
 
-    <!-- MAIN VIEW 4: DAILY QUIZ -->
+    <!-- MAIN VIEW 4: DAILY QUIZ (MULTI-LEVEL UNLOCK SYSTEM) -->
     <div id="quizView" class="workspace-content tab-panel">
         <div class="translate-card" id="quizCardBox" style="text-align:center;">
             <div class="quiz-header-status">
-                <span id="quizCounterText">প্রশ্ন ১ / ১০</span>
+                <span id="quizCounterText">🔥 Level 1 • প্রশ্ন ১ / ৫</span>
                 <span id="quizScoreText" style="color:var(--primary);">স্কোর: ০</span>
             </div>
             
-            <h4 style="color:var(--primary); margin-bottom:6px; font-size:16px;">Daily English Challenge</h4>
+            <h4 id="quizLevelTitle" style="color:var(--primary); margin-bottom:6px; font-size:16px;">Level 1: Essential English</h4>
             <p id="quizPrompt" style="font-size:15px; font-weight:700; margin:12px 0 16px; color:var(--text-main);"></p>
             
             <div id="quizOptionsContainer" style="display:flex; flex-direction:column; gap:10px;"></div>
@@ -608,22 +608,10 @@
     let currentResult = "";
 
     const langVoiceMap = {
-        'bn': 'bn-BD',
-        'en': 'en-US',
-        'de': 'de-DE',
-        'pt': 'pt-PT',
-        'af': 'af-ZA',
-        'mr': 'mr-IN',
-        'te': 'te-IN',
-        'ta': 'ta-IN',
-        'gu': 'gu-IN',
-        'ur': 'ur-PK',
-        'ja': 'ja-JP',
-        'ko': 'ko-KR',
-        'hi': 'hi-IN',
-        'ar': 'ar-SA',
-        'es': 'es-ES',
-        'fr': 'fr-FR'
+        'bn': 'bn-BD', 'en': 'en-US', 'de': 'de-DE', 'pt': 'pt-PT',
+        'af': 'af-ZA', 'mr': 'mr-IN', 'te': 'te-IN', 'ta': 'ta-IN',
+        'gu': 'gu-IN', 'ur': 'ur-PK', 'ja': 'ja-JP', 'ko': 'ko-KR',
+        'hi': 'hi-IN', 'ar': 'ar-SA', 'es': 'es-ES', 'fr': 'fr-FR'
     };
 
     const banglishMap = {
@@ -636,19 +624,55 @@
         "ami kaj korchi": "I am working."
     };
 
-    const dailyQuizPool = [
-        { q: '"Opportunity" শব্দের সঠিক বাংলা অর্থ কী?', options: ["সুযোগ", "কঠিন কাজ", "দায়িত্ব"], ans: 0 },
-        { q: 'She ___ to school every day. (সঠিক শব্দ বসান)', options: ["go", "goes", "gone"], ans: 1 },
-        { q: '"Resilient" শব্দের অর্থ কী?', options: ["সহনশীল / ঘুরে দাঁড়াতে সক্ষম", "দুর্বল", "অলস"], ans: 0 },
-        { q: '"I have ___ apple." শূন্যস্থানে কী বসবে?', options: ["a", "an", "the"], ans: 1 },
-        { q: '"Significant" শব্দের বাংলা অর্থ কী?', options: ["তুচ্ছ", "অল্প", "উল্লেখযোগ্য / গুরুত্বপূর্ণ"], ans: 2 },
-        { q: 'He is good ___ English. (সঠিক Preposition বসান)', options: ["in", "at", "on"], ans: 1 },
-        { q: '"Paramount" শব্দের অর্থ কী?', options: ["সর্বোচ্চ গুরুত্বপূর্ণ", "সহজ", "বিলম্বিত"], ans: 0 },
-        { q: 'They ___ playing football now.', options: ["is", "am", "are"], ans: 2 },
-        { q: '"Substantial" শব্দের অর্থ কী?', options: ["বিপুল / প্রচুর", "ক্ষুদ্র", "অপ্রয়োজনীয়"], ans: 0 },
-        { q: '"How are you doing?" এর সঠিক বাংলা কী?', options: ["আপনি কোথায় যাচ্ছেন?", "দিনকাল কেমন যাচ্ছে?", "আপনার নাম কী?"], ans: 1 }
+    /* MULTI-LEVEL STRUCTURED QUIZ REPOSITORY */
+    const quizLevels = [
+        {
+            level: 1,
+            title: "Level 1: Essential Vocabulary (সহজ শব্দার্থ)",
+            questions: [
+                { q: '"Opportunity" শব্দের সঠিক বাংলা অর্থ কী?', options: ["সুযোগ", "কঠিন কাজ", "দায়িত্ব"], ans: 0 },
+                { q: '"Essential" শব্দের অর্থ কী?', options: ["অপ্রয়োজনীয়", "অত্যাবশ্যকীয় / জরুরি", "সহজ"], ans: 1 },
+                { q: '"Improve" শব্দের অর্থ কী?', options: ["উন্নতি করা", "নষ্ট করা", "ভুলে যাওয়া"], ans: 0 },
+                { q: '"Difficult" শব্দের অর্থ কী?', options: ["সহজ", "কঠিন", "সুন্দর"], ans: 1 },
+                { q: '"Comfortable" শব্দের অর্থ কী?', options: ["আরামদায়ক", "কষ্টকর", "ব্যস্ত"], ans: 0 }
+            ]
+        },
+        {
+            level: 2,
+            title: "Level 2: English Grammar & Tense (গ্রামার ও কাল)",
+            questions: [
+                { q: 'She ___ to school every day. (সঠিক শব্দ বসান)', options: ["go", "goes", "gone"], ans: 1 },
+                { q: '"I have ___ apple." শূন্যস্থানে কী বসবে?', options: ["a", "an", "the"], ans: 1 },
+                { q: 'He is good ___ English. (সঠিক Preposition বসান)', options: ["in", "at", "on"], ans: 1 },
+                { q: 'They ___ playing football now.', options: ["is", "am", "are"], ans: 2 },
+                { q: 'I ___ to London yesterday.', options: ["go", "went", "gone"], ans: 1 }
+            ]
+        },
+        {
+            level: 3,
+            title: "Level 3: Daily Conversation (দৈনন্দিন কথোপকথন)",
+            questions: [
+                { q: '"How are you doing?" এর সঠিক বাংলা কী?', options: ["দিনকাল কেমন যাচ্ছে?", "আপনি কোথায় যাচ্ছেন?", "আপনার নাম কী?"], ans: 0 },
+                { q: '"Could you help me?" দ্বারা কী বোঝায়?', options: ["আমাকে সাহায্য করতে পারেন?", "আমি যেতে পারি?", "আপনি কে?"], ans: 0 },
+                { q: '"Nice to meet you" কখন বলতে হয়?', options: ["বিদায় নেওয়ার সময়", "কারো সাথে পরিচিত হওয়ার সময়", "রাগ প্রকাশে"], ans: 1 },
+                { q: '"Take care" এর অর্থ কী?', options: ["ভালো থেকো / নিজের যত্ন নিও", "দ্রুত আসো", "কাজ করো"], ans: 0 },
+                { q: '"Excuse me" কখন ব্যবহার করবেন?', options: ["কারো দৃষ্টি আকর্ষণ বা অনুমতি চাইতে", "ঘুমানোর সময়", "ধন্যবাদ দিতে"], ans: 0 }
+            ]
+        },
+        {
+            level: 4,
+            title: "Level 4: IELTS & Advanced Vocabulary (উন্নত শব্দভাণ্ডার)",
+            questions: [
+                { q: '"Resilient" শব্দের অর্থ কী?', options: ["সহনশীল / দ্রুত ঘুরে দাঁড়াতে সক্ষম", "দুর্বল", "অলস"], ans: 0 },
+                { q: '"Paramount" শব্দের অর্থ কী?', options: ["সর্বোচ্চ গুরুত্বপূর্ণ", "সহজ", "বিলম্বিত"], ans: 0 },
+                { q: '"Substantial" শব্দের অর্থ কী?', options: ["বিপুল / প্রচুর", "ক্ষুদ্র", "সাময়িক"], ans: 0 },
+                { q: '"Pragmatic" শব্দের অর্থ কী?', options: ["বাস্তববাদী / প্র্যাকটিক্যাল", "কল্পনাপ্রবণ", "অসহায়"], ans: 0 },
+                { q: '"Inevitable" শব্দের অর্থ কী?', options: ["অনিবার্য (যা ঘটবেই)", "সম্ভব নয়", "ভুল"], ans: 0 }
+            ]
+        }
     ];
 
+    let currentLevelIndex = 0;
     let currentQuizIndex = 0;
     let quizScore = 0;
 
@@ -783,7 +807,7 @@
         }
     }
 
-    /* AI MASTER QUICK FIXER (FULLY DYNAMIC, ACCURATE SPELLING & GRAMMAR ENGINE) */
+    /* AI Master Quick Enhancements */
     async function runAiMaster(mode) {
         const input = document.getElementById('sourceInput').value.trim();
         const output = document.getElementById('targetOutput');
@@ -795,7 +819,6 @@
 
         output.innerHTML = '<span style="color:var(--accent-purple);">✨ AI প্রসেস করছে...</span>';
 
-        // 1. স্পেলিং ও সাধারণ ভুল সংশোধন (Real-time normalization dictionary)
         let normalized = input;
         const spellCorrection = {
             "thiland": "Thailand",
@@ -814,15 +837,12 @@
             normalized = normalized.replace(reg, spellCorrection[wrong]);
         }
 
-        // 2. Google GTX ডাবল-পাস ইঞ্জিন (ভুল ইংরেজি দিলে প্রথমে তার অর্থ বের করে পিওর ইংরেজিতে রূপান্তর)
         try {
-            // স্টেপ ১: ইনপুট যে ভাষাতেই হোক, তার নিখুঁত মিনিং বের করা
             const fetchUrl1 = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=bn&dt=t&q=${encodeURIComponent(normalized)}`;
             const res1 = await fetch(fetchUrl1);
             const data1 = await res1.json();
             let bengaliMeaning = data1[0].map(item => item[0]).join('');
 
-            // স্টেপ ২: বাংলা অর্থ থেকে স্ট্যান্ডার্ড ইংরেজি জেনারেট করা
             const fetchUrl2 = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=bn&tl=en&dt=t&q=${encodeURIComponent(bengaliMeaning)}`;
             const res2 = await fetch(fetchUrl2);
             const data2 = await res2.json();
@@ -830,24 +850,19 @@
 
             let finalRes = perfectEnglish;
 
-            // ৩. সিলেক্টেড মোড অনুযায়ী ট্রান্সফর্মেশন
             if (mode === 'grammar') {
-                // গ্রামাটিক্যালি কারেক্ট বাক্য
                 finalRes = perfectEnglish.replace(/\bI go to\b/i, "I am going to");
             } 
             else if (mode === 'pure') {
-                // আধুনিক ও আকর্ষণীয় ট্রাভেল বা সাধারণ এক্সপ্রেশন
                 finalRes = perfectEnglish.replace(/\bI go to\b|\bI will go to\b|\bI am going to\b/i, "I will be traveling to");
             } 
             else if (mode === 'formal') {
-                // অফিসিয়াল ও প্রফেশনাল এক্সপ্রেশন
                 finalRes = perfectEnglish.replace(/\bI go to\b|\bI will go to\b|\bI am going to\b/i, "I intend to travel to");
                 if (!finalRes.includes("for official purposes")) {
                     finalRes = finalRes.replace(/\.$/, "") + " for official purposes.";
                 }
             }
 
-            // ক্যাপিটালাইজেশন ও দাঁড়ি/ফুলস্টপ নিশ্চিত করা
             finalRes = finalRes.charAt(0).toUpperCase() + finalRes.slice(1);
             if (!finalRes.endsWith('.') && !finalRes.endsWith('?') && !finalRes.endsWith('!')) {
                 finalRes += '.';
@@ -859,7 +874,6 @@
             output.style.textAlign = 'left';
 
         } catch (err) {
-            // অফলাইন/নেটওয়ার্ক ফলব্যাক লজিক
             let fallback = normalized.replace(/\bi go ([a-zA-Z]+)\b/gi, "I am going to $1.");
             output.innerText = fallback.charAt(0).toUpperCase() + fallback.slice(1);
             currentResult = output.innerText;
@@ -981,26 +995,43 @@
         }
     }
 
-    /* DYNAMIC DAILY QUIZ ENGINE */
+    /* ADVANCED MULTI-LEVEL QUIZ CONTROLLER */
     function loadQuizQuestion() {
         const box = document.getElementById('quizCardBox');
-        if (currentQuizIndex >= dailyQuizPool.length) {
+        const activeLevel = quizLevels[currentLevelIndex];
+        const questions = activeLevel.questions;
+
+        // যখন একটি লেভেলের সবগুলো প্রশ্ন শেষ হবে
+        if (currentQuizIndex >= questions.length) {
+            const isLastLevel = (currentLevelIndex >= quizLevels.length - 1);
+            
             box.innerHTML = `
                 <div style="padding: 10px 0;">
-                    <span style="font-size: 40px;">🎉</span>
-                    <h3 style="color:var(--primary); margin: 8px 0;">চমৎকার! কুইজ সম্পন্ন হয়েছে</h3>
+                    <span style="font-size: 42px;">🎉</span>
+                    <h3 style="color:var(--primary); margin: 8px 0; font-size:18px;">চমৎকার! ${activeLevel.title.split(':')[0]} সম্পন্ন হয়েছে</h3>
                     <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 16px;">
-                        আপনার মোট স্কোর: <strong>${quizScore} / ${dailyQuizPool.length}</strong>
+                        আপনার স্কোর: <strong>${quizScore} / ${questions.length}</strong>
                     </p>
-                    <button class="btn-main-action" style="width: 100%;" onclick="resetQuiz()">আবার শুরু করুন ➔</button>
+                    
+                    ${!isLastLevel ? `
+                        <button class="btn-main-action" style="width: 100%; margin-bottom: 8px;" onclick="goToNextLevel()">
+                            পরবর্তী লেভেল শুরু করুন (Level ${currentLevelIndex + 2} ➔)
+                        </button>
+                    ` : `
+                        <p style="color:#0f9d58; font-weight:800; margin-bottom:12px;">🏆 অভিনন্দন! আপনি সকল লেভেল সম্পূর্ণ করেছেন!</p>
+                        <button class="btn-main-action" style="width: 100%;" onclick="restartAllLevels()">
+                            শুরু থেকে আবার খেলুন ➔
+                        </button>
+                    `}
                 </div>
             `;
             return;
         }
 
-        const qData = dailyQuizPool[currentQuizIndex];
-        document.getElementById('quizCounterText').innerText = `প্রশ্ন ${currentQuizIndex + 1} / ${dailyQuizPool.length}`;
+        const qData = questions[currentQuizIndex];
+        document.getElementById('quizCounterText').innerText = `🔥 Level ${activeLevel.level} • প্রশ্ন ${currentQuizIndex + 1} / ${questions.length}`;
         document.getElementById('quizScoreText').innerText = `স্কোর: ${quizScore}`;
+        document.getElementById('quizLevelTitle').innerText = activeLevel.title;
         document.getElementById('quizPrompt').innerText = qData.q;
 
         const container = document.getElementById('quizOptionsContainer');
@@ -1028,23 +1059,43 @@
         }
 
         currentQuizIndex++;
-        setTimeout(loadQuizQuestion, 500);
+        setTimeout(loadQuizQuestion, 450);
     }
 
-    function resetQuiz() {
+    function goToNextLevel() {
+        currentLevelIndex++;
         currentQuizIndex = 0;
         quizScore = 0;
+        
+        // লেভেল সম্পন্ন বোনাস পয়েন্ট
+        points += 25;
+        document.getElementById('rewardDisplay').innerText = points;
+        localStorage.setItem('userPts', points);
+        showToast("লেভেল আনলক বোনাস: +২৫ পয়েন্ট! 🎁");
+
+        resetQuizBoxUI();
+        loadQuizQuestion();
+    }
+
+    function restartAllLevels() {
+        currentLevelIndex = 0;
+        currentQuizIndex = 0;
+        quizScore = 0;
+        resetQuizBoxUI();
+        loadQuizQuestion();
+    }
+
+    function resetQuizBoxUI() {
         const box = document.getElementById('quizCardBox');
         box.innerHTML = `
             <div class="quiz-header-status">
-                <span id="quizCounterText">প্রশ্ন ১ / ১০</span>
+                <span id="quizCounterText">🔥 Level 1 • প্রশ্ন ১ / ৫</span>
                 <span id="quizScoreText" style="color:var(--primary);">স্কোর: ০</span>
             </div>
-            <h4 style="color:var(--primary); margin-bottom:6px; font-size:16px;">Daily English Challenge</h4>
+            <h4 id="quizLevelTitle" style="color:var(--primary); margin-bottom:6px; font-size:16px;">Daily English Challenge</h4>
             <p id="quizPrompt" style="font-size:15px; font-weight:700; margin:12px 0 16px; color:var(--text-main);"></p>
             <div id="quizOptionsContainer" style="display:flex; flex-direction:column; gap:10px;"></div>
         `;
-        loadQuizQuestion();
     }
 </script>
 </body>
