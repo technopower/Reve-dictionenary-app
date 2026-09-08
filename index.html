@@ -284,6 +284,16 @@
             font-weight: normal;
         }
 
+        /* Animated Text Effect Classes */
+        .text-glow-effect {
+            animation: textGlowFade 0.5s ease-out forwards;
+        }
+        @keyframes textGlowFade {
+            0% { opacity: 0; transform: translateY(6px); text-shadow: 0 0 0px transparent; }
+            50% { text-shadow: 0 0 15px rgba(96, 165, 250, 0.6); }
+            100% { opacity: 1; transform: translateY(0); text-shadow: 0 0 0px transparent; }
+        }
+
         .ai-enhancer-bar {
             background: rgba(168, 85, 247, 0.1);
             border: 1px dashed rgba(168, 85, 247, 0.4);
@@ -722,7 +732,7 @@
         { en: "Important", bn: "গুরুত্বপূর্ণ", hi: "महत्वपूर्ण", ur: "اہم", ar: "مهم", ja: "重要", ko: "중요한", de: "Wichtig", fr: "Important", es: "Importante", pt: "Importante", af: "Belangrik", mr: "महत्त्वाचे", te: "ముఖ్యమైనది", ta: "முக்கியமானது", gu: "મહત્વપૂર્ણ" },
         { en: "Responsible", bn: "দায়িত্বশীল", hi: "जिम्मेदार", ur: "ذمہ دار", ar: "مسؤول", ja: "責任がある", ko: "책임 있는", de: "Verantwortlich", fr: "Responsable", es: "Responsable", pt: "Responsável", af: "Verantwoordelik", mr: "जबाबदार", te: "బాధ్యతాయుతమైన", ta: "பொறுப்புள்ள", gu: "જવાબદાર" },
         { en: "Experience", bn: "অভিজ্ঞতা", hi: "अनुभव", ur: "تجربہ", ar: "خبرة", ja: "経験", ko: "경험", de: "Erfahrung", fr: "Expérience", es: "Experiencia", pt: "Experiência", af: "Ervaring", mr: "अनुभव", te: "అనుభవం", ta: "அனுபவம்", gu: "અનુભવ" },
-        { en: "Resilient", bn: "সহনশীল", hi: "लचीला", ur: "لچکدار", ar: "مرن", ja: "回復力がある", ko: "회복력 있는", de: "Widerstandsfähig", fr: "Résistant", es: "Resiliente", pt: "Resiliente", af: "Veerkragtig", mr: "लवचिक", te: "స్థితిస్థాపకత", ta: "மீள்தன்மை", gu: "સ્થિતિસ્થાપક" },
+        { en: "Resilient", bn: "সহনশীল", hi: "लचीला", ur: "لچکدار", ar: "مرن", ja: "回復力がある", ko: "회복력 있는", de: "Widerstandsfähig", fr: "Résistant", es: "Resiliente", pt: "Resiliente", af: "Veerkragtig", mr: "लवचिक", te: "స్థితిస్థాపకత", ta: "மீள்தன்மை", gu: "સ્થિતિસ્થાપক" },
         { en: "Paramount", bn: "সর্বোচ্চ গুরুত্বপূর্ণ", hi: "सर्वोपरि", ur: "سب سے اہم", ar: "أسمى", ja: "最重要", ko: "가장 중요한", de: "Überragend", fr: "Primordial", es: "Primordial", pt: "Primordial", af: "Uiters belangrik", mr: "सर्वोच्च", te: "అత్యున్నతమైనది", ta: "முதன்மையானது", gu: "સર્વોચ્ચ" },
         { en: "Substantial", bn: "বিপুল / প্রচুর", hi: "काफी", ur: "کافی", ar: "جوهري", ja: "実質的な", ko: "상당한", de: "Erheblich", fr: "Substantiel", es: "Sustancial", pt: "Substancial", af: "Aansienlik", mr: "भरपूर", te: "గణనీయమైన", ta: "கணிசமான", gu: "નોંધપાત્ર" },
         { en: "Pragmatic", bn: "বাস্তববাদী", hi: "व्यावहारिक", ur: "عملی", ar: "عملي", ja: "実用的な", ko: "실용적인", de: "Pragmatisch", fr: "Pragmatique", es: "Pragmático", pt: "Pragmático", af: "Pragmaties", mr: "व्यावहारिक", te: "ఆచరణాత్మక", ta: "நடைமுறை", gu: "વ્યવહારુ" },
@@ -738,6 +748,23 @@
 
     let wrongAnswerPool = JSON.parse(localStorage.getItem('userWrongAnswers')) || [];
     let currentLevelQuestions = [];
+
+    function playTranslateSound() {
+        try {
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(440, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.15);
+            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.2);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.2);
+        } catch (e) {}
+    }
 
     function playVictorySound() {
         try {
@@ -865,6 +892,8 @@
         if (banglishMap[clean] && target === 'en') {
             currentResult = banglishMap[clean];
             output.innerText = currentResult;
+            output.className = "result-text-area text-glow-effect";
+            playTranslateSound();
             return;
         }
 
@@ -875,6 +904,8 @@
             if (data && data[0]) {
                 currentResult = data[0].map(item => item[0]).join('');
                 output.innerText = currentResult;
+                output.className = "result-text-area text-glow-effect";
+                playTranslateSound();
                 
                 if (target === 'ur' || target === 'ar') {
                     output.style.direction = 'rtl';
@@ -913,8 +944,10 @@
             
             currentResult = refined;
             output.innerText = currentResult;
+            output.className = "result-text-area text-glow-effect";
             output.style.direction = 'ltr';
             output.style.textAlign = 'left';
+            playTranslateSound();
         }, 300);
     }
 
