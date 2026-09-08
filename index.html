@@ -411,6 +411,41 @@
             padding-bottom: 8px;
             border-bottom: 1px dashed var(--border-color);
         }
+
+        .quiz-lang-selector-box {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--bg-body);
+            padding: 8px 12px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            border: 1px solid var(--border-color);
+        }
+        .quiz-lang-select {
+            background: none;
+            border: none;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--primary);
+            outline: none;
+            cursor: pointer;
+        }
+
+        .wrong-review-banner {
+            background: #fef2f2;
+            border: 1px solid #fca5a5;
+            color: #b91c1c;
+            padding: 10px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
     </style>
 </head>
 <body>
@@ -441,7 +476,6 @@
     <!-- MAIN VIEW 1: TRANSLATOR -->
     <div id="transView" class="workspace-content tab-panel active">
         
-        <!-- Language Direction Bar (Default: Bangla to English) -->
         <div class="lang-switch-container">
             <div class="lang-btn">
                 <span id="srcLabel">Bangla</span> ▾
@@ -490,9 +524,8 @@
             </div>
         </div>
 
-        <!-- Input Source Card -->
         <div class="translate-card">
-            <textarea id="sourceInput" class="card-textarea" placeholder="শব্দ বা বাক্য লিখুন (যেমন: ami dhaka jabo বা Where do you live)..."></textarea>
+            <textarea id="sourceInput" class="card-textarea" placeholder="শব্দ বা বাক্য লিখুন..."></textarea>
             
             <div class="card-bottom-actions">
                 <span class="char-count" id="charCount">0 / 5000</span>
@@ -505,20 +538,17 @@
             </div>
         </div>
 
-        <!-- AI Master Quick Enhancement Chips -->
         <div class="ai-enhancer-bar">
             <button class="ai-pill-btn" onclick="runAiMaster('grammar')">✨ Fix Grammar</button>
             <button class="ai-pill-btn" onclick="runAiMaster('pure')">🇬🇧 Pure English</button>
             <button class="ai-pill-btn" onclick="runAiMaster('formal')">💼 Make Pro</button>
         </div>
 
-        <!-- Action Trigger Button -->
         <div class="action-cta-row">
             <button class="btn-main-action" style="background:#0f9d58;" onclick="openVoiceModal()">🎙️ Google Voice</button>
             <button class="btn-main-action" onclick="translateText()">অনুবাদ করুন ➔</button>
         </div>
 
-        <!-- Translation Result Card -->
         <div class="result-panel">
             <div id="targetOutput" class="result-text-area">
                 <span class="result-placeholder">ফলাফল এখানে দৃশ্যমান হবে...</span>
@@ -572,16 +602,43 @@
         </div>
     </div>
 
-    <!-- MAIN VIEW 4: DAILY QUIZ (MULTI-LEVEL UNLOCK SYSTEM) -->
+    <!-- MAIN VIEW 4: DAILY QUIZ (WITH MISTAKE CORRECTION & 100 LEVELS) -->
     <div id="quizView" class="workspace-content tab-panel">
         <div class="translate-card" id="quizCardBox" style="text-align:center;">
+            
+            <div class="quiz-lang-selector-box">
+                <span style="font-size:11px; font-weight:700; color:var(--text-muted);">কুইজ ভাষা:</span>
+                <select id="quizLangSelect" class="quiz-lang-select" onchange="changeQuizLanguage()">
+                    <option value="bn" selected>Bangla (বাংলা)</option>
+                    <option value="en">English (ইংরেজি)</option>
+                    <option value="hi">Hindi (हिन्दी)</option>
+                    <option value="ur">Urdu (اردو)</option>
+                    <option value="ar">Arabic (العربية)</option>
+                    <option value="ja">Japanese (日本語)</option>
+                    <option value="ko">Korean (한국어)</option>
+                    <option value="de">German (Deutsch)</option>
+                    <option value="pt">Portuguese (Português)</option>
+                    <option value="af">Afrikaans (আফ্রিকান)</option>
+                    <option value="mr">Marathi (मराठी)</option>
+                    <option value="te">Telugu (తెలుగు)</option>
+                    <option value="ta">Tamil (தமிழ்)</option>
+                    <option value="gu">Gujarati (ગુજરાતી)</option>
+                    <option value="es">Spanish (Español)</option>
+                    <option value="fr">French (Français)</option>
+                </select>
+            </div>
+
+            <div id="wrongReviewBanner" class="wrong-review-banner" style="display: none;">
+                ⚠️ <span>পূর্বের ভুল প্রশ্ন সংশোধন পর্ব চলছে!</span>
+            </div>
+
             <div class="quiz-header-status">
                 <span id="quizCounterText">🔥 Level 1 • প্রশ্ন ১ / ৫</span>
                 <span id="quizScoreText" style="color:var(--primary);">স্কোর: ০</span>
             </div>
             
-            <h4 id="quizLevelTitle" style="color:var(--primary); margin-bottom:6px; font-size:16px;">Level 1: Essential English</h4>
-            <p id="quizPrompt" style="font-size:15px; font-weight:700; margin:12px 0 16px; color:var(--text-main);"></p>
+            <h4 id="quizLevelTitle" style="color:var(--primary); margin-bottom:6px; font-size:15px;">Level 1: Essential Learning</h4>
+            <p id="quizPrompt" style="font-size:15px; font-weight:700; margin:12px 0 16px; color:var(--text-main); line-height:1.4;"></p>
             
             <div id="quizOptionsContainer" style="display:flex; flex-direction:column; gap:10px;"></div>
         </div>
@@ -624,57 +681,35 @@
         "ami kaj korchi": "I am working."
     };
 
-    /* MULTI-LEVEL STRUCTURED QUIZ REPOSITORY */
-    const quizLevels = [
-        {
-            level: 1,
-            title: "Level 1: Essential Vocabulary (সহজ শব্দার্থ)",
-            questions: [
-                { q: '"Opportunity" শব্দের সঠিক বাংলা অর্থ কী?', options: ["সুযোগ", "কঠিন কাজ", "দায়িত্ব"], ans: 0 },
-                { q: '"Essential" শব্দের অর্থ কী?', options: ["অপ্রয়োজনীয়", "অত্যাবশ্যকীয় / জরুরি", "সহজ"], ans: 1 },
-                { q: '"Improve" শব্দের অর্থ কী?', options: ["উন্নতি করা", "নষ্ট করা", "ভুলে যাওয়া"], ans: 0 },
-                { q: '"Difficult" শব্দের অর্থ কী?', options: ["সহজ", "কঠিন", "সুন্দর"], ans: 1 },
-                { q: '"Comfortable" শব্দের অর্থ কী?', options: ["আরামদায়ক", "কষ্টকর", "ব্যস্ত"], ans: 0 }
-            ]
-        },
-        {
-            level: 2,
-            title: "Level 2: English Grammar & Tense (গ্রামার ও কাল)",
-            questions: [
-                { q: 'She ___ to school every day. (সঠিক শব্দ বসান)', options: ["go", "goes", "gone"], ans: 1 },
-                { q: '"I have ___ apple." শূন্যস্থানে কী বসবে?', options: ["a", "an", "the"], ans: 1 },
-                { q: 'He is good ___ English. (সঠিক Preposition বসান)', options: ["in", "at", "on"], ans: 1 },
-                { q: 'They ___ playing football now.', options: ["is", "am", "are"], ans: 2 },
-                { q: 'I ___ to London yesterday.', options: ["go", "went", "gone"], ans: 1 }
-            ]
-        },
-        {
-            level: 3,
-            title: "Level 3: Daily Conversation (দৈনন্দিন কথোপকথন)",
-            questions: [
-                { q: '"How are you doing?" এর সঠিক বাংলা কী?', options: ["দিনকাল কেমন যাচ্ছে?", "আপনি কোথায় যাচ্ছেন?", "আপনার নাম কী?"], ans: 0 },
-                { q: '"Could you help me?" দ্বারা কী বোঝায়?', options: ["আমাকে সাহায্য করতে পারেন?", "আমি যেতে পারি?", "আপনি কে?"], ans: 0 },
-                { q: '"Nice to meet you" কখন বলতে হয়?', options: ["বিদায় নেওয়ার সময়", "কারো সাথে পরিচিত হওয়ার সময়", "রাগ প্রকাশে"], ans: 1 },
-                { q: '"Take care" এর অর্থ কী?', options: ["ভালো থেকো / নিজের যত্ন নিও", "দ্রুত আসো", "কাজ করো"], ans: 0 },
-                { q: '"Excuse me" কখন ব্যবহার করবেন?', options: ["কারো দৃষ্টি আকর্ষণ বা অনুমতি চাইতে", "ঘুমানোর সময়", "ধন্যবাদ দিতে"], ans: 0 }
-            ]
-        },
-        {
-            level: 4,
-            title: "Level 4: IELTS & Advanced Vocabulary (উন্নত শব্দভাণ্ডার)",
-            questions: [
-                { q: '"Resilient" শব্দের অর্থ কী?', options: ["সহনশীল / দ্রুত ঘুরে দাঁড়াতে সক্ষম", "দুর্বল", "অলস"], ans: 0 },
-                { q: '"Paramount" শব্দের অর্থ কী?', options: ["সর্বোচ্চ গুরুত্বপূর্ণ", "সহজ", "বিলম্বিত"], ans: 0 },
-                { q: '"Substantial" শব্দের অর্থ কী?', options: ["বিপুল / প্রচুর", "ক্ষুদ্র", "সাময়িক"], ans: 0 },
-                { q: '"Pragmatic" শব্দের অর্থ কী?', options: ["বাস্তববাদী / প্র্যাকটিক্যাল", "কল্পনাপ্রবণ", "অসহায়"], ans: 0 },
-                { q: '"Inevitable" শব্দের অর্থ কী?', options: ["অনিবার্য (যা ঘটবেই)", "সম্ভব নয়", "ভুল"], ans: 0 }
-            ]
-        }
+    /* 100-LEVEL DYNAMIC VOCABULARY & EXPRESSION REPOSITORY */
+    const masterVocabDatabase = [
+        { en: "Opportunity", bn: "সুযোগ", hi: "अवसर", ur: "موقع", ar: "فرصة", ja: "機会", ko: "기회", de: "Gelegenheit", fr: "Opportunité", es: "Oportunidad" },
+        { en: "Essential", bn: "জরুরি / অত্যাবশ্যকীয়", hi: "आवश्यक", ur: "ضروری", ar: "ضروري", ja: "不可欠", ko: "필수적인", de: "Wichtig", fr: "Essentiel", es: "Esencial" },
+        { en: "Improve", bn: "উন্নতি করা", hi: "सुधारना", ur: "بہتر بنانا", ar: "تحسين", ja: "改善する", ko: "향상시키다", de: "Verbessern", fr: "Améliorer", es: "Mejorar" },
+        { en: "Difficult", bn: "কঠিন", hi: "कठिन", ur: "مشکل", ar: "صعب", ja: "難しい", ko: "어려운", de: "Schwierig", fr: "Difficile", es: "Difícil" },
+        { en: "Comfortable", bn: "আরামদায়ক", hi: "आरामदायक", ur: "آرام دہ", ar: "مريح", ja: "快適な", ko: "편안한", de: "Bequem", fr: "Confortable", es: "Cómodo" },
+        { en: "Success", bn: "সাফল্য", hi: "सफलता", ur: "کامیابی", ar: "نجاح", ja: "成功", ko: "성공", de: "Erfolg", fr: "Succès", es: "Éxito" },
+        { en: "Challenge", bn: "চ্যালেঞ্জ / পরীক্ষা", hi: "चुनौती", ur: "چیلنج", ar: "تحدي", ja: "挑戦", ko: "도전", de: "Herausforderung", fr: "Défi", es: "Desafío" },
+        { en: "Important", bn: "গুরুত্বপূর্ণ", hi: "महत्वपूर्ण", ur: "اہم", ar: "مهم", ja: "重要", ko: "중요한", de: "Wichtig", fr: "Important", es: "Importante" },
+        { en: "Responsible", bn: "দায়িত্বশীল", hi: "जिम्मेदार", ur: "ذمہ دار", ar: "مسؤول", ja: "責任がある", ko: "책임 있는", de: "Verantwortlich", fr: "Responsable", es: "Responsable" },
+        { en: "Experience", bn: "অভিজ্ঞতা", hi: "अनुभव", ur: "تجربہ", ar: "خبرة", ja: "経験", ko: "경험", de: "Erfahrung", fr: "Expérience", es: "Experiencia" },
+        { en: "Resilient", bn: "সহনশীল / ঘুরে দাঁড়াতে সক্ষম", hi: "लचीला", ur: "لچکدار", ar: "مرن", ja: "回復力がある", ko: "회복력 있는", de: "Widerstandsfähig", fr: "Résistant", es: "Resiliente" },
+        { en: "Paramount", bn: "সর্বোচ্চ গুরুত্বপূর্ণ", hi: "सर्वोपरि", ur: "سب سے اہم", ar: "أسمى", ja: "最重要", ko: "가장 중요한", de: "Überragend", fr: "Primordial", es: "Primordial" },
+        { en: "Substantial", bn: "বিপুল / প্রচুর", hi: "काफी", ur: "کافی", ar: "جوهري", ja: "実質的な", ko: "상당한", de: "Erheblich", fr: "Substantiel", es: "Sustancial" },
+        { en: "Pragmatic", bn: "বাস্তববাদী", hi: "व्यावहारिक", ur: "عملی", ar: "عملي", ja: "実用的な", ko: "실용적인", de: "Pragmatisch", fr: "Pragmatique", es: "Pragmático" },
+        { en: "Inevitable", bn: "অনিবার্য", hi: "अपरिहार्य", ur: "ناگزیر", ar: "حتمي", ja: "避けられない", ko: "불가피한", de: "Unvermeidlich", fr: "Inévitable", es: "Inevitable" }
     ];
 
-    let currentLevelIndex = 0;
+    let currentLevel = parseInt(localStorage.getItem('userQuizLevel')) || 1;
     let currentQuizIndex = 0;
     let quizScore = 0;
+    let selectedQuizLang = 'bn';
+    const totalMaxLevels = 100;
+    const questionsPerLevel = 5;
+
+    // ভুল উত্তর সংরক্ষণ তালিকা
+    let wrongAnswerPool = JSON.parse(localStorage.getItem('userWrongAnswers')) || [];
+    let currentLevelQuestions = [];
 
     function updateLangLabel() {
         const s = document.getElementById('srcLang');
@@ -687,7 +722,8 @@
         document.getElementById('srcLang').value = 'bn';
         document.getElementById('targetLang').value = 'en';
         updateLangLabel();
-        loadQuizQuestion();
+        buildLevelQuestions();
+        loadLevelEngine();
     });
 
     function swapLanguages() {
@@ -711,7 +747,8 @@
         document.getElementById(tabId + 'View').classList.add('active');
         event.target.classList.add('active');
         if(tabId === 'quiz') {
-            loadQuizQuestion();
+            buildLevelQuestions();
+            loadLevelEngine();
         }
     }
 
@@ -821,15 +858,9 @@
 
         let normalized = input;
         const spellCorrection = {
-            "thiland": "Thailand",
-            "malasiya": "Malaysia",
-            "bangladesh": "Bangladesh",
-            "dhaka": "Dhaka",
-            "indai": "India",
-            "singapur": "Singapore",
-            "dubia": "Dubai",
-            "london": "London",
-            "omrica": "America"
+            "thiland": "Thailand", "malasiya": "Malaysia", "bangladesh": "Bangladesh",
+            "dhaka": "Dhaka", "indai": "India", "singapur": "Singapore",
+            "dubia": "Dubai", "london": "London", "omrica": "America"
         };
 
         for (let wrong in spellCorrection) {
@@ -995,32 +1026,115 @@
         }
     }
 
-    /* ADVANCED MULTI-LEVEL QUIZ CONTROLLER */
-    function loadQuizQuestion() {
-        const box = document.getElementById('quizCardBox');
-        const activeLevel = quizLevels[currentLevelIndex];
-        const questions = activeLevel.questions;
+    /* ADVANCED 100-LEVEL GENERATOR & ERROR CORRECTION ENGINE */
+    function changeQuizLanguage() {
+        selectedQuizLang = document.getElementById('quizLangSelect').value;
+        buildLevelQuestions();
+        loadLevelEngine();
+    }
 
-        // যখন একটি লেভেলের সবগুলো প্রশ্ন শেষ হবে
-        if (currentQuizIndex >= questions.length) {
-            const isLastLevel = (currentLevelIndex >= quizLevels.length - 1);
-            
+    function getLevelCategory(lvl) {
+        if (lvl <= 25) return "Foundation Vocabulary (সহজ শব্দার্থ)";
+        if (lvl <= 50) return "Grammar & Daily Use (দৈনন্দিন প্রয়োগ)";
+        if (lvl <= 75) return "Spoken & Fluency (কথোপকথন ও ফ্লুয়েন্সি)";
+        return "Master & IELTS Mastery (সর্বোচ্চ স্তর)";
+    }
+
+    function generateQuestion(item, isReview = false) {
+        let targetMeaning = item[selectedQuizLang] || item['bn'] || item['en'];
+        let promptText = "";
+
+        if (selectedQuizLang === 'bn') {
+            promptText = `"${item.en}" - এর সঠিক বাংলা অর্থ কী?`;
+        } else if (selectedQuizLang === 'en') {
+            promptText = `What is the correct meaning of "${item.en}"?`;
+        } else if (selectedQuizLang === 'ur') {
+            promptText = `"${item.en}" کا درست مطلب کیا ہے؟`;
+        } else if (selectedQuizLang === 'hi') {
+            promptText = `"${item.en}" का सही अर्थ क्या है?`;
+        } else if (selectedQuizLang === 'ar') {
+            promptText = `ما هو المعنى الصحيح لـ "${item.en}"؟`;
+        } else if (selectedQuizLang === 'ja') {
+            promptText = `「${item.en}」の正しい意味は何ですか？`;
+        } else if (selectedQuizLang === 'ko') {
+            promptText = `"${item.en}"의 올바른 의미는 무엇입니까?`;
+        } else {
+            promptText = `Translate & choose meaning for "${item.en}":`;
+        }
+
+        let seedIndex = masterVocabDatabase.findIndex(v => v.en === item.en);
+        if(seedIndex === -1) seedIndex = 0;
+
+        let wrong1 = masterVocabDatabase[(seedIndex + 3) % masterVocabDatabase.length][selectedQuizLang] || "Other Option A";
+        let wrong2 = masterVocabDatabase[(seedIndex + 7) % masterVocabDatabase.length][selectedQuizLang] || "Other Option B";
+
+        if (wrong1 === targetMeaning) wrong1 = "Incorrect Option A";
+        if (wrong2 === targetMeaning || wrong2 === wrong1) wrong2 = "Incorrect Option B";
+
+        let options = [targetMeaning, wrong1, wrong2];
+        options.sort(() => 0.5 - Math.random());
+        let correctIndex = options.indexOf(targetMeaning);
+
+        return {
+            rawItem: item,
+            q: promptText,
+            options: options,
+            ans: correctIndex,
+            isReview: isReview
+        };
+    }
+
+    // প্রতি লেভেলের জন্য প্রশ্ন তৈরি (পূর্বের ভুল প্রশ্ন থাকলে সেগুলোকে অগ্রাধিকার দিয়ে যুক্ত করা)
+    function buildLevelQuestions() {
+        currentLevelQuestions = [];
+
+        // ১. পূর্বের কোনো ভুল প্রশ্ন থাকলে প্রথমে সেগুলোকে অন্তর্ভুক্ত করা হবে
+        if (wrongAnswerPool.length > 0) {
+            wrongAnswerPool.forEach(item => {
+                currentLevelQuestions.push(generateQuestion(item, true));
+            });
+        }
+
+        // ২. বাকি প্রশ্নগুলো নতুন লেভেলের পুল থেকে যুক্ত করা হবে
+        const needed = questionsPerLevel;
+        for (let i = 0; i < needed; i++) {
+            const seed = (currentLevel - 1) * questionsPerLevel + i;
+            const item = masterVocabDatabase[seed % masterVocabDatabase.length];
+            currentLevelQuestions.push(generateQuestion(item, false));
+        }
+    }
+
+    function loadLevelEngine() {
+        const box = document.getElementById('quizCardBox');
+        
+        if (currentQuizIndex >= currentLevelQuestions.length) {
+            const hasNext = currentLevel < totalMaxLevels;
+            const totalQ = currentLevelQuestions.length;
+
             box.innerHTML = `
                 <div style="padding: 10px 0;">
                     <span style="font-size: 42px;">🎉</span>
-                    <h3 style="color:var(--primary); margin: 8px 0; font-size:18px;">চমৎকার! ${activeLevel.title.split(':')[0]} সম্পন্ন হয়েছে</h3>
-                    <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 16px;">
-                        আপনার স্কোর: <strong>${quizScore} / ${questions.length}</strong>
+                    <h3 style="color:var(--primary); margin: 8px 0; font-size:18px;">লেভেল ${currentLevel} সম্পন্ন হয়েছে!</h3>
+                    <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 12px;">
+                        আপনার স্কোর: <strong>${quizScore} / ${totalQ}</strong>
                     </p>
                     
-                    ${!isLastLevel ? `
+                    ${wrongAnswerPool.length > 0 ? `
+                        <div class="wrong-review-banner" style="margin-bottom: 14px;">
+                            💡 <span>${wrongAnswerPool.length}টি ভুল উত্তর পরবর্তী লেভেলে পুনরায় প্র্যাকটিস করে দেওয়া হবে।</span>
+                        </div>
+                    ` : `
+                        <p style="color:#0f9d58; font-size:12px; font-weight:700; margin-bottom:14px;">✓ সকল প্রশ্নের সঠিক উত্তর সম্পন্ন হয়েছে!</p>
+                    `}
+
+                    ${hasNext ? `
                         <button class="btn-main-action" style="width: 100%; margin-bottom: 8px;" onclick="goToNextLevel()">
-                            পরবর্তী লেভেল শুরু করুন (Level ${currentLevelIndex + 2} ➔)
+                            পরবর্তী লেভেল শুরু করুন (Level ${currentLevel + 1} ➔)
                         </button>
                     ` : `
-                        <p style="color:#0f9d58; font-weight:800; margin-bottom:12px;">🏆 অভিনন্দন! আপনি সকল লেভেল সম্পূর্ণ করেছেন!</p>
-                        <button class="btn-main-action" style="width: 100%;" onclick="restartAllLevels()">
-                            শুরু থেকে আবার খেলুন ➔
+                        <p style="color:#0f9d58; font-weight:800; margin-bottom:12px;">🏆 অভিনন্দন! আপনি ১০০তম লেভেল সম্পন্ন করেছেন!</p>
+                        <button class="btn-main-action" style="width: 100%;" onclick="resetToLevelOne()">
+                            লেভেল ১ থেকে আবার খেলুন ➔
                         </button>
                     `}
                 </div>
@@ -1028,10 +1142,19 @@
             return;
         }
 
-        const qData = questions[currentQuizIndex];
-        document.getElementById('quizCounterText').innerText = `🔥 Level ${activeLevel.level} • প্রশ্ন ${currentQuizIndex + 1} / ${questions.length}`;
+        const qData = currentLevelQuestions[currentQuizIndex];
+        const banner = document.getElementById('wrongReviewBanner');
+        
+        if (qData.isReview) {
+            banner.style.display = 'flex';
+            banner.innerHTML = `⚠️ <span>পূর্বের ভুল প্রশ্ন সংশোধন: সঠিক উত্তর দিন!</span>`;
+        } else {
+            banner.style.display = 'none';
+        }
+
+        document.getElementById('quizCounterText').innerText = `🔥 Level ${currentLevel} / ${totalMaxLevels} • প্রশ্ন ${currentQuizIndex + 1} / ${currentLevelQuestions.length}`;
         document.getElementById('quizScoreText').innerText = `স্কোর: ${quizScore}`;
-        document.getElementById('quizLevelTitle').innerText = activeLevel.title;
+        document.getElementById('quizLevelTitle').innerText = `Level ${currentLevel}: ${getLevelCategory(currentLevel)}`;
         document.getElementById('quizPrompt').innerText = qData.q;
 
         const container = document.getElementById('quizOptionsContainer');
@@ -1042,58 +1165,102 @@
             btn.className = 'ai-pill-btn';
             btn.style.width = '100%';
             btn.innerText = opt;
-            btn.onclick = () => submitQuizAnswer(idx, qData.ans);
+            btn.onclick = () => submitQuizAnswer(idx, qData);
             container.appendChild(btn);
         });
     }
 
-    function submitQuizAnswer(selectedIdx, correctIdx) {
-        if (selectedIdx === correctIdx) {
+    function submitQuizAnswer(selectedIdx, qData) {
+        const isCorrect = (selectedIdx === qData.ans);
+
+        if (isCorrect) {
             showToast("সঠিক উত্তর! +১০ পয়েন্ট 🪙");
             points += 10;
             quizScore += 1;
             document.getElementById('rewardDisplay').innerText = points;
             localStorage.setItem('userPts', points);
+
+            // যদি এটি পূর্বের ভুল প্রশ্ন হয়ে থাকে, তবে ভুল তালিকা থেকে মুছে ফেলা হবে
+            if (qData.isReview) {
+                wrongAnswerPool = wrongAnswerPool.filter(item => item.en !== qData.rawItem.en);
+                localStorage.setItem('userWrongAnswers', JSON.stringify(wrongAnswerPool));
+            }
         } else {
-            showToast("ভুল উত্তর!");
+            const correctText = qData.options[qData.ans];
+            showToast(`ভুল! সঠিক উত্তর: "${correctText}"`);
+
+            // ভুল হলে প্রশ্নটি পরবর্তী লেভেলের জন্য ভুল তালিকায় যুক্ত হবে
+            if (!wrongAnswerPool.some(item => item.en === qData.rawItem.en)) {
+                wrongAnswerPool.push(qData.rawItem);
+                localStorage.setItem('userWrongAnswers', JSON.stringify(wrongAnswerPool));
+            }
         }
 
         currentQuizIndex++;
-        setTimeout(loadQuizQuestion, 450);
+        setTimeout(loadLevelEngine, 450);
     }
 
     function goToNextLevel() {
-        currentLevelIndex++;
+        currentLevel++;
         currentQuizIndex = 0;
         quizScore = 0;
         
-        // লেভেল সম্পন্ন বোনাস পয়েন্ট
-        points += 25;
+        points += 20;
         document.getElementById('rewardDisplay').innerText = points;
         localStorage.setItem('userPts', points);
-        showToast("লেভেল আনলক বোনাস: +২৫ পয়েন্ট! 🎁");
+        localStorage.setItem('userQuizLevel', currentLevel);
+        showToast(`লেভেল ${currentLevel} আনলক! বোনাস +২০ পয়েন্ট 🎁`);
 
         resetQuizBoxUI();
-        loadQuizQuestion();
+        buildLevelQuestions();
+        loadLevelEngine();
     }
 
-    function restartAllLevels() {
-        currentLevelIndex = 0;
+    function resetToLevelOne() {
+        currentLevel = 1;
         currentQuizIndex = 0;
         quizScore = 0;
+        wrongAnswerPool = [];
+        localStorage.setItem('userQuizLevel', 1);
+        localStorage.setItem('userWrongAnswers', JSON.stringify([]));
         resetQuizBoxUI();
-        loadQuizQuestion();
+        buildLevelQuestions();
+        loadLevelEngine();
     }
 
     function resetQuizBoxUI() {
         const box = document.getElementById('quizCardBox');
         box.innerHTML = `
+            <div class="quiz-lang-selector-box">
+                <span style="font-size:11px; font-weight:700; color:var(--text-muted);">কুইজ ভাষা:</span>
+                <select id="quizLangSelect" class="quiz-lang-select" onchange="changeQuizLanguage()">
+                    <option value="bn" ${selectedQuizLang === 'bn' ? 'selected' : ''}>Bangla (বাংলা)</option>
+                    <option value="en" ${selectedQuizLang === 'en' ? 'selected' : ''}>English (ইংরেজি)</option>
+                    <option value="hi" ${selectedQuizLang === 'hi' ? 'selected' : ''}>Hindi (हिन्दी)</option>
+                    <option value="ur" ${selectedQuizLang === 'ur' ? 'selected' : ''}>Urdu (اردو)</option>
+                    <option value="ar" ${selectedQuizLang === 'ar' ? 'selected' : ''}>Arabic (العربية)</option>
+                    <option value="ja" ${selectedQuizLang === 'ja' ? 'selected' : ''}>Japanese (日本語)</option>
+                    <option value="ko" ${selectedQuizLang === 'ko' ? 'selected' : ''}>Korean (한국어)</option>
+                    <option value="de" ${selectedQuizLang === 'de' ? 'selected' : ''}>German (Deutsch)</option>
+                    <option value="pt" ${selectedQuizLang === 'pt' ? 'selected' : ''}>Portuguese (Português)</option>
+                    <option value="af" ${selectedQuizLang === 'af' ? 'selected' : ''}>Afrikaans (আফ্রিকান)</option>
+                    <option value="mr" ${selectedQuizLang === 'mr' ? 'selected' : ''}>Marathi (मराठी)</option>
+                    <option value="te" ${selectedQuizLang === 'te' ? 'selected' : ''}>Telugu (తెలుగు)</option>
+                    <option value="ta" ${selectedQuizLang === 'ta' ? 'selected' : ''}>Tamil (தமிழ்)</option>
+                    <option value="gu" ${selectedQuizLang === 'gu' ? 'selected' : ''}>Gujarati (ગુજરાતી)</option>
+                    <option value="es" ${selectedQuizLang === 'es' ? 'selected' : ''}>Spanish (Español)</option>
+                    <option value="fr" ${selectedQuizLang === 'fr' ? 'selected' : ''}>French (Français)</option>
+                </select>
+            </div>
+            <div id="wrongReviewBanner" class="wrong-review-banner" style="display: none;">
+                ⚠️ <span>পূর্বের ভুল প্রশ্ন সংশোধন পর্ব চলছে!</span>
+            </div>
             <div class="quiz-header-status">
-                <span id="quizCounterText">🔥 Level 1 • প্রশ্ন ১ / ৫</span>
+                <span id="quizCounterText">🔥 Level ${currentLevel} • প্রশ্ন ১ / ৫</span>
                 <span id="quizScoreText" style="color:var(--primary);">স্কোর: ০</span>
             </div>
-            <h4 id="quizLevelTitle" style="color:var(--primary); margin-bottom:6px; font-size:16px;">Daily English Challenge</h4>
-            <p id="quizPrompt" style="font-size:15px; font-weight:700; margin:12px 0 16px; color:var(--text-main);"></p>
+            <h4 id="quizLevelTitle" style="color:var(--primary); margin-bottom:6px; font-size:15px;">Daily Challenge</h4>
+            <p id="quizPrompt" style="font-size:15px; font-weight:700; margin:12px 0 16px; color:var(--text-main); line-height:1.4;"></p>
             <div id="quizOptionsContainer" style="display:flex; flex-direction:column; gap:10px;"></div>
         `;
     }
