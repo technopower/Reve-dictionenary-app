@@ -1011,6 +1011,8 @@
 
     const banglishMap = {
         "ami dhaka jabo": "I will go to Dhaka.",
+        "ami ki dhaka jabo": "Will I go to Dhaka?",
+        "apni ki kal jaben": "Will you go tomorrow?",
         "ami dhaka jai": "I go to Dhaka.",
         "amar nam rahim": "My name is Rahim.",
         "kemon acho": "How are you?",
@@ -1159,7 +1161,7 @@
             if (data && data[0]) {
                 let translated = data[0].map(item => item[0]).join('');
                 
-                // Automatic Punctuation & Question Mark Handling
+                // Automatic Punctuation & Question Mark Handling Added Here
                 if ((cleanText.toLowerCase().includes("কি") || cleanText.toLowerCase().includes("kemon") || cleanText.toLowerCase().includes("ki ") || cleanText.endsWith('?')) && !translated.endsWith('?')) {
                     if (!translated.endsWith('?')) translated += '?';
                 } else if (!translated.endsWith('.') && !translated.endsWith('?') && !translated.endsWith('!')) {
