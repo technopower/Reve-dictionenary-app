@@ -686,14 +686,14 @@
     <div id="dictView" class="workspace-content tab-panel">
         <div class="translate-card">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                <h3 style="color:#60a5fa;" id="dictHeaderTitle">📖 Smart Dictionary</h3>
+                <h3 style="color:#60a5fa;">📖 Smart Dictionary</h3>
                 <div class="custom-lang-pill" style="padding:6px 12px; font-size:12px;" onclick="openLangModal('dict')">
                     <span id="dictTargetLangLabel">বাংলা</span> ▾
                 </div>
             </div>
             <div style="display:flex; gap:8px; margin-bottom:12px;">
                 <input type="text" id="dictSearchInput" class="lang-search-input" placeholder="Type English word (e.g. Run)...">
-                <button class="btn-main-action" style="flex:0.6; padding:10px;" id="dictSearchBtn" onclick="lookupDictionary()">Search</button>
+                <button class="btn-main-action" style="flex:0.6; padding:10px;" onclick="lookupDictionary()">Search</button>
             </div>
             <div id="dictResultBox" style="font-size:14px; color:var(--text-main); line-height:1.6; min-height:80px;">
                 <span style="color:var(--text-muted);" id="dictPlaceholderText">শব্দ সার্চ করলে অর্থ, সমার্থক শব্দ ও ভার্ব কনজুগেশন এখানে দেখাবে।</span>
@@ -1031,9 +1031,9 @@
         { en: "Comfortable", bn: "আরামদায়ক", hi: "आरामदायक", ar: "مريح", zh: "舒适的", ja: "快適な", ko: "편안한", de: "Bequem", fr: "Confortable", es: "Cómodo", it: "Comodo", pt: "Confortável" },
         { en: "Success", bn: "সাফল্য", hi: "सफलता", ar: "نجاح", zh: "成功", ja: "成功", ko: "성공", de: "Erfolg", fr: "Succès", es: "Éxito", it: "Successo", pt: "Sucesso" },
         { en: "Challenge", bn: "চ্যালেঞ্জ", hi: "चुनौती", ar: "تحدي", zh: "挑战", ja: "挑戦", ko: "도전", de: "Herausforderung", fr: "Défi", es: "Desafío", it: "Sfida", pt: "Desafio" },
-        { en: "Important", bn: "গুরুত্বপূর্ণ", hi: "महत्वपूर्ण", ar: "مهم", zh: "重要的", ja: "重要", ko: "중요한", de: "Wichtig", fr: "Important", es: "Importante", it: "Importante", pt: "Importante" },
+        { en: "Important", bn: "গুরুত্বপূর্ণ", hi: "महत्वपूर्ण", ar: "महम", zh: "重要的", ja: "重要", ko: "중요한", de: "Wichtig", fr: "Important", es: "Importante", it: "Importante", pt: "Importante" },
         { en: "Experience", bn: "অভিজ্ঞতা", hi: "अनुभव", ar: "خبرة", zh: "经验", ja: "経験", ko: "경험", de: "Erfahrung", fr: "Expérience", es: "Experiencia", it: "Esperienza", pt: "Experiência" },
-        { en: "Resilient", bn: "সহনশীল", hi: "लचीला", ar: "مرن", zh: "有弹性の", ja: "回復力のある", ko: "회복력 있는", de: "Widerstandsfähig", fr: "Résilient", es: "Resiliente", it: "Resiliente", pt: "Resiliente" },
+        { en: "Resilient", bn: "সহনশীল", hi: "लचीला", ar: "مرن", zh: "有弹性的", ja: "回復力のある", ko: "회복력 있는", de: "Widerstandsfähig", fr: "Résilient", es: "Resiliente", it: "Resiliente", pt: "Resiliente" },
         { en: "Confidence", bn: "আত্মবিশ্বাস", hi: "आत्मविश्वास", ar: "ثقة", zh: "信心", ja: "自信", ko: "자신감", de: "Vertrauen", fr: "Confiance", es: "Confianza", it: "Fiducia", pt: "Confiança" },
         { en: "Knowledge", bn: "জ্ঞান", hi: "ज्ञान", ar: "معرفة", zh: "知识", ja: "知識", ko: "지식", de: "Wissen", fr: "Connaissance", es: "Conocimiento", it: "Conoscenza", pt: "Conhecimento" },
         { en: "Freedom", bn: "স্বাধীনতা", hi: "स्वतंत्रता", ar: "حرية", zh: "自由", ja: "自由", ko: "자유", de: "Freiheit", fr: "Liberté", es: "Libertad", it: "Libertà", pt: "Liberdade" },
@@ -1108,7 +1108,8 @@
     function clearAll() {
         document.getElementById('sourceInput').value = '';
         document.getElementById('charCount').innerText = '0 / 5000';
-        const t = multiLangUI[currentSourceLang] || multiLangUI['en'];
+        const uiLang = (multiLangUI[currentSourceLang] ? currentSourceLang : 'en');
+        const t = multiLangUI[uiLang];
         document.getElementById('targetOutput').innerHTML = `<span class="result-placeholder">${t.resultPlaceholder}</span>`;
         currentResult = "";
     }
@@ -1682,7 +1683,8 @@
         const el = document.getElementById('dictTargetLangLabel');
         if(el) el.innerText = `${dObj.native}`;
 
-        const t = multiLangUI[currentSourceLang] || multiLangUI['en'];
+        const uiLang = (multiLangUI[currentSourceLang] ? currentSourceLang : 'en');
+        const t = multiLangUI[uiLang];
         const placeholderEl = document.getElementById('dictPlaceholderText');
         if(placeholderEl) {
             placeholderEl.innerText = t.dictPlaceholder;
@@ -1763,7 +1765,9 @@
     }
 
     function applyUiLocalization(langCode) {
-        const t = multiLangUI[langCode] || multiLangUI['en'];
+        const uiLang = (multiLangUI[langCode] ? langCode : 'en');
+        const t = multiLangUI[uiLang];
+        
         document.getElementById('tabTransBtn').innerText = t.transTab;
         document.getElementById('tabTeacherBtn').innerText = t.teacherTab;
         document.getElementById('tabQuizBtn').innerText = t.quizTab;
@@ -1779,7 +1783,7 @@
         document.getElementById('resPlaceholder').innerText = t.resultPlaceholder;
         document.getElementById('aiVerifiedText').innerText = t.aiVerified;
 
-        // Convo Tab Localization
+        // Convo Tab Localization based on selected source language
         const convoTitle = document.getElementById('convoTitleText');
         const convoSub = document.getElementById('convoSubText');
         const btnA = document.getElementById('convoBtnA');
