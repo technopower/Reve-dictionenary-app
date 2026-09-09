@@ -1134,8 +1134,7 @@
             "dubia": "Dubai", "london": "London", "omrica": "America",
             "i goes": "I go", "he go": "he goes", "she go": "she goes",
             "they was": "they were", "i is": "I am",
-            "ami nepal jabo": "I will go to Nepal.",
-            "apni ki kal jaben": "Will you go tomorrow?"
+            "ami nepal jabo": "I will go to Nepal."
         };
 
         for (let wrong in smartCorrections) {
@@ -1158,16 +1157,7 @@
             const res = await fetch(url);
             const data = await res.json();
             if (data && data[0]) {
-                let translated = data[0].map(item => item[0]).join('');
-                
-                // Punctuation and Question Mark Auto Handling
-                if ((cleanText.includes("কি") || cleanText.includes("kemon") || cleanText.includes("ki ") || cleanText.endsWith('?')) && !translated.endsWith('?')) {
-                    if (!translated.endsWith('?')) translated += '?';
-                } else if (!translated.endsWith('.') && !translated.endsWith('?') && !translated.endsWith('!')) {
-                    translated += '.';
-                }
-
-                currentResult = translated;
+                currentResult = data[0].map(item => item[0]).join('');
                 output.innerText = currentResult;
                 output.className = "result-text-area text-glow-effect";
                 saveHistory(input, currentResult);
@@ -1366,19 +1356,11 @@
         globalRecognition.lang = langVoiceMap[currentSourceLang] || 'en-US';
         globalRecognition.interimResults = true;
 
-      globalRecognition.onresult = function(e) {
+        globalRecognition.onresult = function(e) {
             let txt = '';
             for (let i = e.resultIndex; i < e.results.length; ++i) {
                 txt += e.results[i][0].transcript;
             }
-            
-            // ভয়েস টেক্সট ফিল্টার করার নিরাপদ লজিক
-            let cleanedTxt = txt.replace(/[\/\.\!\?\-\,\s]/g, '').trim();
-            if (cleanedTxt.length === 0 && !e.results[0].isFinal) {
-                status.innerText = "আবার স্পষ্টভাবে বলুন...";
-                return;
-            }
-
             status.innerText = txt;
             if (e.results[0].isFinal) {
                 document.getElementById('sourceInput').value = txt;
@@ -1388,6 +1370,13 @@
                 }, 400);
             }
         };
+
+        try {
+            globalRecognition.start();
+        } catch(e) {
+            showToast("Speech recognition error.");
+        }
+    }
 
     function closeVoiceModal() {
         document.getElementById('voiceModal').style.display = 'none';
