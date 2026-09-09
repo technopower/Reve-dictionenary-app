@@ -809,6 +809,13 @@
 </div>
 
 <script>
+    // Service Worker Registration for PWA / PWABuilder
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('./sw.js')
+            .then(() => console.log("Service Worker Registered Successfully"))
+            .catch((err) => console.log("Service Worker Registration Failed", err));
+    }
+
     let points = parseInt(localStorage.getItem('userPts')) || 21;
     let globalRecognition = null;
     let currentResult = "";
