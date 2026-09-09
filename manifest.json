@@ -1,21 +1,20 @@
 {
-  "name": "শব্দকোষ ও কুইজ একাডেমি",
-  "short_name": "ডিকুইজ",
-  "description": "A comprehensive Dictionary and Quiz PWA",
+  "name": "REVE AI Master Translator",
+  "short_name": "REVE AI",
   "start_url": "./index.html",
-  "scope": "./",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#2ecc71",
+  "background_color": "#09122c",
+  "theme_color": "#09122c",
+  "description": "A comprehensive Dictionary, Translator and Quiz PWA",
   "icons": [
     {
-      "src": "./assets/logos/index_logo.png",
+      "src": "https://raw.githubusercontent.com/technopower/Reve-dictionenary-app/main/icon.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "./assets/logos/index_logo.png",
+      "src": "https://raw.githubusercontent.com/technopower/Reve-dictionenary-app/main/icon.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
