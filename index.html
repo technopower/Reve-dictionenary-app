@@ -1134,7 +1134,8 @@
             "dubia": "Dubai", "london": "London", "omrica": "America",
             "i goes": "I go", "he go": "he goes", "she go": "she goes",
             "they was": "they were", "i is": "I am",
-            "ami nepal jabo": "I will go to Nepal."
+            "ami nepal jabo": "I will go to Nepal.",
+            "apni ki kal jaben": "Will you go tomorrow?"
         };
 
         for (let wrong in smartCorrections) {
@@ -1157,7 +1158,16 @@
             const res = await fetch(url);
             const data = await res.json();
             if (data && data[0]) {
-                currentResult = data[0].map(item => item[0]).join('');
+                let translated = data[0].map(item => item[0]).join('');
+                
+                // Punctuation and Question Mark Auto Handling
+                if ((cleanText.includes("কি") || cleanText.includes("kemon") || cleanText.includes("ki ") || cleanText.endsWith('?')) && !translated.endsWith('?')) {
+                    if (!translated.endsWith('?')) translated += '?';
+                } else if (!translated.endsWith('.') && !translated.endsWith('?') && !translated.endsWith('!')) {
+                    translated += '.';
+                }
+
+                currentResult = translated;
                 output.innerText = currentResult;
                 output.className = "result-text-area text-glow-effect";
                 saveHistory(input, currentResult);
