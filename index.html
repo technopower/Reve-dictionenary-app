@@ -959,10 +959,14 @@
     const langVoiceMap = {
         'bn': 'bn-BD', 'en': 'en-US', 'hi': 'hi-IN', 'ar': 'ar-SA', 'zh': 'zh-CN', 'ja': 'ja-JP',
         'ko': 'ko-KR', 'de': 'de-DE', 'fr': 'fr-FR', 'es': 'es-ES', 'it': 'it-IT', 'pt': 'pt-PT',
-        'ru': 'ru-RU', 'tr': 'tr-TR', 'fa': 'fa-IR', 'ur': 'ur-PK', 'fr': 'fr-FR'
+        'ru': 'ru-RU', 'tr': 'tr-TR', 'fa': 'fa-IR', 'ur': 'ur-PK'
     };
 
-    // Multi-language UI texts mapping for Convo and Translator tabs
+    const dictMeaningLabels = {
+        'bn': 'অর্থ', 'hi': 'अर्थ', 'ar': 'المعنى', 'fr': 'Sens', 'es': 'Significado',
+        'de': 'Bedeutung', 'en': 'Meaning', 'zh': '意思', 'ja': '意味', 'ur': 'معنی'
+    };
+
     const multiLangUI = {
         'bn': {
             transTab: "🌐 TRANSLATOR", teacherTab: "👨‍🏫 TEACHER", quizTab: "⚔️ ARENA",
@@ -1050,7 +1054,7 @@
         { en: "Challenge", bn: "চ্যালেঞ্জ", hi: "चुनौती", ar: "تحدي", zh: "挑战", ja: "挑戦", ko: "도전", de: "Herausforderung", fr: "Défi", es: "Desafío", it: "Sfida", pt: "Desafio" },
         { en: "Important", bn: "গুরুত্বপূর্ণ", hi: "महत्वपूर्ण", ar: "مهم", zh: "重要的", ja: "重要", ko: "중요한", de: "Wichtig", fr: "Important", es: "Importante", it: "Importante", pt: "Importante" },
         { en: "Experience", bn: "অভিজ্ঞতা", hi: "अनुभव", ar: "خبرة", zh: "经验", ja: "経験", ko: "경험", de: "Erfahrung", fr: "Expérience", es: "Experiencia", it: "Esperienza", pt: "Experiência" },
-        { en: "Resilient", bn: "সহনশীল", hi: "लचीला", ar: "مرن", zh: "有弹性的", ja: "回復力のある", ko: "회복력 있는", de: "Widerstandsfähig", fr: "Résilient", es: "Resiliente", it: "Resiliente", pt: "Resiliente" },
+        { en: "Resilient", bn: "সহনশীল", hi: "लचीला", ar: "مرن", zh: "有弹性の", ja: "回復力のある", ko: "회복력 있는", de: "Widerstandsfähig", fr: "Résilient", es: "Resiliente", it: "Resiliente", pt: "Resiliente" },
         { en: "Confidence", bn: "আত্মবিশ্বাস", hi: "आत्मविश्वास", ar: "ثقة", zh: "信心", ja: "自信", ko: "자신감", de: "Vertrauen", fr: "Confiance", es: "Confianza", it: "Fiducia", pt: "Confiança" },
         { en: "Knowledge", bn: "জ্ঞান", hi: "ज्ञान", ar: "معرفة", zh: "知识", ja: "知識", ko: "지식", de: "Wissen", fr: "Connaissance", es: "Conocimiento", it: "Conoscenza", pt: "Conhecimento" },
         { en: "Freedom", bn: "স্বাধীনতা", hi: "स्वतंत्रता", ar: "حرية", zh: "自由", ja: "自由", ko: "자유", de: "Freiheit", fr: "Liberté", es: "Libertad", it: "Libertà", pt: "Liberdade" },
@@ -1240,10 +1244,12 @@
             const res = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=${selectedDictLang}&dt=t&q=${encodeURIComponent(word)}`);
             const data = await res.json();
             let meaning = data[0].map(item => item[0]).join('');
-            const targetLangObj = languagesDB.find(l => l.code === selectedDictLang) || languagesDB[2];
+            const targetLangObj = languagesDB.find(l => l.code === selectedDictLang) || languagesDB[0];
+            const labelText = dictMeaningLabels[selectedDictLang] || 'Meaning';
+            
             box.innerHTML = `
                 <div style="font-size:16px; font-weight:700; color:#60a5fa; margin-bottom:6px;">${word}</div>
-                <div><strong>অর্থ (${targetLangObj.native}):</strong> ${meaning}</div>
+                <div><strong>${labelText} (${targetLangObj.native}):</strong> ${meaning}</div>
                 <div style="margin-top:6px; font-size:12px; color:var(--text-muted);">Verb Forms: Present (${word}), Past (${word}ed), Participle (${word}ed).</div>
             `;
         } catch(e) {
@@ -1269,13 +1275,9 @@
                 const res = await fetch(url);
                 const data = await res.json();
                 let translated = data[0].map(item => item[0]).join('');
-                
-                const uiLang = (multiLangUI[convoLangA] ? convoLangA : 'en');
-                const transLabel = uiLang === 'fr' ? 'Traduit' : (uiLang === 'hi' ? 'अनुदित' : 'Translated');
-
                 document.getElementById('convoResultBox').innerHTML = `
                     <div><strong>Person ${person} (${lang}):</strong> ${spokenText}</div>
-                    <div style="color:#60a5fa; margin-top:4px;"><strong>${transLabel} (${targetLang}):</strong> ${translated}</div>
+                    <div style="color:#60a5fa; margin-top:4px;"><strong>Translated (${targetLang}):</strong> ${translated}</div>
                 `;
                 speakCustom(translated, langVoiceMap[targetLang] || 'en-US');
             } catch(err) {
@@ -1412,14 +1414,7 @@
         const box = document.getElementById('dailyCardBox');
         if (!box) return;
         if (dailyIndex >= dailyQuestions.length) {
-            box.innerHTML = `
-                <div style="padding: 10px 0;">
-                    <span style="font-size: 38px;">🎉</span>
-                    <h4 style="color:#34d399; margin: 8px 0;">Daily Challenge Completed!</h4>
-                    <p style="font-size: 13px; color:var(--text-muted); margin-bottom:12px;">আপনি আজকের ডেইলি মিশন সফলভাবে সম্পন্ন করেছেন। +৫০ কয়েন বোনাস পেয়েছেন!</p>
-                    <button class="btn-main-action" style="width:100%;" onclick="resetDaily()">Play Again Tomorrow ➔</button>
-                </div>
-            `;
+            box.innerHTML = `<h4 style="color:#34d399; margin: 8px 0;">Daily Challenge Completed! 🎉</h4>`;
             return;
         }
 
@@ -1444,7 +1439,7 @@
                     showToast("Correct! +15 Bonus Pts 🪙");
                     points += 15;
                 } else {
-                    showToast("Incorrect! Answer was: " + item.en);
+                    showToast("Incorrect!");
                 }
                 document.getElementById('rewardDisplay').innerText = points;
                 localStorage.setItem('userPts', points);
@@ -1610,7 +1605,7 @@
             } else {
                 showToast("Correct! +10 Arena Pts 🪙");
                 points += 10;
-                quizScore += 1;
+                quizScore++;
                 document.getElementById('rewardDisplay').innerText = points;
                 localStorage.setItem('userPts', points);
             }
@@ -1682,7 +1677,7 @@
     }
 
     function updateLanguageDisplay() {
-        const srcObj = languagesDB.find(l => l.code === currentSourceLang) || languagesDB[2]; 
+        const srcObj = languagesDB.find(l => l.code === currentSourceLang) || languagesDB[0]; 
         const targetObj = languagesDB.find(l => l.code === currentTargetLang) || languagesDB[0]; 
         document.getElementById('srcLabel').innerText = `${srcObj.en} — ${srcObj.native}`;
         document.getElementById('targetLabel').innerText = `${targetObj.en} — ${targetObj.native}`;
@@ -1690,16 +1685,16 @@
     }
 
     function updateArenaLangDisplay() {
-        const qObj = languagesDB.find(l => l.code === selectedQuizLang) || languagesDB[2];
+        const qObj = languagesDB.find(l => l.code === selectedQuizLang) || languagesDB[0];
         document.getElementById('quizLangLabel').innerText = `${qObj.en} — ${qObj.native} ▾`;
     }
 
     function updateDictLangDisplay() {
-        const dObj = languagesDB.find(l => l.code === selectedDictLang) || languagesDB[2];
+        const dObj = languagesDB.find(l => l.code === selectedDictLang) || languagesDB[0];
         const el = document.getElementById('dictTargetLangLabel');
         if(el) el.innerText = `${dObj.native}`;
 
-        const uiLang = (multiLangUI[convoLangA] ? convoLangA : 'en');
+        const uiLang = (multiLangUI[currentSourceLang] ? currentSourceLang : 'en');
         const t = multiLangUI[uiLang] || multiLangUI['en'];
         const placeholderEl = document.getElementById('dictPlaceholderText');
         if(placeholderEl) {
@@ -1708,28 +1703,12 @@
     }
 
     function updateConvoLangDisplay() {
-        const aObj = languagesDB.find(l => l.code === convoLangA) || languagesDB[2];
+        const aObj = languagesDB.find(l => l.code === convoLangA) || languagesDB[0];
         const bObj = languagesDB.find(l => l.code === convoLangB) || languagesDB[0];
         const elA = document.getElementById('convoALabel');
         const elB = document.getElementById('convoBLabel');
         if(elA) elA.innerText = aObj.native;
         if(elB) elB.innerText = bObj.native;
-
-        // Automatically update Convo UI texts based on Person A's language selection
-        const uiLang = (multiLangUI[convoLangA] ? convoLangA : 'en');
-        const t = multiLangUI[uiLang] || multiLangUI['en'];
-
-        const convoTitle = document.getElementById('convoTitleText');
-        const convoSub = document.getElementById('convoSubText');
-        const btnA = document.getElementById('convoBtnA');
-        const btnB = document.getElementById('convoBtnB');
-        const convoPH = document.getElementById('convoPlaceholderText');
-
-        if(convoTitle) convoTitle.innerText = t.convoTitle;
-        if(convoSub) convoSub.innerText = t.convoSub;
-        if(btnA) btnA.innerText = t.convoBtnA;
-        if(btnB) btnB.innerText = t.convoBtnB;
-        if(convoPH) convoPH.innerText = t.convoPlaceholder;
     }
 
     function openLangModal(type) {
@@ -1790,10 +1769,6 @@
         currentSourceLang = currentTargetLang;
         currentTargetLang = temp;
         updateLanguageDisplay();
-        if (currentResult && currentResult !== "অনুবাদে সমস্যা হয়েছে, ইন্টারনেট সংযোগ পরীক্ষা করুন।") {
-            document.getElementById('sourceInput').value = currentResult;
-            translateText();
-        }
     }
 
     function applyUiLocalization(langCode) {
