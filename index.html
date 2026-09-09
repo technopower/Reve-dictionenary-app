@@ -188,6 +188,7 @@
             color: #ffffff;
         }
 
+        /* Custom Searchable Language Modal Styles */
         .lang-modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -661,7 +662,7 @@
     <div id="convoView" class="workspace-content tab-panel">
         <div class="translate-card" style="text-align:center; padding: 20px;">
             <h3 style="color:#60a5fa; margin-bottom:6px;" id="convoTitleText">🗣️ Voice-to-Voice Conversation</h3>
-            <p style="font-size:12px; color:var(--text-muted); margin-bottom:14px;" id="convoSubText">মুখোমুখি বসে দুটি ভিন্ন ভাষায় রিয়েল-টাইম কথা বলুন।</p>
+            <p style="font-size:12px; color:var(--text-muted); margin-bottom:14px;" id="convoSubText">মুখোমুখি বসে দুটি ভিন্ন ভাষায় রিয়েল-টাইম কথা বলুন।</p>
             
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; gap:8px;">
                 <div class="custom-lang-pill" style="flex:1; padding:6px; font-size:12px;" onclick="openLangModal('convoA')">
@@ -985,7 +986,7 @@
             toastCopy: "অনুবাদ কপি করা হয়েছে! 📋",
             dictPlaceholder: "শব্দ সার্চ করলে অর্থ, সমার্থক শব্দ ও ভার্ব কনজুগেশন এখানে দেখাবে।",
             convoTitle: "🗣️ Voice-to-Voice Conversation",
-            convoSub: "মুখোমুখি বসে দুটি ভিন্ন ভাষায় রিয়েল-টাইম কথা বলুন।",
+            convoSub: "মুখোমুখি বসে দুটি ভিন্ন ভাষায় রিয়েল-টাইম কথা বলুন।",
             convoBtnA: "🎙️ Speak as Person A",
             convoBtnB: "🎙️ Speak as Person B",
             convoPlaceholder: "কনভার্সেশন আউটপুট এখানে দেখাবে..."
@@ -1010,8 +1011,6 @@
 
     const banglishMap = {
         "ami dhaka jabo": "I will go to Dhaka.",
-        "ami ki dhaka jabo": "Will I go to Dhaka?",
-        "apni ki kal jaben": "Will you go tomorrow?",
         "ami dhaka jai": "I go to Dhaka.",
         "amar nam rahim": "My name is Rahim.",
         "kemon acho": "How are you?",
@@ -1129,11 +1128,24 @@
         output.innerHTML = '<span style="color:var(--text-muted);">এআই স্মার্ট প্রসেসিং হচ্ছে...</span>';
 
         let cleanText = input;
+        const smartCorrections = {
+            "thiland": "Thailand", "malasiya": "Malaysia", "bangladesh": "Bangladesh",
+            "dhaka": "Dhaka", "indai": "India", "singapur": "Singapore",
+            "dubia": "Dubai", "london": "London", "omrica": "America",
+            "i goes": "I go", "he go": "he goes", "she go": "she goes",
+            "they was": "they were", "i is": "I am",
+            "ami nepal jabo": "I will go to Nepal."
+        };
+
+        for (let wrong in smartCorrections) {
+            let reg = new RegExp("\\b" + wrong + "\\b", "gi");
+            cleanText = cleanText.replace(reg, smartCorrections[wrong]);
+        }
+
         const clean = cleanText.toLowerCase().replace(/[।?!.]/g, '').trim();
 
         if (banglishMap[clean] && currentTargetLang === 'en') {
-            let translated = banglishMap[clean];
-            currentResult = translated;
+            currentResult = banglishMap[clean];
             output.innerText = currentResult;
             output.className = "result-text-area text-glow-effect";
             saveHistory(input, currentResult);
@@ -1145,16 +1157,7 @@
             const res = await fetch(url);
             const data = await res.json();
             if (data && data[0]) {
-                let translated = data[0].map(item => item[0]).join('');
-                
-                // Automatic Punctuation (Full Stop or Question Mark) Handling
-                if ((cleanText.toLowerCase().includes("কি") || cleanText.toLowerCase().includes("kemon") || cleanText.toLowerCase().includes("ki ") || cleanText.endsWith('?')) && !translated.endsWith('?')) {
-                    if (!translated.endsWith('?')) translated += '?';
-                } else if (!translated.endsWith('.') && !translated.endsWith('?') && !translated.endsWith('!')) {
-                    translated += '.';
-                }
-
-                currentResult = translated;
+                currentResult = data[0].map(item => item[0]).join('');
                 output.innerText = currentResult;
                 output.className = "result-text-area text-glow-effect";
                 saveHistory(input, currentResult);
@@ -1200,7 +1203,7 @@
         translationHistory = [];
         localStorage.removeItem('userHistory');
         renderHistoryList();
-        showToast("হিস্ট্রি মুছে ফেলা হয়েছে");
+        showToast("হিস্ট্রি মুছে ফেলা হয়েছে");
     }
 
     async function lookupDictionary() {
@@ -1221,7 +1224,7 @@
                 <div style="margin-top:6px; font-size:12px; color:var(--text-muted);">Verb Forms: Present (${word}), Past (${word}ed), Participle (${word}ed).</div>
             `;
         } catch(e) {
-            box.innerHTML = "অর্থ পাওয়া যায়নি।";
+            box.innerHTML = "অর্থ পাওয়া যায়নি।";
         }
     }
 
@@ -1249,7 +1252,7 @@
                 `;
                 speakCustom(translated, langVoiceMap[targetLang] || 'en-US');
             } catch(err) {
-                showToast("কনভার্সেশন অনুবাদ ব্যর্থ হয়েছে");
+                showToast("কনভার্সেশন অনুবাদ ব্যর্থ হয়েছে");
             }
         };
         rec.start();
