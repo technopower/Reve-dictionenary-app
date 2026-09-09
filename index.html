@@ -686,14 +686,14 @@
     <div id="dictView" class="workspace-content tab-panel">
         <div class="translate-card">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                <h3 style="color:#60a5fa;">📖 Smart Dictionary</h3>
+                <h3 style="color:#60a5fa;" id="dictHeaderTitle">📖 Smart Dictionary</h3>
                 <div class="custom-lang-pill" style="padding:6px 12px; font-size:12px;" onclick="openLangModal('dict')">
                     <span id="dictTargetLangLabel">বাংলা</span> ▾
                 </div>
             </div>
             <div style="display:flex; gap:8px; margin-bottom:12px;">
                 <input type="text" id="dictSearchInput" class="lang-search-input" placeholder="Type English word (e.g. Run)...">
-                <button class="btn-main-action" style="flex:0.6; padding:10px;" onclick="lookupDictionary()">Search</button>
+                <button class="btn-main-action" style="flex:0.6; padding:10px;" id="dictSearchBtn" onclick="lookupDictionary()">Search</button>
             </div>
             <div id="dictResultBox" style="font-size:14px; color:var(--text-main); line-height:1.6; min-height:80px;">
                 <span style="color:var(--text-muted);" id="dictPlaceholderText">শব্দ সার্চ করলে অর্থ, সমার্থক শব্দ ও ভার্ব কনজুগেশন এখানে দেখাবে।</span>
@@ -1033,7 +1033,7 @@
         { en: "Challenge", bn: "চ্যালেঞ্জ", hi: "चुनौती", ar: "تحدي", zh: "挑战", ja: "挑戦", ko: "도전", de: "Herausforderung", fr: "Défi", es: "Desafío", it: "Sfida", pt: "Desafio" },
         { en: "Important", bn: "গুরুত্বপূর্ণ", hi: "महत्वपूर्ण", ar: "مهم", zh: "重要的", ja: "重要", ko: "중요한", de: "Wichtig", fr: "Important", es: "Importante", it: "Importante", pt: "Importante" },
         { en: "Experience", bn: "অভিজ্ঞতা", hi: "अनुभव", ar: "خبرة", zh: "经验", ja: "経験", ko: "경험", de: "Erfahrung", fr: "Expérience", es: "Experiencia", it: "Esperienza", pt: "Experiência" },
-        { en: "Resilient", bn: "সহনশীল", hi: "लचीला", ar: "مرن", zh: "有弹性的", ja: "回復力のある", ko: "회복력 있는", de: "Widerstandsfähig", fr: "Résilient", es: "Resiliente", it: "Resiliente", pt: "Resiliente" },
+        { en: "Resilient", bn: "সহনশীল", hi: "लचीला", ar: "مرن", zh: "有弹性の", ja: "回復力のある", ko: "회복력 있는", de: "Widerstandsfähig", fr: "Résilient", es: "Resiliente", it: "Resiliente", pt: "Resiliente" },
         { en: "Confidence", bn: "আত্মবিশ্বাস", hi: "आत्मविश्वास", ar: "ثقة", zh: "信心", ja: "自信", ko: "자신감", de: "Vertrauen", fr: "Confiance", es: "Confianza", it: "Fiducia", pt: "Confiança" },
         { en: "Knowledge", bn: "জ্ঞান", hi: "ज्ञान", ar: "معرفة", zh: "知识", ja: "知識", ko: "지식", de: "Wissen", fr: "Connaissance", es: "Conocimiento", it: "Conoscenza", pt: "Conhecimento" },
         { en: "Freedom", bn: "স্বাধীনতা", hi: "स्वतंत्रता", ar: "حرية", zh: "自由", ja: "自由", ko: "자유", de: "Freiheit", fr: "Liberté", es: "Libertad", it: "Libertà", pt: "Liberdade" },
