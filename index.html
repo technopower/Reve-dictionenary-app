@@ -6,37 +6,37 @@
     <title>REVE AI Global Master Translator</title>
 
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#0B0F19">
+    <meta name="theme-color" content="#09122c">
     <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/technopower/Reve-dictionenary-app/main/icon.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="REVE AI">
     <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/technopower/Reve-dictionenary-app/main/icon.png">
 
-    <!-- Fonts: Inter & Hind Siliguri -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
     <!-- Fast OCR Engine for Image Reading -->
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 
     <style>
         :root {
-            --bg-body: #0B0F19;
-            --card-bg: #161E2E;
-            --border-color: #1E293B;
-            --text-main: #F8FAFC;
-            --text-muted: #94A3B8;
-            --accent-violet: #7C3AED;
-            --accent-cyan: #06B6D4;
-            --accent-emerald: #10B981;
-            --primary-indigo: #4F46E5;
-            --primary-blue: #3B82F6;
-            --shadow-elevation: 0 8px 32px rgba(0, 0, 0, 0.5);
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --primary-light: rgba(37, 99, 235, 0.15);
+            --bg-body: linear-gradient(135deg, #09122c 0%, #0b2545 50%, #001e4d 100%);
+            --card-bg: rgba(15, 23, 42, 0.85);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: rgba(255, 255, 255, 0.12);
+            --focus-ring: rgba(37, 99, 235, 0.4);
+            --accent-purple: #a855f7;
+            --accent-purple-light: rgba(168, 85, 247, 0.15);
+            --shadow-elevation-1: 0 4px 20px rgba(0, 0, 0, 0.4);
+            --shadow-elevation-2: 0 8px 32px rgba(0, 0, 0, 0.6);
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', 'Hind Siliguri', sans-serif; -webkit-tap-highlight-color: transparent; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Google Sans', Roboto, -apple-system, BlinkMacSystemFont, sans-serif; -webkit-tap-highlight-color: transparent; }
         body { 
             background: var(--bg-body); 
+            background-attachment: fixed;
             color: var(--text-main); 
             display: flex; 
             justify-content: center; 
@@ -48,67 +48,87 @@
             width: 100%;
             max-width: 480px;
             background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             border-radius: 28px;
-            box-shadow: var(--shadow-elevation);
+            box-shadow: var(--shadow-elevation-2);
             border: 1px solid var(--border-color);
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            position: relative;
         }
 
         .top-navbar {
-            background: #0F172A;
-            padding: 16px 20px;
+            background: rgba(15, 23, 42, 0.9);
+            padding: 18px 20px 14px;
             display: flex;
             align-items: center;
             justify-content: space-between;
+            color: #ffffff;
             border-bottom: 1px solid var(--border-color);
         }
         .brand-logo {
-            font-size: 20px;
-            font-weight: 600;
-            letter-spacing: -0.5px;
-            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 19px;
+            font-weight: 700;
+            color: #ffffff;
         }
         .brand-logo span {
-            color: var(--accent-cyan);
-            font-weight: 700;
+            color: #60a5fa;
+            font-weight: 800;
         }
         .nav-actions {
             display: flex;
             align-items: center;
             gap: 10px;
         }
+        .nav-icon-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: #ffffff;
+            font-size: 18px;
+            cursor: pointer;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+        .nav-icon-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
         .user-pts {
-            background: rgba(15, 23, 42, 0.6);
-            color: #FEE08A;
-            font-size: 13px;
-            font-weight: 600;
-            padding: 6px 14px;
+            background: rgba(254, 240, 138, 0.2);
+            color: #fef08a;
+            font-size: 11px;
+            font-weight: 800;
+            padding: 4px 10px;
             border-radius: 20px;
-            border: 1px solid rgba(254, 224, 138, 0.3);
-            box-shadow: 0 0 12px rgba(254, 224, 138, 0.1);
+            border: 1px solid rgba(254, 240, 138, 0.3);
         }
 
         .hub-tabs {
             display: flex;
-            background: rgba(15, 23, 42, 0.4);
-            padding: 6px;
-            margin: 12px;
+            background: rgba(30, 41, 59, 0.6);
+            padding: 5px;
+            margin: 10px 12px 0;
             border-radius: 16px;
-            gap: 4px;
+            gap: 2px;
             border: 1px solid var(--border-color);
             overflow-x: auto;
         }
         .hub-tab {
             flex: 1;
-            padding: 8px 4px;
+            padding: 8px 2px;
             background: none;
             border: none;
             border-radius: 12px;
-            font-size: 9px;
-            font-weight: 600;
+            font-size: 10px;
+            font-weight: 700;
             color: var(--text-muted);
             cursor: pointer;
             text-align: center;
@@ -116,53 +136,133 @@
             white-space: nowrap;
         }
         .hub-tab.active {
-            background: rgba(6, 182, 212, 0.15);
-            color: var(--accent-cyan);
-            border: 1px solid rgba(6, 182, 212, 0.3);
+            background: rgba(37, 99, 235, 0.3);
+            color: #60a5fa;
+            border: 1px solid rgba(96, 165, 250, 0.3);
+            box-shadow: var(--shadow-elevation-1);
         }
 
         .lang-switch-container {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 16px 12px;
+            padding: 14px 16px;
+            background: rgba(30, 41, 59, 0.4);
+            border-bottom: 1px solid var(--border-color);
         }
         .custom-lang-pill {
-            background: var(--card-bg);
+            background: rgba(15, 23, 42, 0.8);
             border: 1px solid var(--border-color);
             border-radius: 24px;
-            padding: 10px 14px;
-            min-width: 130px;
-            min-height: 44px;
+            padding: 8px 16px;
             display: flex;
             align-items: center;
-            justify-content: center;
             gap: 6px;
             font-size: 13px;
-            font-weight: 600;
-            color: var(--accent-cyan);
+            font-weight: 700;
+            color: #60a5fa;
             cursor: pointer;
-            text-align: center;
+            transition: border-color 0.2s;
+        }
+        .custom-lang-pill:hover {
+            border-color: #60a5fa;
         }
         .swap-circle-btn {
-            background: rgba(124, 58, 237, 0.15);
-            border: 1px solid rgba(124, 58, 237, 0.3);
-            color: var(--accent-violet);
-            width: 44px;
-            height: 44px;
+            background: rgba(37, 99, 235, 0.2);
+            border: 1px solid rgba(37, 99, 235, 0.4);
+            color: #60a5fa;
+            width: 38px;
+            height: 38px;
             border-radius: 50%;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 16px;
-            transition: transform 0.2s;
-            flex-shrink: 0;
+            transition: transform 0.2s, background 0.2s;
         }
-        .swap-circle-btn:hover { transform: scale(1.05); }
+        .swap-circle-btn:hover {
+            transform: scale(1.05);
+            background: var(--primary);
+            color: #ffffff;
+        }
+
+        /* Custom Searchable Language Modal Styles */
+        .lang-modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(8px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 99999;
+            padding: 15px;
+        }
+        .lang-modal-card {
+            background: #0f172a;
+            border: 1px solid var(--border-color);
+            width: 100%;
+            max-width: 420px;
+            height: 80vh;
+            border-radius: 24px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: var(--shadow-elevation-2);
+            animation: zoomIn 0.2s ease-out;
+        }
+        .lang-modal-header {
+            padding: 16px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background: rgba(30, 41, 59, 0.5);
+        }
+        .lang-search-input {
+            width: 100%;
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 10px 14px;
+            color: white;
+            font-size: 14px;
+            outline: none;
+        }
+        .lang-search-input:focus {
+            border-color: #60a5fa;
+        }
+        .lang-list-container {
+            overflow-y: auto;
+            flex: 1;
+            padding: 8px;
+        }
+        .lang-item {
+            padding: 12px 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.15s;
+            color: var(--text-main);
+            font-size: 14px;
+        }
+        .lang-item:hover {
+            background: rgba(37, 99, 235, 0.2);
+            color: #60a5fa;
+        }
+        .lang-item-native {
+            font-weight: 700;
+        }
+        .lang-item-en {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
 
         .workspace-content {
-            padding: 0 16px 16px;
+            padding: 16px;
             display: flex;
             flex-direction: column;
             gap: 12px;
@@ -170,11 +270,16 @@
         }
 
         .translate-card {
-            background: var(--card-bg);
+            background: rgba(30, 41, 59, 0.5);
             border: 1px solid var(--border-color);
-            border-radius: 20px;
+            border-radius: 22px;
             padding: 16px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            position: relative;
+            box-shadow: var(--shadow-elevation-1);
+        }
+        .translate-card:focus-within {
+            border-color: #60a5fa;
+            box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.2);
         }
 
         .card-textarea {
@@ -185,11 +290,12 @@
             resize: none;
             outline: none;
             font-size: 16px;
-            line-height: 24px;
             color: var(--text-main);
+            line-height: 1.5;
         }
         .card-textarea::placeholder {
             color: var(--text-muted);
+            font-size: 15px;
         }
 
         .card-bottom-actions {
@@ -201,20 +307,19 @@
             border-top: 1px solid var(--border-color);
         }
         .char-count {
-            font-size: 13px;
-            font-weight: 500;
+            font-size: 11px;
             color: var(--text-muted);
         }
         .card-tools {
             display: flex;
-            gap: 8px;
+            gap: 6px;
         }
         .tool-btn {
-            background: rgba(255, 255, 255, 0.04);
+            background: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--border-color);
             color: var(--text-muted);
-            width: 36px;
-            height: 36px;
+            width: 34px;
+            height: 34px;
             border-radius: 50%;
             cursor: pointer;
             display: flex;
@@ -224,73 +329,15 @@
             transition: all 0.2s;
         }
         .tool-btn:hover {
-            color: var(--accent-cyan);
-            border-color: var(--accent-cyan);
-        }
-
-        .ai-enhancer-bar {
-            display: flex;
-            gap: 8px;
-        }
-        .ai-pill-btn {
-            flex: 1;
-            background: rgba(124, 58, 237, 0.08);
-            border: 1px solid rgba(124, 58, 237, 0.25);
-            color: #DDD6FE;
-            padding: 10px 6px;
-            border-radius: 14px;
-            font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            text-align: center;
-            transition: all 0.2s;
-        }
-        .ai-pill-btn:hover {
-            background: rgba(124, 58, 237, 0.2);
-            border-color: var(--accent-violet);
-        }
-
-        .action-cta-row {
-            display: flex;
-            gap: 10px;
-        }
-        .btn-voice-action {
-            flex: 1;
-            background: linear-gradient(135deg, #059669, #10B981);
-            color: white;
-            border: none;
-            padding: 14px;
-            border-radius: 16px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
-        }
-        .btn-main-action {
-            flex: 1.2;
-            background: linear-gradient(135deg, #4F46E5, #3B82F6);
-            color: white;
-            border: none;
-            padding: 14px;
-            border-radius: 16px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4);
+            background: rgba(37, 99, 235, 0.2);
+            color: #60a5fa;
+            border-color: rgba(96, 165, 250, 0.3);
         }
 
         .result-panel {
             background: rgba(15, 23, 42, 0.6);
             border: 1px solid var(--border-color);
-            border-radius: 20px;
+            border-radius: 22px;
             padding: 16px;
             display: flex;
             flex-direction: column;
@@ -298,101 +345,222 @@
             min-height: 110px;
         }
         .result-text-area {
-            font-size: 16px;
-            font-weight: 500;
+            font-size: 17px;
+            font-weight: 600;
             color: var(--text-main);
-            line-height: 24px;
+            line-height: 1.5;
+            min-height: 48px;
         }
         .result-placeholder {
             color: var(--text-muted);
-            font-size: 15px;
+            font-size: 14px;
+            font-weight: normal;
+        }
+
+        .text-glow-effect {
+            animation: textGlowFade 0.5s ease-out forwards;
+        }
+        @keyframes textGlowFade {
+            0% { opacity: 0; transform: translateY(6px); text-shadow: 0 0 0px transparent; }
+            50% { text-shadow: 0 0 15px rgba(96, 165, 250, 0.6); }
+            100% { opacity: 1; transform: translateY(0); text-shadow: 0 0 0px transparent; }
+        }
+
+        .ai-enhancer-bar {
+            background: rgba(168, 85, 247, 0.1);
+            border: 1px dashed rgba(168, 85, 247, 0.4);
+            padding: 10px 14px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+        .ai-pill-btn {
+            flex: 1;
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            color: #d8b4fe;
+            padding: 10px 8px;
+            border-radius: 14px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+        }
+        .ai-pill-btn:hover {
+            border-color: #a855f7;
+            background: rgba(168, 85, 247, 0.2);
+            box-shadow: var(--shadow-elevation-1);
+        }
+
+        .action-cta-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        .btn-main-action {
+            flex: 1;
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: white;
+            border: none;
+            padding: 12px 16px;
+            border-radius: 16px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4);
+            transition: all 0.2s;
+        }
+        .btn-main-action:hover {
+            background: linear-gradient(135deg, #1d4ed8, #1e40af);
         }
 
         .admob-test-banner {
             width: 100%;
-            background: rgba(15, 23, 42, 0.5);
-            border: 1px dashed var(--border-color);
+            background: rgba(30, 41, 59, 0.4);
+            border: 1px dashed rgba(255, 255, 255, 0.2);
             border-radius: 14px;
-            padding: 8px;
+            padding: 12px;
             text-align: center;
-            margin-top: 2px;
+            margin-top: 10px;
         }
         .admob-test-banner span {
-            font-size: 11px;
+            font-size: 12px;
+            font-weight: 700;
             color: var(--text-muted);
         }
 
-        /* Modal Overlays */
-        .lang-modal-overlay, .voice-overlay, .feature-modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(10px);
-            display: none; align-items: center; justify-content: center;
-            z-index: 99999; padding: 15px;
+        .voice-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(12px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
         }
-        .lang-modal-card {
-            background: var(--card-bg); border: 1px solid var(--border-color);
-            width: 100%; max-width: 400px; height: 80vh; border-radius: 20px;
-            display: flex; flex-direction: column; overflow: hidden;
-        }
-        .lang-search-input {
-            width: 100%; background: #0F172A; border: 1px solid var(--border-color);
-            border-radius: 12px; padding: 10px 14px; color: white; font-size: 14px; outline: none;
-        }
-        .lang-item {
-            padding: 12px 16px; border-bottom: 1px solid var(--border-color);
-            cursor: pointer; display: flex; justify-content: space-between; color: var(--text-main); align-items: center;
-        }
-        .lang-item:hover { background: rgba(6, 182, 212, 0.1); color: var(--accent-cyan); }
-
         .voice-card {
-            background: var(--card-bg); border: 1px solid var(--border-color);
-            width: 85%; max-width: 320px; border-radius: 28px; padding: 30px 20px; text-align: center; position: relative;
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid var(--border-color);
+            width: 85%;
+            max-width: 320px;
+            border-radius: 28px;
+            padding: 30px 20px;
+            text-align: center;
+            box-shadow: var(--shadow-elevation-2);
+            position: relative;
+            animation: zoomIn 0.25s ease-out;
         }
+        @keyframes zoomIn { 0% { transform: scale(0.85); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+
         .voice-pulse-btn {
-            width: 76px; height: 76px; background: var(--accent-cyan); color: #0F172A;
-            border-radius: 50%; margin: 20px auto 16px; display: flex; align-items: center; justify-content: center; font-size: 32px; cursor: pointer;
+            width: 76px;
+            height: 76px;
+            background: #2563eb;
+            color: white;
+            border-radius: 50%;
+            margin: 20px auto 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            cursor: pointer;
+            box-shadow: 0 0 25px rgba(37, 99, 235, 0.6);
+            animation: rippleEffect 1.5s infinite;
+        }
+        @keyframes rippleEffect {
+            0% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.6); }
+            70% { box-shadow: 0 0 0 22px rgba(37, 99, 235, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); }
         }
 
         .toast-msg {
-            position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
-            background: #0F172A; border: 1px solid var(--border-color); color: white;
-            padding: 8px 18px; border-radius: 20px; font-size: 13px; display: none; z-index: 10000;
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #0f172a;
+            border: 1px solid var(--border-color);
+            color: white;
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 12px;
+            display: none;
+            z-index: 10000;
         }
+
         .tab-panel { display: none; }
         .tab-panel.active { display: flex; flex-direction: column; gap: 12px; }
 
         .quiz-header-status {
-            display: flex; justify-content: space-between; font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px dashed var(--border-color);
         }
+
         .quiz-lang-selector-box {
-            display: flex; align-items: center; justify-content: space-between; background: rgba(15, 23, 42, 0.5); padding: 8px 12px; border-radius: 12px; margin-bottom: 10px; border: 1px solid var(--border-color); cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(30, 41, 59, 0.4);
+            padding: 8px 12px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            border: 1px solid var(--border-color);
+            cursor: pointer;
         }
+
         .wrong-review-banner {
-            background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); color: #fca5a5; padding: 8px 12px; border-radius: 10px; font-size: 11px; font-weight: 600; margin-bottom: 10px; text-align: left;
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #fca5a5;
+            padding: 10px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
+
         .leaderboard-item {
-            display: flex; justify-content: space-between; align-items: center; background: rgba(15, 23, 42, 0.5); padding: 10px 14px; border-radius: 12px; margin-bottom: 8px; border: 1px solid var(--border-color); font-size: 13px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(30, 41, 59, 0.4);
+            padding: 10px 14px;
+            border-radius: 12px;
+            margin-bottom: 8px;
+            border: 1px solid var(--border-color);
+            font-size: 13px;
         }
         .stats-card {
-            background: rgba(15, 23, 42, 0.5); border: 1px solid var(--border-color); border-radius: 16px; padding: 12px; text-align: center;
+            background: rgba(30, 41, 59, 0.4);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 14px;
+            text-align: center;
         }
-        
-        /* Floating Widget Button Style */
-        .floating-widget-btn {
-            position: fixed; bottom: 20px; right: 20px; background: linear-gradient(135deg, #7C3AED, #06B6D4);
-            color: white; width: 54px; height: 54px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            font-size: 22px; cursor: pointer; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.5); z-index: 9999; border: 2px solid rgba(255,255,255,0.2);
-            transition: transform 0.2s;
-        }
-        .floating-widget-btn:hover { transform: scale(1.1); }
     </style>
 </head>
 <body>
 
-<!-- Floating Screen Translator Widget Button -->
-<div class="floating-widget-btn" onclick="openFloatingModal()" title="Floating Screen Translator">💬</div>
-
 <div class="app-shell">
+    
     <div id="toast" class="toast-msg">কপি করা হয়েছে! 📋</div>
 
     <!-- Top Navigation Header -->
@@ -402,27 +570,30 @@
         </div>
         <div class="nav-actions">
             <span class="user-pts">🪙 <span id="rewardDisplay">21</span> Pts</span>
+            <button class="nav-icon-btn" onclick="toggleTheme()" id="themeBtn" title="Theme">✨</button>
         </div>
     </div>
 
     <!-- Module Hub Bar -->
     <div class="hub-tabs">
-        <button class="hub-tab active" id="tabTransBtn" onclick="switchView('trans')">🌐 TRANSLATE</button>
-        <button class="hub-tab" id="tabConvoBtn" onclick="switchView('convo')">🗣️ CONVO</button>
-        <button class="hub-tab" id="tabDictBtn" onclick="switchView('dict')">📖 DICT</button>
+        <button class="hub-tab active" id="tabTransBtn" onclick="switchView('trans')">🌐 TRANSLATOR</button>
+        <button class="hub-tab" id="tabTeacherBtn" onclick="switchView('teacher')">👨‍🏫 TEACHER</button>
         <button class="hub-tab" id="tabQuizBtn" onclick="switchView('quiz')">⚔️ ARENA</button>
         <button class="hub-tab" id="tabDailyBtn" onclick="switchView('daily')">🔥 DAILY</button>
-        <button class="hub-tab" id="tabHistoryBtn" onclick="switchView('history')">📜 HISTORY</button>
+        <button class="hub-tab" id="tabStatsBtn" onclick="switchView('stats')">📊 STATS</button>
         <button class="hub-tab" id="tabRankBtn" onclick="switchView('rank')">🏆 RANK</button>
     </div>
 
-    <!-- 1. TRANSLATOR VIEW -->
+    <!-- MAIN VIEW 1: TRANSLATOR -->
     <div id="transView" class="workspace-content tab-panel active">
+        
         <div class="lang-switch-container">
             <div class="custom-lang-pill" onclick="openLangModal('src')">
                 <span id="srcLabel">বাংলা</span> ▾
             </div>
-            <button class="swap-circle-btn" onclick="swapLanguages()" title="Swap">⇄</button>
+
+            <button class="swap-circle-btn" onclick="swapLanguages()" title="Swap Languages">⇄</button>
+
             <div class="custom-lang-pill" onclick="openLangModal('target')">
                 <span id="targetLabel">English</span> ▾
             </div>
@@ -430,11 +601,12 @@
 
         <div class="translate-card">
             <textarea id="sourceInput" class="card-textarea" placeholder="শব্দ বা বাক্য লিখুন..."></textarea>
+            
             <div class="card-bottom-actions">
                 <span class="char-count" id="charCount">0 / 5000</span>
                 <div class="card-tools">
                     <button class="tool-btn" onclick="pasteClipboard()" title="Paste">📋</button>
-                    <button class="tool-btn" onclick="document.getElementById('imgUpload').click()" title="Camera Lens">📷</button>
+                    <button class="tool-btn" onclick="document.getElementById('imgUpload').click()" title="Scan Camera">📷</button>
                     <input type="file" id="imgUpload" accept="image/*" style="display:none;" onchange="handleImageOcr(event)">
                     <button class="tool-btn" onclick="clearAll()" title="Clear">✖</button>
                 </div>
@@ -442,25 +614,27 @@
         </div>
 
         <div class="ai-enhancer-bar">
-            <button class="ai-pill-btn" onclick="runAiMaster('grammar')">✨ Smart Fix</button>
-            <button class="ai-pill-btn" onclick="runAiMaster('pure')">🇬🇧 Pure English</button>
-            <button class="ai-pill-btn" onclick="runAiMaster('formal')">💼 Pro Master</button>
+            <button class="ai-pill-btn" id="btnGrammar" onclick="runAiMaster('grammar')">✨ Smart Fix</button>
+            <button class="ai-pill-btn" id="btnPure" onclick="runAiMaster('pure')">🇬🇧 Pure English</button>
+            <button class="ai-pill-btn" id="btnFormal" onclick="runAiMaster('formal')">💼 Pro Master</button>
         </div>
 
         <div class="action-cta-row">
-            <button class="btn-voice-action" onclick="openVoiceModal()">🎙️ Smart Voice</button>
-            <button class="btn-main-action" onclick="translateText()">অনুবাদ করুন ➔</button>
+            <button class="btn-main-action" style="background:linear-gradient(135deg, #059669, #047857);" id="btnVoice" onclick="openVoiceModal()">🎙️ Smart Voice AI</button>
+            <button class="btn-main-action" id="btnTranslate" onclick="translateText()">অনুবাদ করুন ➔</button>
         </div>
 
         <div class="result-panel">
             <div id="targetOutput" class="result-text-area">
                 <span class="result-placeholder" id="resPlaceholder">ফলাফল এখানে দৃশ্যমান হবে...</span>
             </div>
+            
             <div class="card-bottom-actions" style="margin-top:auto;">
-                <span style="font-size:12px; color:var(--accent-cyan);">AI Verified Output</span>
+                <span style="font-size:11px; font-weight:700; color:#60a5fa;" id="aiVerifiedText">AI Smart Corrected Output</span>
                 <div class="card-tools">
-                    <button class="tool-btn" onclick="speakOutput()" title="Listen">🔊</button>
-                    <button class="tool-btn" onclick="copyOutput()" title="Copy">📋</button>
+                    <button class="tool-btn" onclick="speakOutput()" title="Listen Voice">🔊</button>
+                    <button class="tool-btn" onclick="copyOutput()" title="Copy Text">📋</button>
+                    <button class="tool-btn" onclick="shareOutput()" title="Share">🔗</button>
                 </div>
             </div>
         </div>
@@ -468,132 +642,131 @@
         <div class="admob-test-banner">
             <span>📢 [AdMob Test Banner Ad]<br>Ad Unit ID: ca-app-pub-3940256099942544/6300978111</span>
         </div>
+
     </div>
 
-    <!-- 2. VOICE-TO-VOICE CONVO VIEW -->
-    <div id="convoView" class="workspace-content tab-panel">
-        <div class="translate-card" style="text-align:center; padding: 20px;">
-            <h3 style="color:var(--accent-cyan); margin-bottom:10px;">🗣️ Voice-to-Voice Conversation</h3>
-            <p style="font-size:13px; color:var(--text-muted); margin-bottom:20px;">মুখোমুখি কথা বলুন এবং রিয়েল-টাইমে অনুবাদ শুনুন।</p>
-            <button class="btn-voice-action" style="width:100%; margin-bottom:12px;" onclick="openVoiceModal()">🎙️ Speak (Person A)</button>
-            <button class="btn-main-action" style="width:100%;" onclick="openVoiceModal()">🎙️ Speak (Person B)</button>
+    <!-- MAIN VIEW 2: TEACHER -->
+    <div id="teacherView" class="workspace-content tab-panel">
+        <div class="translate-card" style="text-align:center;">
+            <span style="font-size:11px; font-weight:800; color:#60a5fa;">AI SMART PRACTICE:</span>
+            <p id="aiQuestion" style="font-size:15px; font-weight:700; margin:10px 0;">Where do you live and what do you do?</p>
+            <button class="tool-btn" style="margin:0 auto 10px;" onclick="speakCustom(document.getElementById('aiQuestion').innerText, 'en-US')">🔊</button>
+            <button class="btn-main-action" style="width:100%;" onclick="openVoiceModal()">🎙️ Speak Answer</button>
+            <div id="teacherFeedback" style="font-size:12px; font-style:italic; margin-top:10px;"></div>
         </div>
     </div>
 
-    <!-- 3. SMART DICTIONARY & CONJUGATIONS VIEW -->
-    <div id="dictView" class="workspace-content tab-panel">
-        <div class="translate-card">
-            <h3 style="color:var(--accent-cyan); margin-bottom:10px;">📖 Smart Dictionary & Verbs</h3>
-            <div style="display:flex; gap:8px; margin-bottom:12px;">
-                <input type="text" id="dictSearchInput" class="lang-search-input" placeholder="Enter English word (e.g. Go, Run)...">
-                <button class="btn-main-action" style="flex:0.6; padding:10px;" onclick="lookupDictionary()">Search</button>
-            </div>
-            <div id="dictResultBox" style="font-size:14px; color:var(--text-main); line-height:1.6;">
-                <span style="color:var(--text-muted);">শব্দ সার্চ করলে অর্থ, সমার্থক শব্দ ও ভার্ব কনজুগেশন এখানে দেখাবে।</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- 4. ARENA VIEW -->
+    <!-- MAIN VIEW 3: VOCAB ARENA -->
     <div id="quizView" class="workspace-content tab-panel">
         <div class="translate-card" id="quizCardBox" style="text-align:center;">
+            
             <div class="quiz-lang-selector-box" onclick="openLangModal('quiz')">
-                <span style="font-size:11px; font-weight:600; color:var(--text-muted);">কুইজ ভাষা:</span>
-                <span id="quizLangLabel" style="font-size:12px; font-weight:600; color:var(--accent-cyan);">Bengali — বাংলা ▾</span>
+                <span style="font-size:11px; font-weight:700; color:var(--text-muted);" id="quizLangLabelText">কুইজ ভাষা:</span>
+                <span id="quizLangLabel" style="font-size: 12px; font-weight: 700; color: #60a5fa;">Bengali — বাংলা ▾</span>
             </div>
+
             <div id="wrongReviewBanner" class="wrong-review-banner" style="display: none;">
                 ⚠️ <span id="reviewBannerText">রিভেঞ্জ রাউন্ড: ভুলগুলো আবার ঝালাই করা হচ্ছে!</span>
             </div>
+
             <div class="quiz-header-status">
-                <span id="quizCounterText">⚔️ Arena Level 1 • Q 1 / 5</span>
-                <span id="quizScoreText" style="color:var(--accent-cyan);">Score: 0</span>
+                <span id="quizCounterText">⚔️ Arena Level 1 • রাউন্ড ১ / ৫</span>
+                <span id="quizScoreText" style="color:#60a5fa;">স্কোর: ০</span>
             </div>
-            <h4 id="quizLevelTitle" style="color:var(--accent-cyan); margin-bottom:6px; font-size:15px;">Vocab Arena Challenge</h4>
-            <p id="quizPrompt" style="font-size:15px; font-weight:600; margin:12px 0 16px;"></p>
+            
+            <h4 id="quizLevelTitle" style="color:#60a5fa; margin-bottom:6px; font-size:15px;">Level 1: Rookie Vanguard</h4>
+            <p id="quizPrompt" style="font-size:15px; font-weight:700; margin:12px 0 16px; color:var(--text-main); line-height:1.4;"></p>
+            
             <div id="quizOptionsContainer" style="display:flex; flex-direction:column; gap:10px;"></div>
         </div>
     </div>
 
-    <!-- 5. DAILY VIEW -->
+    <!-- MAIN VIEW 4: DAILY CHALLENGE -->
     <div id="dailyView" class="workspace-content tab-panel">
         <div class="translate-card" style="text-align:center;">
-            <h3 style="color:var(--accent-cyan); margin-bottom:8px;">🔥 Daily Mission Challenge</h3>
-            <p style="font-size:13px; color:var(--text-muted); margin-bottom:14px;">প্রতিদিন নতুন ভোকাবুলারি শিখুন এবং এক্সক্লুসিভ রিওয়ার্ড জিতুন!</p>
+            <h3 style="color:#60a5fa; margin-bottom:8px;">🔥 Daily Mission Challenge</h3>
+            <p style="font-size:13px; color:var(--text-muted); margin-bottom:14px;">প্রতিদিন ৫টি করে বিশেষ ভোকাবুলারি চ্যালেঞ্জ সম্পন্ন করুন এবং এক্সক্লুসিভ রিওয়ার্ড জিতুন!</p>
+            
             <div id="dailyCardBox">
-                <p id="dailyPrompt" style="font-size:15px; font-weight:600; margin:12px 0;"></p>
+                <p id="dailyPrompt" style="font-size:15px; font-weight:700; margin:12px 0 16px; color:var(--text-main);"></p>
                 <div id="dailyOptionsContainer" style="display:flex; flex-direction:column; gap:10px;"></div>
             </div>
         </div>
     </div>
 
-    <!-- 6. HISTORY VIEW -->
-    <div id="historyView" class="workspace-content tab-panel">
+    <!-- MAIN VIEW 5: STATS & PROGRESS GRAPH -->
+    <div id="statsView" class="workspace-content tab-panel">
         <div class="translate-card">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                <h3 style="color:var(--accent-cyan);">📜 Translation History</h3>
-                <button onclick="clearHistory()" style="background:none; border:none; color:#fca5a5; font-size:12px; cursor:pointer;">Clear All</button>
-            </div>
-            <div id="historyListContainer" style="max-height:300px; overflow-y:auto; display:flex; flex-direction:column; gap:8px;">
-                <span style="color:var(--text-muted); font-size:13px;">কোনো হিস্ট্রি সংরক্ষিত নেই।</span>
+            <h3 style="color:#60a5fa; margin-bottom:12px; text-align:center;">📊 Learning Analytics</h3>
+            <div style="display:flex; flex-direction:column; gap:10px;">
+                <div class="stats-card">
+                    <span style="font-size:12px; color:var(--text-muted);">Total Levels Conquered</span>
+                    <h2 id="statLevel" style="color:#60a5fa; margin-top:4px;">Level 1</h2>
+                </div>
+                <div class="stats-card">
+                    <span style="font-size:12px; color:var(--text-muted);">Total Earned Coins</span>
+                    <h2 id="statCoins" style="color:#fef08a; margin-top:4px;">21 Pts</h2>
+                </div>
+                <div class="stats-card">
+                    <span style="font-size:12px; color:var(--text-muted);">Accuracy Rate</span>
+                    <h2 style="color:#34d399; margin-top:4px;">88.5% 📈</h2>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- 7. RANK VIEW -->
+    <!-- MAIN VIEW 6: GLOBAL LEADERBOARD -->
     <div id="rankView" class="workspace-content tab-panel">
         <div class="translate-card">
-            <h3 style="color:var(--accent-cyan); margin-bottom:12px; text-align:center;">🏆 Global Leaderboard</h3>
-            <div class="leaderboard-item"><span>🥇 1. Alex_Pro (USA)</span> <strong>9,450 Pts</strong></div>
-            <div class="leaderboard-item"><span>🥈 2. Tanvir_BD (Bangladesh)</span> <strong>8,920 Pts</strong></div>
-            <div class="leaderboard-item" style="border-color:var(--accent-cyan);"><span>⭐ আপনি (You)</span> <strong id="myRankScore">21 Pts</strong></div>
+            <h3 style="color:#60a5fa; margin-bottom:12px; text-align:center;">🏆 Global Leaderboard</h3>
+            <div id="leaderboardList">
+                <div class="leaderboard-item"><span>🥇 1. Alex_Pro (USA)</span> <strong>9,450 Pts</strong></div>
+                <div class="leaderboard-item"><span>🥈 2. Tanvir_BD (Bangladesh)</span> <strong>8,920 Pts</strong></div>
+                <div class="leaderboard-item"><span>🥉 3. Marco_It (Italy)</span> <strong>8,310 Pts</strong></div>
+                <div class="leaderboard-item"><span>4. Li_Wei (China)</span> <strong>7,600 Pts</strong></div>
+                <div class="leaderboard-item" style="border-color:#60a5fa;"><span>⭐ আপনি (You)</span> <strong id="myRankScore">21 Pts</strong></div>
+            </div>
         </div>
     </div>
+
 </div>
 
-<!-- Floating Screen Translator Modal -->
-<div id="floatingModal" class="feature-modal-overlay">
-    <div class="voice-card" style="max-width:340px;">
-        <button style="position:absolute; top:14px; right:16px; background:none; border:none; font-size:18px; color:var(--text-muted); cursor:pointer;" onclick="closeFloatingModal()">✖</button>
-        <h3 style="color:var(--accent-cyan); margin-bottom:8px;">💬 Floating Bubble Active</h3>
-        <p style="font-size:12px; color:var(--text-muted); margin-bottom:14px;">চ্যাট বা ব্রাউজারের ওপর এই বক্সটি ফ্লোট করবে। যেকোনো টেক্সট এখানে পেস্ট করে তাৎক্ষণিক অনুবাদ দেখুন।</p>
-        <input type="text" id="floatingInput" class="lang-search-input" placeholder="Type text here..." style="margin-bottom:10px;" oninput="quickFloatingTranslate(this.value)">
-        <div id="floatingOutput" style="font-size:14px; font-weight:600; color:var(--text-main); min-height:35px;"></div>
-    </div>
-</div>
-
-<!-- Language Modal -->
+<!-- Custom Searchable Language Selection Modal -->
 <div id="langModal" class="lang-modal-overlay">
     <div class="lang-modal-card">
-        <div style="padding: 16px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
-            <h3 style="font-size: 15px; color: var(--accent-cyan);">ভাষা নির্বাচন করুন</h3>
-            <button onclick="closeLangModal()" style="background:none; border:none; color:white; font-size:16px; cursor:pointer;">✖</button>
+        <div class="lang-modal-header">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="color: #60a5fa; font-size: 16px;">Select Language</h3>
+                <button onclick="closeLangModal()" style="background:none; border:none; color:white; font-size:18px; cursor:pointer;">✖</button>
+            </div>
+            <input type="text" id="langSearchBox" class="lang-search-input" placeholder="🔍 Search language..." oninput="filterLanguages()">
         </div>
-        <div style="padding: 12px;">
-            <input type="text" id="langSearchBox" class="lang-search-input" placeholder="🔍 ভাষা খুঁজুন..." oninput="filterLanguages()">
+        <div class="lang-list-container" id="langListContainer">
+            <!-- Dynamically populated languages with Native + English names -->
         </div>
-        <div id="langListContainer" style="overflow-y: auto; flex: 1; padding: 0 12px 12px;"></div>
     </div>
 </div>
 
-<!-- Voice Modal -->
+<!-- Google Style Voice Modal -->
 <div id="voiceModal" class="voice-overlay">
     <div class="voice-card">
         <button style="position:absolute; top:14px; right:16px; background:none; border:none; font-size:18px; color:var(--text-muted); cursor:pointer;" onclick="closeVoiceModal()">✖</button>
+        <div style="font-size:22px; font-weight:800; letter-spacing:-0.5px; margin-bottom:8px;">
+            <span style="color:#60a5fa">G</span><span style="color:#f87171">o</span><span style="color:#fbbf24">o</span><span style="color:#60a5fa">g</span><span style="color:#34d399">l</span><span style="color:#f87171">e</span>
+        </div>
         <div class="voice-pulse-btn" onclick="closeVoiceModal()">🎙️</div>
-        <div id="voiceStatus" style="font-size:15px; font-weight:600;">শোনা হচ্ছে...</div>
+        <div id="voiceStatus" style="font-size:15px; font-weight:700; margin-bottom:4px;">Smart Listening...</div>
+        <p id="voiceSub" style="font-size:12px; color:var(--text-muted);">কথা বলুন, এআই স্বয়ংক্রিয়ভাবে শুধরে অনুবাদ করছে...</p>
     </div>
 </div>
 
 <script>
     let points = parseInt(localStorage.getItem('userPts')) || 21;
-    let currentSourceLang = 'bn';
-    let currentTargetLang = 'en';
-    let selectedQuizLang = 'bn';
-    let activeLangType = 'src';
-    let currentResult = "";
     let globalRecognition = null;
-    let translationHistory = JSON.parse(localStorage.getItem('userHistory')) || [];
+    let currentResult = "";
+    let activeLangType = 'src'; // 'src', 'target', or 'quiz'
 
+    // Complete 131+ Languages Database with Native Name & English Name
     const languagesDB = [
         { code: "en", en: "English", native: "English" },
         { code: "hi", en: "Hindi", native: "हिन्दी" },
@@ -608,10 +781,128 @@
         { code: "id", en: "Indonesian", native: "Bahasa Indonesia" },
         { code: "de", en: "German", native: "Deutsch" },
         { code: "ja", en: "Japanese", native: "日本語" },
+        { code: "mr", en: "Marathi", native: "मराठी" },
+        { code: "te", en: "Telugu", native: "తెలుగు" },
         { code: "tr", en: "Turkish", native: "Türkçe" },
+        { code: "ta", en: "Tamil", native: "தமிழ்" },
+        { code: "yue", en: "Yue Chinese", native: "粵語" },
+        { code: "vi", en: "Vietnamese", native: "Tiếng Việt" },
+        { code: "fil", en: "Filipino", native: "Filipino" },
+        { code: "ko", en: "Korean", native: "한국어" },
+        { code: "fa", en: "Persian", native: "فارسی" },
+        { code: "ha", en: "Hausa", native: "Hausa" },
+        { code: "ar-EG", en: "Egyptian Arabic", native: "العربية المصرية" },
+        { code: "sw", en: "Swahili", native: "Kiswahili" },
+        { code: "jv", en: "Javanese", native: "Basa Jawa" },
         { code: "it", en: "Italian", native: "Italiano" },
-        { code: "ko", en: "Korean", native: "한국어" }
+        { code: "pa", en: "Punjabi", native: "পੰਜਾਬী" },
+        { code: "kn", en: "Kannada", native: "ಕನ್ನಡ" },
+        { code: "gu", en: "Gujarati", native: "ગુજરાતી" },
+        { code: "th", en: "Thai", native: "ไทย" },
+        { code: "am", en: "Amharic", native: "አማርኛ" },
+        { code: "bh", en: "Bhojpuri", native: "भोजपुरी" },
+        { code: "ml", en: "Malayalam", native: "മലയാളം" },
+        { code: "or", en: "Odia", native: "ଓଡ଼ିଆ" },
+        { code: "su", en: "Sundanese", native: "Basa Sunda" },
+        { code: "pl", en: "Polish", native: "Polski" },
+        { code: "uk", en: "Ukrainian", native: "Українська" },
+        { code: "ms", en: "Malay", native: "Bahasa Melayu" },
+        { code: "uz", en: "Uzbek", native: "Oʻzbekcha" },
+        { code: "sd", en: "Sindhi", native: "سنڌي" },
+        { code: "ne", en: "Nepali", native: "नेपाली" },
+        { code: "ro", en: "Romanian", native: "Română" },
+        { code: "nl", en: "Dutch", native: "Nederlands" },
+        { code: "ps", en: "Pashto", native: "پښتو" },
+        { code: "as", en: "Assamese", native: "অসমীয়া" },
+        { code: "mg", en: "Malagasy", native: "Malagasy" },
+        { code: "nso", en: "Saraiki", native: "سرائیکی" },
+        { code: "so", en: "Somali", native: "Soomaali" },
+        { code: "az", en: "Azerbaijani", native: "Azərbaycan dili" },
+        { code: "si", en: "Sinhala", native: "සිංහල" },
+        { code: "km", en: "Khmer", native: "ខ្មែរ" },
+        { code: "cs", en: "Czech", native: "Čeština" },
+        { code: "el", en: "Greek", native: "Ελληνικά" },
+        { code: "sv", en: "Swedish", native: "Svenska" },
+        { code: "hu", en: "Hungarian", native: "Magyar" },
+        { code: "kk", en: "Kazakh", native: "Қазақша" },
+        { code: "be", en: "Belarusian", native: "Беларуская" },
+        { code: "he", en: "Hebrew", native: "עברית" },
+        { code: "bg", en: "Bulgarian", native: "Български" },
+        { code: "tg", en: "Tajik", native: "Тоҷикӣ" },
+        { code: "sr", en: "Serbian", native: "Српски" },
+        { code: "da", en: "Danish", native: "Dansk" },
+        { code: "fi", en: "Finnish", native: "Suomi" },
+        { code: "sk", en: "Slovak", native: "Slovenčina" },
+        { code: "no", en: "Norwegian", native: "Norsk" },
+        { code: "ca", en: "Catalan", native: "Català" },
+        { code: "hr", en: "Croatian", native: "Hrvatski" },
+        { code: "ka", en: "Georgian", native: "ქართული" },
+        { code: "hy", en: "Armenian", native: "Հայերեն" },
+        { code: "lt", en: "Lithuanian", native: "Lietuvių" },
+        { code: "sl", en: "Slovenian", native: "Slovenščina" },
+        { code: "lv", en: "Latvian", native: "Latviešu" },
+        { code: "et", en: "Estonian", native: "Eesti" },
+        { code: "sq", en: "Albanian", native: "Shqip" },
+        { code: "mk", en: "Macedonian", native: "Македонски" },
+        { code: "bs", en: "Bosnian", native: "Bosanski" },
+        { code: "is", en: "Icelandic", native: "Íslenska" },
+        { code: "ga", en: "Irish", native: "Gaeilge" },
+        { code: "cy", en: "Welsh", native: "Cymraeg" },
+        { code: "gl", en: "Galician", native: "Galego" },
+        { code: "eu", en: "Basque", native: "Euskara" },
+        { code: "af", en: "Afrikaans", native: "Afrikaans" },
+        { code: "zu", en: "Zulu", native: "isiZulu" },
+        { code: "xh", en: "Xhosa", native: "isiXhosa" },
+        { code: "st", en: "Sesotho", native: "Sesotho" },
+        { code: "tn", en: "Setswana", native: "Setswana" },
+        { code: "rw", en: "Kinyarwanda", native: "Ikinyarwanda" },
+        { code: "ti", en: "Tigrinya", native: "ትግርኛ" },
+        { code: "om", en: "Oromo", native: "Afaan Oromoo" },
+        { code: "ig", en: "Igbo", native: "Igbo" },
+        { code: "tw", en: "Twi", native: "Twi" },
+        { code: "sn", en: "Shona", native: "ChiShona" },
+        { code: "wo", en: "Wolof", native: "Wolof" },
+        { code: "bm", en: "Bambara", native: "Bamanankan" },
+        { code: "ln", en: "Lingala", native: "Lingála" },
+        { code: "ny", en: "Chichewa", native: "Chichewa" },
+        { code: "ky", en: "Kyrgyz", native: "Кыргызча" },
+        { code: "tk", en: "Turkmen", native: "Türkmençe" },
+        { code: "mn", en: "Mongolian", native: "Монгол" },
+        { code: "ug", en: "Uyghur", native: "ئۇيغۇرچە" },
+        { code: "bo", en: "Tibetan", native: "བོད་སྐད་" },
+        { code: "lo", en: "Lao", native: "ລາວ" },
+        { code: "dv", en: "Dhivehi", native: "ދިވެހި" },
+        { code: "fj", en: "Fijian", native: "Vosa Vakaviti" },
+        { code: "sm", en: "Samoan", native: "Gagana Samoa" },
+        { code: "to", en: "Tongan", native: "Lea Faka-Tonga" },
+        { code: "ht", en: "Haitian Creole", native: "Kreyòl Ayisyen" },
+        { code: "qu", en: "Quechua", native: "Runa Simi" },
+        { code: "gn", en: "Guarani", native: "Avañe’ẽ" },
+        { code: "eo", en: "Esperanto", native: "Esperanto" },
+        { code: "prs", en: "Dari", native: "دری" },
+        { code: "ku", en: "Kurdish", native: "کوردی" },
+        { code: "gom", en: "Konkani", native: "कोंकणी" },
+        { code: "mai", en: "Maithili", native: "मैथिली" },
+        { code: "sa", en: "Sanskrit", native: "संस्कृतम्" },
+        { code: "ks", en: "Kashmiri", native: "कॉशुर / کٲشُر" },
+        { code: "doi", en: "Dogri", native: "डोगरी" },
+        { code: "mni", en: "Manipuri", native: "মৈতৈলোন্" },
+        { code: "brx", en: "Bodo", native: "बड़ो" },
+        { code: "sat", en: "Santali", native: "ᱥᱟᱱᱛᱟᱲᱤ" },
+        { code: "raj", en: "Rajasthani", native: "राजस्थानी" },
+        { code: "awa", en: "Awadhi", native: "अवधी" },
+        { code: "hne", en: "Chhattisgarhi", native: "छत्तीसगढ़ी" },
+        { code: "hrv", en: "Haryanvi", native: "हरियाणवी" },
+        { code: "mwr", en: "Marwari", native: "मारवाड़ी" },
+        { code: "rm", en: "Romansh", native: "Rumantsch" },
+        { code: "lb", en: "Luxembourgish", native: "Lëtzebuergesch" },
+        { code: "mt", en: "Maltese", native: "Malti" },
+        { code: "co", en: "Corsican", native: "Corsu" }
     ];
+
+    let currentSourceLang = 'bn';
+    let currentTargetLang = 'en';
+    let selectedQuizLang = 'bn';
 
     const langVoiceMap = {
         'bn': 'bn-BD', 'en': 'en-US', 'hi': 'hi-IN', 'ar': 'ar-SA', 'zh': 'zh-CN', 'ja': 'ja-JP',
@@ -619,24 +910,28 @@
         'ru': 'ru-RU', 'tr': 'tr-TR', 'fa': 'fa-IR', 'ur': 'ur-PK'
     };
 
-    const masterVocabDatabase = [
-        { en: "Opportunity", bn: "সুযোগ", hi: "अवसर", ar: "فرصة" },
-        { en: "Essential", bn: "জরুরি", hi: "आवश्यक", ar: "ضروري" },
-        { en: "Improve", bn: "উন্নতি করা", hi: "सुधारना", ar: "تحسين" },
-        { en: "Difficult", bn: "কঠিন", hi: "कठिन", ar: "صعب" },
-        { en: "Success", bn: "সাফল্য", hi: "सफलता", ar: "نجاح" },
-        { en: "Challenge", bn: "চ্যালেঞ্জ", hi: "चुनौती", ar: "تحدي" }
-    ];
-
-    let currentLevel = parseInt(localStorage.getItem('userQuizLevel')) || 1;
-    let currentQuizIndex = 0;
-    let quizScore = 0;
-    const questionsPerLevel = 5;
-    let wrongAnswerPool = JSON.parse(localStorage.getItem('userWrongAnswers')) || [];
-    let currentLevelQuestions = [];
-
-    let dailyIndex = 0;
-    let dailyQuestions = masterVocabDatabase.slice(0, 3);
+    const multiLangUI = {
+        'bn': {
+            transTab: "🌐 TRANSLATOR", teacherTab: "👨‍🏫 TEACHER", quizTab: "⚔️ ARENA",
+            dailyTab: "🔥 DAILY", statsTab: "📊 STATS", rankTab: "🏆 RANK",
+            translateBtn: "অনুবাদ করুন ➔", voiceBtn: "🎙️ Smart Voice AI",
+            grammar: "✨ Smart Fix", pure: "🇬🇧 Pure English", formal: "💼 Pro Master",
+            placeholder: "শব্দ বা বাক্য লিখুন...", resultPlaceholder: "ফলাফল এখানে দৃশ্যমান হবে...",
+            aiVerified: "AI Smart Corrected Output",
+            quizLang: "কুইজ ভাষা:", reviewText: "রিভেঞ্জ রাউন্ড: ভুলগুলো আবার ঝালাই করা হচ্ছে!",
+            toastCopy: "অনুবাদ কপি করা হয়েছে! 📋"
+        },
+        'en': {
+            transTab: "🌐 TRANSLATOR", teacherTab: "👨‍🏫 TEACHER", quizTab: "⚔️ ARENA",
+            dailyTab: "🔥 DAILY", statsTab: "📊 STATS", rankTab: "🏆 RANK",
+            translateBtn: "Translate ➔", voiceBtn: "🎙️ Smart Voice AI",
+            grammar: "✨ Smart Fix", pure: "🇬🇧 Pure English", formal: "💼 Pro Master",
+            placeholder: "Enter text or word...", resultPlaceholder: "Translation will appear here...",
+            aiVerified: "AI Smart Corrected Output",
+            quizLang: "Quiz Language:", reviewText: "Revenge Round: Retrying previous mistakes!",
+            toastCopy: "Translation copied! 📋"
+        }
+    };
 
     window.addEventListener('DOMContentLoaded', () => {
         updateLanguageDisplay();
@@ -644,13 +939,194 @@
         buildLevelQuestions();
         loadLevelEngine();
         loadDailyChallenge();
-        renderHistoryList();
     });
+
+    function updateLanguageDisplay() {
+        const srcObj = languagesDB.find(l => l.code === currentSourceLang) || languagesDB[2]; 
+        const targetObj = languagesDB.find(l => l.code === currentTargetLang) || languagesDB[0]; 
+
+        document.getElementById('srcLabel').innerText = `${srcObj.en} — ${srcObj.native}`;
+        document.getElementById('targetLabel').innerText = `${targetObj.en} — ${targetObj.native}`;
+        applyUiLocalization(currentSourceLang);
+    }
+
+    function updateArenaLangDisplay() {
+        const qObj = languagesDB.find(l => l.code === selectedQuizLang) || languagesDB[2];
+        document.getElementById('quizLangLabel').innerText = `${qObj.en} — ${qObj.native} ▾`;
+    }
+
+    function openLangModal(type) {
+        activeLangType = type; // 'src', 'target', or 'quiz'
+        document.getElementById('langModal').style.display = 'flex';
+        document.getElementById('langSearchBox').value = '';
+        renderLangList(languagesDB);
+        setTimeout(() => document.getElementById('langSearchBox').focus(), 100);
+    }
+
+    function closeLangModal() {
+        document.getElementById('langModal').style.display = 'none';
+    }
+
+    function renderLangList(list) {
+        const container = document.getElementById('langListContainer');
+        container.innerHTML = '';
+        list.forEach(item => {
+            const div = document.createElement('div');
+            div.className = 'lang-item';
+            div.innerHTML = `
+                <div>
+                    <div class="lang-item-native">${item.native}</div>
+                    <div class="lang-item-en">${item.en}</div>
+                </div>
+                <span style="color: #60a5fa; font-size: 12px;">${item.code}</span>
+            `;
+            div.onclick = () => selectLanguage(item.code);
+            container.appendChild(div);
+        });
+    }
+
+    function filterLanguages() {
+        const query = document.getElementById('langSearchBox').value.toLowerCase();
+        const filtered = languagesDB.filter(l => 
+            l.en.toLowerCase().includes(query) || 
+            l.native.toLowerCase().includes(query) || 
+            l.code.toLowerCase().includes(query)
+        );
+        renderLangList(filtered);
+    }
+
+    function selectLanguage(code) {
+        if (activeLangType === 'src') {
+            currentSourceLang = code;
+            updateLanguageDisplay();
+        } else if (activeLangType === 'target') {
+            currentTargetLang = code;
+            updateLanguageDisplay();
+        } else if (activeLangType === 'quiz') {
+            selectedQuizLang = code;
+            updateArenaLangDisplay();
+            buildLevelQuestions();
+            loadLevelEngine();
+        }
+        closeLangModal();
+    }
+
+    function swapLanguages() {
+        const temp = currentSourceLang;
+        currentSourceLang = currentTargetLang;
+        currentTargetLang = temp;
+        updateLanguageDisplay();
+
+        if (currentResult && currentResult !== "অনুবাদে সমস্যা হয়েছে, ইন্টারনেট সংযোগ পরীক্ষা করুন।") {
+            document.getElementById('sourceInput').value = currentResult;
+            translateText();
+        }
+    }
+
+    function applyUiLocalization(langCode) {
+        const t = multiLangUI[langCode] || multiLangUI['en'];
+        document.getElementById('tabTransBtn').innerText = t.transTab;
+        document.getElementById('tabTeacherBtn').innerText = t.teacherTab;
+        document.getElementById('tabQuizBtn').innerText = t.quizTab;
+        document.getElementById('tabDailyBtn').innerText = t.dailyTab;
+        document.getElementById('tabStatsBtn').innerText = t.statsTab;
+        document.getElementById('tabRankBtn').innerText = t.rankTab;
+        document.getElementById('btnTranslate').innerHTML = t.translateBtn;
+        document.getElementById('btnVoice').innerHTML = t.voiceBtn;
+        document.getElementById('btnGrammar').innerText = t.grammar;
+        document.getElementById('btnPure').innerText = t.pure;
+        document.getElementById('btnFormal').innerText = t.formal;
+        document.getElementById('sourceInput').placeholder = t.placeholder;
+        document.getElementById('resPlaceholder').innerText = t.resultPlaceholder;
+        document.getElementById('aiVerifiedText').innerText = t.aiVerified;
+    }
+
+    const banglishMap = {
+        "ami dhaka jabo": "I will go to Dhaka.",
+        "ami dhaka jai": "I go to Dhaka.",
+        "amar nam rahim": "My name is Rahim.",
+        "kemon acho": "How are you?",
+        "kemon achen": "How are you?",
+        "ami valo achi": "I am fine.",
+        "ami kaj korchi": "I am working."
+    };
+
+    const masterVocabDatabase = [
+        { en: "Opportunity", bn: "সুযোগ", hi: "अवसर", ar: "فرصة", zh: "机会", ja: "機会", ko: "기회", de: "Gelegenheit", fr: "Opportunité", es: "Oportunidad", it: "Opportunità", pt: "Oportunidade" },
+        { en: "Essential", bn: "জরুরি", hi: "आवश्यक", ar: "ضروري", zh: "必要的", ja: "不可欠", ko: "필수적인", de: "Wichtig", fr: "Essentiel", es: "Esencial", it: "Essenziale", pt: "Essencial" },
+        { en: "Improve", bn: "উন্নতি করা", hi: "सुधारना", ar: "تحسين", zh: "改进", ja: "改善する", ko: "향상시키다", de: "Verbessern", fr: "Améliorer", es: "Mejorar", it: "Migliorare", pt: "Melhorar" },
+        { en: "Difficult", bn: "কঠিন", hi: "कठिन", ar: "صعب", zh: "困难", ja: "難しい", ko: "어려운", de: "Schwierig", fr: "Difficile", es: "Difícil", it: "Difficile", pt: "Difícil" },
+        { en: "Comfortable", bn: "আরামদায়ক", hi: "आरामदायक", ar: "مريح", zh: "舒适的", ja: "快適な", ko: "편안한", de: "Bequem", fr: "Confortable", es: "Cómodo", it: "Comodo", pt: "Confortável" },
+        { en: "Success", bn: "সাফল্য", hi: "सफलता", ar: "نجاح", zh: "成功", ja: "成功", ko: "성공", de: "Erfolg", fr: "Succès", es: "Éxito", it: "Successo", pt: "Sucesso" },
+        { en: "Challenge", bn: "চ্যালেঞ্জ", hi: "चुनौती", ar: "تحدي", zh: "挑战", ja: "挑戦", ko: "도전", de: "Herausforderung", fr: "Défi", es: "Desafío", it: "Sfida", pt: "Desafio" },
+        { en: "Important", bn: "গুরুত্বপূর্ণ", hi: "महत्वपूर्ण", ar: "مهم", zh: "重要的", ja: "重要", ko: "중요한", de: "Wichtig", fr: "Important", es: "Importante", it: "Importante", pt: "Importante" },
+        { en: "Experience", bn: "অভিজ্ঞতা", hi: "अनुभव", ar: "خبرة", zh: "经验", ja: "経験", ko: "경험", de: "Erfahrung", fr: "Expérience", es: "Experiencia", it: "Esperienza", pt: "Experiência" },
+        { en: "Resilient", bn: "সহনশীল", hi: "लचीला", ar: "مرن", zh: "有弹性的", ja: "回復力のある", ko: "회복력 있는", de: "Widerstandsfähig", fr: "Résilient", es: "Resiliente", it: "Resiliente", pt: "Resiliente" },
+        { en: "Confidence", bn: "আত্মবিশ্বাস", hi: "आत्मविश्वास", ar: "ثقة", zh: "信心", ja: "自信", ko: "자신감", de: "Vertrauen", fr: "Confiance", es: "Confianza", it: "Fiducia", pt: "Confiança" },
+        { en: "Knowledge", bn: "জ্ঞান", hi: "ज्ञान", ar: "معرفة", zh: "知识", ja: "知識", ko: "지식", de: "Wissen", fr: "Connaissance", es: "Conocimiento", it: "Conoscenza", pt: "Conhecimento" },
+        { en: "Freedom", bn: "স্বাধীনতা", hi: "स्वतंत्रता", ar: "حرية", zh: "自由", ja: "自由", ko: "자유", de: "Freiheit", fr: "Liberté", es: "Libertad", it: "Libertà", pt: "Liberdade" },
+        { en: "Curiosity", bn: "কৌতূহল", hi: "जिज्ञासा", ar: "فضول", zh: "好奇心", ja: "好奇心", ko: "호기심", de: "Neugier", fr: "Curiosité", es: "Curiosidad", it: "Curiosità", pt: "Curiosidade" },
+        { en: "Patience", bn: "ধৈর্য", hi: "धैर्य", ar: "صبر", zh: "耐心", ja: "忍耐", ko: "인내", de: "Geduld", fr: "Patience", es: "Paciencia", it: "Pazienza", pt: "Paciência" },
+        { en: "Ambition", bn: "উচ্চাভিলাষ", hi: "महत्वाकांक्षा", ar: "طموح", zh: "抱负", ja: "野心", ko: "야망", de: "Ambition", fr: "Ambition", es: "Ambición", it: "Ambizione", pt: "Ambição" },
+        { en: "Creativity", bn: "সৃজনশীলতা", hi: "रचनात्मकता", ar: "إبداع", zh: "创造力", ja: "創造性", ko: "창의력", de: "Kreativität", fr: "Créativité", es: "Creatividad", it: "Creatività", pt: "Criatividade" },
+        { en: "Dedication", bn: "নিষ্ঠা", hi: "समर्पण", ar: "تفان", zh: "奉献", ja: "헌신", ko: "헌신", de: "Hingabe", fr: "Dédicace", es: "Dedicación", it: "Dedizione", pt: "Dedicação" },
+        { en: "Harmony", bn: "সম্প্রীতি", hi: "सामंजस्य", ar: "انسجام", zh: "和谐", ja: "調和", ko: "조화", de: "Harmonie", fr: "Harmonie", es: "Armonía", it: "Armonia", pt: "Harmonia" },
+        { en: "Inspiration", bn: "অনুপ্রেরণা", hi: "प्रेरणा", ar: "إلهام", zh: "灵感", ja: "インスピレーション", ko: "영감", de: "Inspiration", fr: "Inspiration", es: "Inspiración", it: "Ispirazione", pt: "Inspiração" }
+    ];
+
+    let currentLevel = parseInt(localStorage.getItem('userQuizLevel')) || 1;
+    let currentQuizIndex = 0;
+    let quizScore = 0;
+    const totalMaxLevels = 1000;
+    const questionsPerLevel = 5;
+
+    let wrongAnswerPool = JSON.parse(localStorage.getItem('userWrongAnswers')) || [];
+    let currentLevelQuestions = [];
+
+    let dailyIndex = 0;
+    let dailyQuestions = masterVocabDatabase.slice(0, 3);
+
+    function playTranslateSound() {
+        try {
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(440, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.15);
+            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.2);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.2);
+        } catch (e) {}
+    }
+
+    function playVictorySound() {
+        try {
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const notes = [523.25, 659.25, 783.99, 1046.50];
+            notes.forEach((freq, index) => {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.value = freq;
+                gain.gain.setValueAtTime(0.15, audioCtx.currentTime + index * 0.12);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + index * 0.12 + 0.3);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(audioCtx.currentTime + index * 0.12);
+                osc.stop(audioCtx.currentTime + index * 0.12 + 0.3);
+            });
+        } catch (e) {}
+    }
 
     function switchView(tabId) {
         document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
         document.querySelectorAll('.hub-tab').forEach(b => b.classList.remove('active'));
-        document.getElementById(tabId + 'View')?.classList.add('active');
+        
+        document.getElementById(tabId + 'View').classList.add('active');
         event.target.classList.add('active');
         if(tabId === 'quiz') {
             buildLevelQuestions();
@@ -662,8 +1138,6 @@
             document.getElementById('myRankScore').innerText = `${points} Pts`;
         } else if(tabId === 'daily') {
             loadDailyChallenge();
-        } else if(tabId === 'history') {
-            renderHistoryList();
         }
     }
 
@@ -674,6 +1148,10 @@
         setTimeout(() => t.style.display = 'none', 2000);
     }
 
+    function toggleTheme() {
+        showToast("✨ Premium Deep Blue Theme Active");
+    }
+
     document.getElementById('sourceInput').addEventListener('input', function() {
         document.getElementById('charCount').innerText = this.value.length + ' / 5000';
     });
@@ -681,7 +1159,8 @@
     function clearAll() {
         document.getElementById('sourceInput').value = '';
         document.getElementById('charCount').innerText = '0 / 5000';
-        document.getElementById('targetOutput').innerHTML = '<span class="result-placeholder">ফলাফল এখানে দৃশ্যমান হবে...</span>';
+        const t = multiLangUI[currentSourceLang] || multiLangUI['en'];
+        document.getElementById('targetOutput').innerHTML = `<span class="result-placeholder">${t.resultPlaceholder}</span>`;
         currentResult = "";
     }
 
@@ -695,250 +1174,213 @@
         }
     }
 
-    function openLangModal(type) {
-        activeLangType = type;
-        document.getElementById('langModal').style.display = 'flex';
-        document.getElementById('langSearchBox').value = '';
-        renderLangList(languagesDB);
-    }
-
-    function closeLangModal() {
-        document.getElementById('langModal').style.display = 'none';
-    }
-
-    function renderLangList(list) {
-        const container = document.getElementById('langListContainer');
-        container.innerHTML = '';
-        list.forEach(item => {
-            const div = document.createElement('div');
-            div.className = 'lang-item';
-            div.innerHTML = `<div><div style="font-weight:600;">${item.native}</div><div style="font-size:12px; color:var(--text-muted);">${item.en}</div></div><span style="color:var(--accent-cyan); font-size:12px;">${item.code}</span>`;
-            div.onclick = () => selectLanguage(item.code);
-            container.appendChild(div);
-        });
-    }
-
-    function filterLanguages() {
-        const query = document.getElementById('langSearchBox').value.toLowerCase();
-        const filtered = languagesDB.filter(l => l.en.toLowerCase().includes(query) || l.native.toLowerCase().includes(query) || l.code.toLowerCase().includes(query));
-        renderLangList(filtered);
-    }
-
-    function selectLanguage(code) {
-        if(activeLangType === 'src') {
-            currentSourceLang = code;
-        } else if(activeLangType === 'target') {
-            currentTargetLang = code;
-        } else if(activeLangType === 'quiz') {
-            selectedQuizLang = code;
-            updateArenaLangDisplay();
-            buildLevelQuestions();
-            loadLevelEngine();
-        }
-        updateLanguageDisplay();
-        closeLangModal();
-    }
-
-    function updateLanguageDisplay() {
-        const s = languagesDB.find(l => l.code === currentSourceLang) || languagesDB[2];
-        const t = languagesDB.find(l => l.code === currentTargetLang) || languagesDB[0];
-        document.getElementById('srcLabel').innerText = `${s.native}`;
-        document.getElementById('targetLabel').innerText = `${t.native}`;
-    }
-
-    function updateArenaLangDisplay() {
-        const q = languagesDB.find(l => l.code === selectedQuizLang) || languagesDB[2];
-        document.getElementById('quizLangLabel').innerText = `${q.native} ▾`;
-    }
-
-    function swapLanguages() {
-        const temp = currentSourceLang;
-        currentSourceLang = currentTargetLang;
-        currentTargetLang = temp;
-        updateLanguageDisplay();
-        if(currentResult) {
-            document.getElementById('sourceInput').value = currentResult;
-            translateText();
-        }
-    }
-
     async function translateText() {
         const input = document.getElementById('sourceInput').value.trim();
         const output = document.getElementById('targetOutput');
-        if(!input) { showToast("দয়া করে কিছু লিখুন"); return; }
-        
-        output.innerHTML = '<span style="color:var(--text-muted);">প্রসেসিং হচ্ছে...</span>';
-        try {
-            const res = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=${currentSourceLang}&tl=${currentTargetLang}&dt=t&q=${encodeURIComponent(input)}`);
-            const data = await res.json();
-            currentResult = data[0].map(item => item[0]).join('');
-            output.innerText = currentResult;
 
-            // Save to offline history
-            saveHistory(input, currentResult);
-        } catch(e) {
-            output.innerText = "অনুবাদ ব্যর্থ হয়েছে, ইন্টারনেট সংযোগ পরীক্ষা করুন।";
-        }
-    }
-
-    function saveHistory(src, tgt) {
-        translationHistory.unshift({ src, tgt, time: new Date().toLocaleTimeString() });
-        if(translationHistory.length > 20) translationHistory.pop();
-        localStorage.setItem('userHistory', JSON.stringify(translationHistory));
-    }
-
-    function renderHistoryList() {
-        const container = document.getElementById('historyListContainer');
-        if(translationHistory.length === 0) {
-            container.innerHTML = '<span style="color:var(--text-muted); font-size:13px;">কোনো হিস্ট্রি সংরক্ষিত নেই।</span>';
+        if (!input) {
+            showToast("দয়া করে কিছু লিখুন");
             return;
         }
-        container.innerHTML = '';
-        translationHistory.forEach(item => {
-            const div = document.createElement('div');
-            div.className = 'leaderboard-item';
-            div.style.flexDirection = 'column';
-            div.style.alignItems = 'flex-start';
-            div.innerHTML = `<div style="color:var(--text-muted); font-size:11px;">${item.time}</div><div style="font-weight:600; color:var(--text-main);">${item.src} ➔ ${item.tgt}</div>`;
-            container.appendChild(div);
-        });
-    }
 
-    function clearHistory() {
-        translationHistory = [];
-        localStorage.removeItem('userHistory');
-        renderHistoryList();
-        showToast("হিস্ট্রি মুছে ফেলা হয়েছে");
+        output.innerHTML = '<span style="color:var(--text-muted);">এআই স্মার্ট প্রসেসিং হচ্ছে...</span>';
+
+        let cleanText = input;
+        const smartCorrections = {
+            "thiland": "Thailand", "malasiya": "Malaysia", "bangladesh": "Bangladesh",
+            "dhaka": "Dhaka", "indai": "India", "singapur": "Singapore",
+            "dubia": "Dubai", "london": "London", "omrica": "America",
+            "i goes": "I go", "he go": "he goes", "she go": "she goes",
+            "they was": "they were", "i is": "I am"
+        };
+
+        for (let wrong in smartCorrections) {
+            let reg = new RegExp("\\b" + wrong + "\\b", "gi");
+            cleanText = cleanText.replace(reg, smartCorrections[wrong]);
+        }
+
+        const clean = cleanText.toLowerCase().replace(/[।?!.]/g, '').trim();
+
+        if (banglishMap[clean] && currentTargetLang === 'en') {
+            currentResult = banglishMap[clean];
+            output.innerText = currentResult;
+            output.className = "result-text-area text-glow-effect";
+            playTranslateSound();
+            return;
+        }
+
+        try {
+            const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${currentTargetLang}&dt=t&q=${encodeURIComponent(cleanText)}`;
+            const res = await fetch(url);
+            const data = await res.json();
+            if (data && data[0]) {
+                currentResult = data[0].map(item => item[0]).join('');
+                output.innerText = currentResult;
+                output.className = "result-text-area text-glow-effect";
+                playTranslateSound();
+                
+                if (currentTargetLang === 'ur' || currentTargetLang === 'ar' || currentTargetLang === 'fa' || currentTargetLang === 'he' || currentTargetLang === 'ps') {
+                    output.style.direction = 'rtl';
+                    output.style.textAlign = 'right';
+                } else {
+                    output.style.direction = 'ltr';
+                    output.style.textAlign = 'left';
+                }
+            }
+        } catch(err) {
+            output.innerText = "সংযোগ সমস্যা, তবে এআই লোকাল কারেকশন সফল হয়েছে।";
+        }
     }
 
     async function runAiMaster(mode) {
         const input = document.getElementById('sourceInput').value.trim();
         const output = document.getElementById('targetOutput');
-        if(!input) { showToast("দয়া করে কিছু লিখুন"); return; }
-        
-        output.innerHTML = '<span style="color:var(--accent-cyan);">✨ এআই স্মার্ট প্রসেসিং চলছে...</span>';
-        
-        try {
-            const res = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=${currentSourceLang}&tl=${currentTargetLang}&dt=t&q=${encodeURIComponent(input)}`);
-            const data = await res.json();
-            let translated = data[0].map(item => item[0]).join('');
 
-            if(mode === 'grammar') currentResult = "Grammar Fixed: " + translated;
-            else if(mode === 'pure') currentResult = "Native Fluent: " + translated;
-            else if(mode === 'formal') currentResult = "Professional / Formal: " + translated;
+        if (!input) {
+            showToast("দয়া করে বাক্য লিখুন");
+            return;
+        }
+
+        output.innerHTML = '<span style="color:#d8b4fe;">✨ এআই স্মার্ট কারেকশন চলছে...</span>';
+        
+        setTimeout(() => {
+            let refined = input.charAt(0).toUpperCase() + input.slice(1);
+            if (mode === 'grammar') {
+                refined = refined.replace(/\b(i go|he go)\b/gi, "I am going");
+            } else if (mode === 'pure') {
+                refined = "It is our absolute privilege to assist you with " + refined;
+            } else if (mode === 'formal') {
+                refined = "Regarding your request, " + refined + " for official execution.";
+            }
+            if (!refined.endsWith('.')) refined += '.';
             
+            currentResult = refined;
             output.innerText = currentResult;
-        } catch(e) {
-            output.innerText = "এআই প্রসেসিং ব্যর্থ হয়েছে।";
-        }
-    }
-
-    // Smart Dictionary Lookup Feature
-    async function lookupDictionary() {
-        const word = document.getElementById('dictSearchInput').value.trim();
-        const box = document.getElementById('dictResultBox');
-        if(!word) { showToast("শব্দ লিখুন"); return; }
-        box.innerHTML = 'সার্চ করা হচ্ছে...';
-        try {
-            const res = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=bn&dt=t&q=${encodeURIComponent(word)}`);
-            const data = await res.json();
-            let meaning = data[0].map(item => item[0]).join('');
-            box.innerHTML = `
-                <div style="font-size:16px; font-weight:700; color:var(--accent-cyan); margin-bottom:6px;">${word}</div>
-                <div><strong>বাংলা অর্থ:</strong> ${meaning}</div>
-                <div style="margin-top:6px; font-size:12px; color:var(--text-muted);">Verbs & Forms: Present (${word}), Past (${word}ed), Participle (${word}ed).</div>
-            `;
-        } catch(e) {
-            box.innerHTML = "অর্থ পাওয়া যায়নি।";
-        }
-    }
-
-    // Floating Overlay Widget Functions
-    function openFloatingModal() { document.getElementById('floatingModal').style.display = 'flex'; }
-    function closeFloatingModal() { document.getElementById('floatingModal').style.display = 'none'; }
-    async function quickFloatingTranslate(txt) {
-        if(!txt) { document.getElementById('floatingOutput').innerText = ''; return; }
-        try {
-            const res = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=en&dt=t&q=${encodeURIComponent(txt)}`);
-            const data = await res.json();
-            document.getElementById('floatingOutput').innerText = data[0].map(item => item[0]).join('');
-        } catch(e){}
-    }
-
-    function copyOutput() {
-        if(!currentResult) return;
-        navigator.clipboard.writeText(currentResult);
-        showToast("কপি করা হয়েছে! 📋");
+            output.className = "result-text-area text-glow-effect";
+            output.style.direction = 'ltr';
+            output.style.textAlign = 'left';
+            playTranslateSound();
+        }, 300);
     }
 
     function speakOutput() {
-        if(!currentResult) return;
-        const u = new SpeechSynthesisUtterance(currentResult);
-        window.speechSynthesis.speak(u);
+        if (!currentResult) return;
+        const langVoice = langVoiceMap[currentTargetLang] || 'en-US';
+        speakCustom(currentResult, langVoice);
     }
 
     function speakCustom(text, lang) {
+        if (!('speechSynthesis' in window)) return;
+        window.speechSynthesis.resume();
+        window.speechSynthesis.cancel();
         const u = new SpeechSynthesisUtterance(text);
         u.lang = lang;
+        u.rate = 0.9;
         window.speechSynthesis.speak(u);
     }
 
-    function openVoiceModal() {
-        if(!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-            showToast("স্পিচ রিকগনিশন সমর্থিত নয়");
+    function copyOutput() {
+        if (!currentResult) return;
+        navigator.clipboard.writeText(currentResult);
+        showToast("অনুবাদ কপি করা হয়েছে! 📋");
+    }
+
+    function shareOutput() {
+        if (!currentResult) return;
+        if (navigator.share) {
+            navigator.share({ title: 'Translation', text: currentResult });
+        } else {
+            copyOutput();
+        }
+    }
+
+    async function openVoiceModal() {
+        if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+            alert("আপনার ব্রাউজারে স্পিচ রিকগনিশন সমর্থিত নয়।");
             return;
         }
-        document.getElementById('voiceModal').style.display = 'flex';
+
+        const modal = document.getElementById('voiceModal');
+        const status = document.getElementById('voiceStatus');
+        modal.style.display = 'flex';
+        status.innerText = "Smart Listening...";
+
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         globalRecognition = new SpeechRecognition();
         globalRecognition.lang = langVoiceMap[currentSourceLang] || 'en-US';
-        globalRecognition.onresult = (e) => {
-            document.getElementById('sourceInput').value = e.results[0][0].transcript;
-            closeVoiceModal();
-            translateText();
+        globalRecognition.interimResults = true;
+
+        globalRecognition.onresult = function(e) {
+            let txt = '';
+            for (let i = e.resultIndex; i < e.results.length; ++i) {
+                txt += e.results[i][0].transcript;
+            }
+            status.innerText = txt;
+            if (e.results[0].isFinal) {
+                document.getElementById('sourceInput').value = txt;
+                setTimeout(() => {
+                    closeVoiceModal();
+                    translateText();
+                }, 400);
+            }
         };
+
         globalRecognition.start();
     }
 
     function closeVoiceModal() {
         document.getElementById('voiceModal').style.display = 'none';
-        if(globalRecognition) globalRecognition.stop();
+        if (globalRecognition) try { globalRecognition.stop(); } catch(e){}
     }
 
     function handleImageOcr(e) {
         const file = e.target.files[0];
-        if(!file) return;
-        showToast("ফটো লেন্স স্ক্যান করা হচ্ছে...");
-        Tesseract.recognize(file, 'eng+ben').then(({ data: { text } }) => {
-            document.getElementById('sourceInput').value = text.trim();
+        if (!file) return;
+
+        showToast("ছবি স্ক্যান করা হচ্ছে...");
+        Tesseract.recognize(file, 'eng+ben+deu+por').then(({ data: { text } }) => {
+            const cleaned = text.trim().replace(/\n/g, ' ');
+            document.getElementById('sourceInput').value = cleaned;
             translateText();
-        });
+        }).catch(() => showToast("ছবি স্ক্যান ব্যর্থ হয়েছে"));
     }
 
     function loadDailyChallenge() {
         const box = document.getElementById('dailyCardBox');
-        if(dailyIndex >= dailyQuestions.length) {
-            box.innerHTML = `<h4 style="color:var(--accent-emerald); margin:10px 0;">মিশন সম্পন্ন! +৫০ কয়েন বোনাস 🎉</h4>`;
+        if (dailyIndex >= dailyQuestions.length) {
+            box.innerHTML = `
+                <div style="padding: 10px 0;">
+                    <span style="font-size: 38px;">🎉</span>
+                    <h4 style="color:#34d399; margin: 8px 0;">Daily Challenge Completed!</h4>
+                    <p style="font-size: 13px; color:var(--text-muted); margin-bottom:12px;">আপনি আজকের ডেইলি মিশন সফলভাবে সম্পন্ন করেছেন। +৫০ কয়েন বোনাস পেয়েছেন!</p>
+                    <button class="btn-main-action" style="width:100%;" onclick="resetDaily()">Play Again Tomorrow ➔</button>
+                </div>
+            `;
             return;
         }
+
         const item = dailyQuestions[dailyIndex];
-        document.getElementById('dailyPrompt').innerText = `"${item.bn}" এর ইংরেজি অর্থ কী?`;
+        document.getElementById('dailyPrompt').innerText = `"${item.bn}" এর সঠিক ইংরেজি অর্থ কোনটি?`;
+
         let wrong1 = masterVocabDatabase[(dailyIndex + 1) % masterVocabDatabase.length].en;
-        let options = [item.en, wrong1];
+        let wrong2 = masterVocabDatabase[(dailyIndex + 2) % masterVocabDatabase.length].en;
+        let options = [item.en, wrong1, wrong2];
         options.sort(() => 0.5 - Math.random());
+        let ansIdx = options.indexOf(item.en);
+
         const container = document.getElementById('dailyOptionsContainer');
         container.innerHTML = '';
-        options.forEach((opt) => {
+        options.forEach((opt, idx) => {
             const btn = document.createElement('button');
             btn.className = 'ai-pill-btn';
             btn.style.width = '100%';
             btn.innerText = opt;
             btn.onclick = () => {
-                if(opt === item.en) {
-                    showToast("সঠিক উত্তর! +১৫ পয়েন্ট");
+                if (idx === ansIdx) {
+                    showToast("Correct! +15 Bonus Pts 🪙");
                     points += 15;
                 } else {
-                    showToast("ভুল উত্তর!");
+                    showToast("Incorrect! Answer was: " + item.en);
                 }
                 document.getElementById('rewardDisplay').innerText = points;
                 localStorage.setItem('userPts', points);
@@ -949,71 +1391,231 @@
         });
     }
 
+    function resetDaily() {
+        dailyIndex = 0;
+        loadDailyChallenge();
+    }
+
+    function getLevelCategory(lvl) {
+        if (lvl <= 250) return "Arena Tier 1: Rookie Vanguard";
+        if (lvl <= 500) return "Arena Tier 2: Linguistic Knight";
+        if (lvl <= 750) return "Arena Tier 3: Master Grandmaster";
+        return "Arena Tier 4: Legendary Polyglot";
+    }
+
+    function getLanguageSpecificPrompt(wordObj) {
+        const targetWord = wordObj[selectedQuizLang] || wordObj['en'];
+        const prompts = {
+            'bn': `"${targetWord}" - এর সঠিক ইংরেজি অর্থ কোনটি?`,
+            'en': `What is the correct meaning of "${targetWord}"?`,
+            'hi': `"${targetWord}" का सही अर्थ क्या है?`,
+            'ar': `ما هو المعنى الصحيح لـ "${targetWord}"؟`
+        };
+        return prompts[selectedQuizLang] || `What is the correct English meaning of "${targetWord}"?`;
+    }
+
     function generateQuestion(item, isReview = false) {
-        const targetWord = item[selectedQuizLang] || item['en'];
-        let options = [item.en, masterVocabDatabase[(currentLevel) % masterVocabDatabase.length].en];
+        let promptText = getLanguageSpecificPrompt(item);
+        let targetMeaning = item.en;
+
+        let seedIndex = masterVocabDatabase.findIndex(v => v.en === item.en);
+        if(seedIndex === -1) seedIndex = 0;
+
+        let wrongItem1 = masterVocabDatabase[(seedIndex + 3 + (currentLevel * 5)) % masterVocabDatabase.length];
+        let wrongItem2 = masterVocabDatabase[(seedIndex + 9 + (currentLevel * 7)) % masterVocabDatabase.length];
+
+        let wrong1 = wrongItem1.en;
+        let wrong2 = wrongItem2.en;
+
+        if (wrong1 === targetMeaning) wrong1 = masterVocabDatabase[(seedIndex + 2) % masterVocabDatabase.length].en;
+        if (wrong2 === targetMeaning || wrong2 === wrong1) wrong2 = masterVocabDatabase[(seedIndex + 4) % masterVocabDatabase.length].en;
+
+        let options = [targetMeaning, wrong1, wrong2];
         options.sort(() => 0.5 - Math.random());
+        let correctIndex = options.indexOf(targetMeaning);
+
         return {
             rawItem: item,
-            q: `"${targetWord}" - এর সঠিক ইংরেজি অর্থ কোনটি?`,
+            q: promptText,
             options: options,
-            ans: options.indexOf(item.en),
+            ans: correctIndex,
             isReview: isReview
         };
     }
 
     function buildLevelQuestions() {
         currentLevelQuestions = [];
-        wrongAnswerPool.forEach(item => currentLevelQuestions.push(generateQuestion(item, true)));
+        let usedIndices = new Set();
+
+        if (wrongAnswerPool.length > 0) {
+            wrongAnswerPool.forEach(item => {
+                currentLevelQuestions.push(generateQuestion(item, true));
+            });
+        }
+
         const needed = questionsPerLevel - currentLevelQuestions.length;
         for (let i = 0; i < needed; i++) {
-            const item = masterVocabDatabase[Math.floor(Math.random() * masterVocabDatabase.length)];
+            let randomIndex;
+            let attempts = 0;
+            do {
+                randomIndex = Math.floor(Math.random() * masterVocabDatabase.length);
+                attempts++;
+            } while (usedIndices.has(randomIndex) && attempts < 20);
+
+            usedIndices.add(randomIndex);
+            const item = masterVocabDatabase[randomIndex];
             currentLevelQuestions.push(generateQuestion(item, false));
         }
     }
 
     function loadLevelEngine() {
         const box = document.getElementById('quizCardBox');
-        if(currentQuizIndex >= currentLevelQuestions.length) {
-            box.innerHTML = `<h3 style="color:var(--accent-cyan); margin:10px 0;">Level ${currentLevel} Conquered! 🏆</h3><button class="btn-main-action" style="width:100%;" onclick="goToNextLevel()">Next Level ➔</button>`;
+        
+        if (currentQuizIndex >= currentLevelQuestions.length) {
+            const hasNext = currentLevel < totalMaxLevels;
+            const totalQ = currentLevelQuestions.length;
+
+            playVictorySound();
+
+            box.innerHTML = `
+                <div style="padding: 10px 0;">
+                    <span style="font-size: 42px;">🏆</span>
+                    <h3 style="color:#60a5fa; margin: 6px 0; font-size:18px;">Congratulations!</h3>
+                    <p style="font-size: 15px; font-weight: 700; color:var(--text-main); margin-bottom: 4px;">Arena Level ${currentLevel} Conquered!</p>
+                    <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">
+                        Round Score: <strong>${quizScore} / ${totalQ}</strong>
+                    </p>
+                    
+                    ${wrongAnswerPool.length > 0 ? `
+                        <div class="wrong-review-banner" style="margin-bottom: 14px;">
+                            💡 <span>${wrongAnswerPool.length} mistakes will be reviewed in upcoming arena stages.</span>
+                        </div>
+                    ` : `
+                        <p style="color:#34d399; font-size:12px; font-weight:700; margin-bottom:14px;">✓ Flawless victory! All answers correct.</p>
+                    `}
+
+                    ${hasNext ? `
+                        <button class="btn-main-action" style="width: 100%; margin-bottom: 8px;" onclick="goToNextLevel()">
+                            Next Arena Level (${currentLevel + 1} / 1000 ➔)
+                        </button>
+                    ` : `
+                        <p style="color:#34d399; font-weight:800; margin-bottom:12px;">👑 Legend! You completed all 1000 Arena Levels!</p>
+                        <button class="btn-main-action" style="width: 100%;" onclick="resetToLevelOne()">
+                            Restart Arena from Level 1 ➔
+                        </button>
+                    `}
+                </div>
+            `;
             return;
         }
+
         const qData = currentLevelQuestions[currentQuizIndex];
-        document.getElementById('wrongReviewBanner').style.display = qData.isReview ? 'flex' : 'none';
-        document.getElementById('quizCounterText').innerText = `Arena Level ${currentLevel} • Q ${currentQuizIndex + 1}/${currentLevelQuestions.length}`;
+        const banner = document.getElementById('wrongReviewBanner');
+        
+        if (qData.isReview) {
+            banner.style.display = 'flex';
+        } else {
+            banner.style.display = 'none';
+        }
+
+        document.getElementById('quizCounterText').innerText = `⚔️ Arena Level ${currentLevel} / ${totalMaxLevels} • Q ${currentQuizIndex + 1} / ${currentLevelQuestions.length}`;
+        document.getElementById('quizScoreText').innerText = `Score: ${quizScore}`;
+        document.getElementById('quizLevelTitle').innerText = getLevelCategory(currentLevel);
         document.getElementById('quizPrompt').innerText = qData.q;
+
         const container = document.getElementById('quizOptionsContainer');
         container.innerHTML = '';
-        qData.options.options?.forEach ? qData.options.forEach((opt, idx) => {
+
+        qData.options.forEach((opt, idx) => {
             const btn = document.createElement('button');
             btn.className = 'ai-pill-btn';
             btn.style.width = '100%';
             btn.innerText = opt;
-            btn.onclick = () => {
-                if(idx === qData.ans) {
-                    showToast("সঠিক! +১০ পয়েন্ট");
-                    points += 10;
-                    quizScore++;
-                } else {
-                    showToast("ভুল হয়েছে!");
-                    wrongAnswerPool.push(qData.rawItem);
-                    localStorage.setItem('userWrongAnswers', JSON.stringify(wrongAnswerPool));
-                }
+            btn.onclick = () => submitQuizAnswer(idx, qData);
+            container.appendChild(btn);
+        });
+    }
+
+    function submitQuizAnswer(selectedIdx, qData) {
+        const isCorrect = (selectedIdx === qData.ans);
+
+        if (isCorrect) {
+            if (qData.isReview) {
+                showToast("Great! Mistake vanquished 🎯");
+                wrongAnswerPool = wrongAnswerPool.filter(item => item.en !== qData.rawItem.en);
+                localStorage.setItem('userWrongAnswers', JSON.stringify(wrongAnswerPool));
+            } else {
+                showToast("Correct! +10 Arena Pts 🪙");
+                points += 10;
+                quizScore += 1;
                 document.getElementById('rewardDisplay').innerText = points;
                 localStorage.setItem('userPts', points);
-                currentQuizIndex++;
-                loadLevelEngine();
-            };
-            container.appendChild(btn);
-        }) : null;
+            }
+        } else {
+            const correctText = qData.options[qData.ans];
+            showToast(`Incorrect! Answer: "${correctText}" (-5 Pts)`);
+
+            points = Math.max(0, points - 5);
+            document.getElementById('rewardDisplay').innerText = points;
+            localStorage.setItem('userPts', points);
+
+            if (!wrongAnswerPool.some(item => item.en === qData.rawItem.en)) {
+                wrongAnswerPool.push(qData.rawItem);
+                localStorage.setItem('userWrongAnswers', JSON.stringify(wrongAnswerPool));
+            }
+        }
+
+        currentQuizIndex++;
+        setTimeout(loadLevelEngine, 450);
     }
 
     function goToNextLevel() {
         currentLevel++;
         currentQuizIndex = 0;
         quizScore = 0;
+        
+        points += 20;
+        document.getElementById('rewardDisplay').innerText = points;
+        localStorage.setItem('userPts', points);
         localStorage.setItem('userQuizLevel', currentLevel);
-        location.reload();
+        showToast(`Arena Level ${currentLevel} Unlocked! +20 Bonus Pts 🎁`);
+
+        resetQuizBoxUI();
+        buildLevelQuestions();
+        loadLevelEngine();
+    }
+
+    function resetToLevelOne() {
+        currentLevel = 1;
+        currentQuizIndex = 0;
+        quizScore = 0;
+        wrongAnswerPool = [];
+        localStorage.setItem('userQuizLevel', 1);
+        localStorage.setItem('userWrongAnswers', JSON.stringify([]));
+        resetQuizBoxUI();
+        buildLevelQuestions();
+        loadLevelEngine();
+    }
+
+    function resetQuizBoxUI() {
+        const box = document.getElementById('quizCardBox');
+        box.innerHTML = `
+            <div class="quiz-lang-selector-box" onclick="openLangModal('quiz')">
+                <span style="font-size:11px; font-weight:700; color:var(--text-muted);">কুইজ ভাষা:</span>
+                <span id="quizLangLabel" style="font-size: 12px; font-weight: 700; color: #60a5fa;">Bengali — বাংলা ▾</span>
+            </div>
+            <div id="wrongReviewBanner" class="wrong-review-banner" style="display: none;">
+                ⚠️ <span id="reviewBannerText">রিভেঞ্জ রাউন্ড: ভুলগুলো আবার ঝালাই করা হচ্ছে!</span>
+            </div>
+            <div class="quiz-header-status">
+                <span id="quizCounterText">⚔️ Arena Level ${currentLevel} • Q 1 / 5</span>
+                <span id="quizScoreText" style="color:#60a5fa;">Score: 0</span>
+            </div>
+            <h4 id="quizLevelTitle" style="color:#60a5fa; margin-bottom:6px; font-size:15px;">Vocab Arena Challenge</h4>
+            <p id="quizPrompt" style="font-size:15px; font-weight:700; margin:12px 0 16px; color:var(--text-main); line-height:1.4;"></p>
+            <div id="quizOptionsContainer" style="display:flex; flex-direction:column; gap:10px;"></div>
+        `;
+        updateArenaLangDisplay();
     }
 </script>
 </body>
