@@ -706,7 +706,7 @@
         <div class="translate-card" id="quizCardBox" style="text-align:center;">
             
             <div class="quiz-lang-selector-box" onclick="openLangModal('quiz')">
-                <span style="font-size:11px; font-weight:700; color:var(--text-muted);" id="quizLangLabelText">কুইজ ভাষা:</span>
+                <span style="font-size:11px; font-weight:700; color:var(--text-muted);">কুইজ ভাষা:</span>
                 <span id="quizLangLabel" style="font-size: 12px; font-weight: 700; color: #60a5fa;">Bengali — বাংলা ▾</span>
             </div>
 
@@ -1031,7 +1031,7 @@
         { en: "Comfortable", bn: "আরামদায়ক", hi: "आरामदायक", ar: "مريح", zh: "舒适的", ja: "快適な", ko: "편안한", de: "Bequem", fr: "Confortable", es: "Cómodo", it: "Comodo", pt: "Confortável" },
         { en: "Success", bn: "সাফল্য", hi: "सफलता", ar: "نجاح", zh: "成功", ja: "成功", ko: "성공", de: "Erfolg", fr: "Succès", es: "Éxito", it: "Successo", pt: "Sucesso" },
         { en: "Challenge", bn: "চ্যালেঞ্জ", hi: "चुनौती", ar: "تحدي", zh: "挑战", ja: "挑戦", ko: "도전", de: "Herausforderung", fr: "Défi", es: "Desafío", it: "Sfida", pt: "Desafio" },
-        { en: "Important", bn: "গুরুত্বপূর্ণ", hi: "महत्वपूर्ण", ar: "महम", zh: "重要的", ja: "重要", ko: "중요한", de: "Wichtig", fr: "Important", es: "Importante", it: "Importante", pt: "Importante" },
+        { en: "Important", bn: "গুরুত্বপূর্ণ", hi: "महत्वपूर्ण", ar: "مهم", zh: "重要的", ja: "重要", ko: "중요한", de: "Wichtig", fr: "Important", es: "Importante", it: "Importante", pt: "Importante" },
         { en: "Experience", bn: "অভিজ্ঞতা", hi: "अनुभव", ar: "خبرة", zh: "经验", ja: "経験", ko: "경험", de: "Erfahrung", fr: "Expérience", es: "Experiencia", it: "Esperienza", pt: "Experiência" },
         { en: "Resilient", bn: "সহনশীল", hi: "लचीला", ar: "مرن", zh: "有弹性的", ja: "回復力のある", ko: "회복력 있는", de: "Widerstandsfähig", fr: "Résilient", es: "Resiliente", it: "Resiliente", pt: "Resiliente" },
         { en: "Confidence", bn: "আত্মবিশ্বাস", hi: "आत्मविश्वास", ar: "ثقة", zh: "信心", ja: "自信", ko: "자신감", de: "Vertrauen", fr: "Confiance", es: "Confianza", it: "Fiducia", pt: "Confiança" },
@@ -1155,7 +1155,6 @@
             currentResult = banglishMap[clean];
             output.innerText = currentResult;
             output.className = "result-text-area text-glow-effect";
-            playTranslateSound();
             saveHistory(input, currentResult);
             return;
         }
@@ -1168,7 +1167,6 @@
                 currentResult = data[0].map(item => item[0]).join('');
                 output.innerText = currentResult;
                 output.className = "result-text-area text-glow-effect";
-                playTranslateSound();
                 
                 saveHistory(input, currentResult);
 
@@ -1304,7 +1302,6 @@
             output.className = "result-text-area text-glow-effect";
             output.style.direction = 'ltr';
             output.style.textAlign = 'left';
-            playTranslateSound();
         }, 300);
     }
 
@@ -1521,8 +1518,6 @@
         if (currentQuizIndex >= currentLevelQuestions.length) {
             const hasNext = currentLevel < totalMaxLevels;
             const totalQ = currentLevelQuestions.length;
-
-            playVictorySound();
 
             box.innerHTML = `
                 <div style="padding: 10px 0;">
