@@ -967,7 +967,6 @@
         'de': 'Bedeutung', 'en': 'Meaning', 'zh': '意思', 'ja': '意味', 'ur': 'معنی'
     };
 
-    // Comprehensive dynamic UI translation map for major languages
     const multiLangUI = {
         'bn': {
             transTab: "🌐 TRANSLATOR", teacherTab: "👨‍🏫 TEACHER", quizTab: "⚔️ ARENA",
@@ -978,12 +977,7 @@
             aiVerified: "AI Smart Corrected Output",
             quizLang: "কুইজ ভাষা:", reviewText: "রিভেঞ্জ রাউন্ড: ভুলগুলো আবার ঝালাই করা হচ্ছে!",
             toastCopy: "অনুবাদ কপি করা হয়েছে! 📋",
-            dictPlaceholder: "শব্দ সার্চ করলে অর্থ, সমার্থক শব্দ ও ভার্ব কনজুগেশন এখানে দেখাবে।",
-            convoTitle: "🗣️ Voice-to-Voice Conversation",
-            convoSub: "মুখোমুখি বসে দুটি ভিন্ন ভাষায় রিয়েল-টাইম কথা বলুন।",
-            convoBtnA: "🎙️ Speak as Person A",
-            convoBtnB: "🎙️ Speak as Person B",
-            convoPlaceholder: "কনভার্সেশন আউটপুট এখানে দেখাবে..."
+            dictPlaceholder: "শব্দ সার্চ করলে অর্থ, সমার্থক শব্দ ও ভার্ব কনজুগেশন এখানে দেখাবে।"
         },
         'hi': {
             transTab: "🌐 TRANSLATOR", teacherTab: "👨‍🏫 TEACHER", quizTab: "⚔️ ARENA",
@@ -994,12 +988,7 @@
             aiVerified: "AI Smart Corrected Output",
             quizLang: "क्विज़ भाषा:", reviewText: "रिवेंज राउंड: पिछली गलतियाँ सुधारी जा रही हैं!",
             toastCopy: "अनुवाद कॉपी हो गया! 📋",
-            dictPlaceholder: "शब्द खोजे जाने पर अर्थ, पर्यायवाची और क्रिया रूप यहाँ दिखाई देंगे।",
-            convoTitle: "🗣️ Voice-to-Voice Conversation",
-            convoSub: "आमने-सामने बैठकर दो अलग-अलग भाषाओं में वास्तविक समय में बात करें।",
-            convoBtnA: "🎙️ Person A के रूप में बोलें",
-            convoBtnB: "🎙️ Person B के रूप में बोलें",
-            convoPlaceholder: "वार्तालाप आउटपुट यहाँ दिखाई देगा..."
+            dictPlaceholder: "शब्द खोजे जाने पर अर्थ, पर्यायवाची और क्रिया रूप यहाँ दिखाई देंगे।"
         },
         'fr': {
             transTab: "🌐 TRADUCTEUR", teacherTab: "👨‍🏫 PROF", quizTab: "⚔️ ARÈNE",
@@ -1010,44 +999,7 @@
             aiVerified: "Sortie Corrigée par IA",
             quizLang: "Langue du Quiz:", reviewText: "Tour de Revanche: Correction des erreurs !",
             toastCopy: "Traduction copiée ! 📋",
-            dictPlaceholder: "Recherchez un mot pour voir sa définition et sa conjugaison.",
-            convoTitle: "🗣️ Conversation Vocale",
-            convoSub: "Discutez en temps réel en face à face dans deux langues différentes.",
-            convoBtnA: "🎙️ Parler (Personne A)",
-            convoBtnB: "🎙️ Parler (Personne B)",
-            convoPlaceholder: "Le résultat de la conversation apparaîtra ici..."
-        },
-        'es': {
-            transTab: "🌐 TRADUCTOR", teacherTab: "👨‍🏫 PROFESOR", quizTab: "⚔️ ARENA",
-            dailyTab: "🔥 DIARIO", statsTab: "📊 ESTADÍSTICAS", rankTab: "🏆 RANGO",
-            translateBtn: "Traducir ➔", voiceBtn: "🎙️ Voz IA",
-            grammar: "✨ Corrección", pure: "🇪🇸 Español Puro", formal: "💼 Pro Master",
-            placeholder: "Ingrese texto o palabra...", resultPlaceholder: "La traducción aparecerá aquí...",
-            aiVerified: "Salida Corregida por IA",
-            quizLang: "Idioma del Cuestionario:", reviewText: "¡Ronda de Venganza: Corrigiendo errores!",
-            toastCopy: "¡Traducción copiada! 📋",
-            dictPlaceholder: "Busca una palabra para ver su significado y conjugación.",
-            convoTitle: "🗣️ Conversación de Voz",
-            convoSub: "Habla en tiempo real en dos idiomas diferentes cara a cara.",
-            convoBtnA: "🎙️ Hablar como Persona A",
-            convoBtnB: "🎙️ Hablar como Persona B",
-            convoPlaceholder: "El resultado de la conversación aparecerá aquí..."
-        },
-        'ar': {
-            transTab: "🌐 مترجم", teacherTab: "👨‍🏫 معلم", quizTab: "⚔️ الساحة",
-            dailyTab: "🔥 يومي", statsTab: "📊 إحصائيات", rankTab: "🏆 الترتيب",
-            translateBtn: "ترجم ➔", voiceBtn: "🎙️ صوت الذكاء الاصطناعي",
-            grammar: "✨ تصحيح ذكي", pure: "🇸🇦 عربية فصحى", formal: "💼 محترف",
-            placeholder: "أدخل النص أو الكلمة...", resultPlaceholder: "ستظهر الترجمة هنا...",
-            aiVerified: "مخرج مصحح بذكاء",
-            quizLang: "لغة الاختبار:", reviewText: "جولة الانتقام: تصحيح الأخطاء السابقة!",
-            toastCopy: "تم نسخ الترجمة! 📋",
-            dictPlaceholder: "ابحث عن كلمة لرؤية المعنى والمرادفات وتصريف الأفعال.",
-            convoTitle: "🗣️ محادثة صوتية",
-            convoSub: "تحدث في الوقت الفعلي بلغتين مختلفتين وجهاً لوجه.",
-            convoBtnA: "🎙️ التحدث كشخص أ",
-            convoBtnB: "🎙️ التحدث كشخص ب",
-            convoPlaceholder: "سيظهر ناتج المحادثة هنا..."
+            dictPlaceholder: "Recherchez un mot pour voir sa définition et sa conjugaison."
         },
         'en': {
             transTab: "🌐 TRANSLATOR", teacherTab: "👨‍🏫 TEACHER", quizTab: "⚔️ ARENA",
@@ -1058,12 +1010,7 @@
             aiVerified: "AI Smart Corrected Output",
             quizLang: "Quiz Language:", reviewText: "Revenge Round: Retrying previous mistakes!",
             toastCopy: "Translation copied! 📋",
-            dictPlaceholder: "Search a word to see meaning, synonyms, and verb conjugations.",
-            convoTitle: "🗣️ Voice-to-Voice Conversation",
-            convoSub: "Talk in real-time in two different languages face-to-face.",
-            convoBtnA: "🎙️ Speak as Person A",
-            convoBtnB: "🎙️ Speak as Person B",
-            convoPlaceholder: "Conversation output will appear here..."
+            dictPlaceholder: "Search a word to see meaning, synonyms, and verb conjugations."
         }
     };
 
@@ -1095,7 +1042,7 @@
         { en: "Curiosity", bn: "কৌতূহল", hi: "जिज्ञासा", ar: "فضول", zh: "好奇心", ja: "好奇心", ko: "호기심", de: "Neugier", fr: "Curiosité", es: "Curiosidad", it: "Curiosità", pt: "Curiosidade" },
         { en: "Patience", bn: "ধৈর্য", hi: "धैर्य", ar: "صبر", zh: "耐心", ja: "忍耐", ko: "인내", de: "Geduld", fr: "Patience", es: "Paciencia", it: "Pazienza", pt: "Paciência" },
         { en: "Ambition", bn: "উচ্চাভিলাষ", hi: "महत्वाकांक्षा", ar: "طموح", zh: "抱负", ja: "野心", ko: "야망", de: "Ambition", fr: "Ambition", es: "Ambición", it: "Ambizione", pt: "Ambição" },
-        { en: "Creativity", bn: "সৃজনশীলতা", hi: "রচয়িতা", ar: "إبداع", zh: "创造力", ja: "創造性", ko: "창의력", de: "Kreativität", fr: "Créativité", es: "Creatividad", it: "Creatività", pt: "Criatividade" },
+        { en: "Creativity", bn: "সৃজনশীলতা", hi: "রचनात्मकता", ar: "إبداع", zh: "创造力", ja: "創造性", ko: "창의력", de: "Kreativität", fr: "Créativité", es: "Creatividad", it: "Creatività", pt: "Criatividade" },
         { en: "Dedication", bn: "নিষ্ঠা", hi: "समर्पण", ar: "تفان", zh: "奉献", ja: "헌신", ko: "헌신", de: "Hingabe", fr: "Dédicace", es: "Dedicación", it: "Dedizione", pt: "Dedicação" },
         { en: "Harmony", bn: "সম্প্রীতি", hi: "सामंजस्य", ar: "انسجام", zh: "和谐", ja: "調和", ko: "조화", de: "Harmonie", fr: "Harmonie", es: "Armonía", it: "Armonia", pt: "Harmonia" },
         { en: "Inspiration", bn: "অনুপ্রেরণা", hi: "प्रेरणा", ar: "إلهام", zh: "灵感", ja: "インスピレーション", ko: "영감", de: "Inspiration", fr: "Inspiration", es: "Inspiración", it: "Ispirazione", pt: "Inspiração" }
@@ -1737,7 +1684,7 @@
         const elA = document.getElementById('convoALabel');
         const elB = document.getElementById('convoBLabel');
         if(elA) elA.innerText = aObj.native;
-        if(elB) elB.innerText = bObj.native;
+        if(elB) elB.native = bObj.native;
 
         const uiLang = (multiLangUI[convoLangA] ? convoLangA : 'en');
         const t = multiLangUI[uiLang] || multiLangUI['en'];
