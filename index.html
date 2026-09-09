@@ -959,7 +959,7 @@
     const langVoiceMap = {
         'bn': 'bn-BD', 'en': 'en-US', 'hi': 'hi-IN', 'ar': 'ar-SA', 'zh': 'zh-CN', 'ja': 'ja-JP',
         'ko': 'ko-KR', 'de': 'de-DE', 'fr': 'fr-FR', 'es': 'es-ES', 'it': 'it-IT', 'pt': 'pt-PT',
-        'ru': 'ru-RU', 'tr': 'tr-TR', 'fa': 'fa-IR', 'ur': 'ur-PK'
+        'ru': 'ru-RU', 'tr': 'tr-TR', 'fa': 'fa-IR', 'ur': 'ur-PK', 'fr': 'fr-FR'
     };
 
     const multiLangUI = {
@@ -979,21 +979,21 @@
             convoBtnB: "🎙️ Speak as Person B",
             convoPlaceholder: "কনভার্সেশন আউটপুট এখানে দেখাবে..."
         },
-        'hi': {
-            transTab: "🌐 TRANSLATOR", teacherTab: "👨‍🏫 TEACHER", quizTab: "⚔️ ARENA",
-            dailyTab: "🔥 DAILY", statsTab: "📊 STATS", rankTab: "🏆 RANK",
-            translateBtn: "अनुवाद करें ➔", voiceBtn: "🎙️ Smart Voice AI",
-            grammar: "✨ Smart Fix", pure: "🇬🇧 Pure English", formal: "💼 Pro Master",
-            placeholder: "शब्द या वाक्य दर्ज करें...", resultPlaceholder: "परिणाम यहाँ दिखाई देगा...",
-            aiVerified: "AI Smart Corrected Output",
-            quizLang: "क्विज़ भाषा:", reviewText: "रिवेंज राउंड: पिछली गलतियाँ सुधारी जा रही हैं!",
-            toastCopy: "अनुवाद कॉपी हो गया! 📋",
-            dictPlaceholder: "शब्द खोजे जाने पर अर्थ, पर्यायवाची और क्रिया रूप यहाँ दिखाई देंगे।",
-            convoTitle: "🗣️ Voice-to-Voice Conversation",
-            convoSub: "आमने-सामने बैठकर दो अलग-अलग भाषाओं में वास्तविक समय में बात करें।",
-            convoBtnA: "🎙️ Person A के रूप में बोलें",
-            convoBtnB: "🎙️ Person B के रूप में बोलें",
-            convoPlaceholder: "वार्तालाप आउटपुट यहाँ दिखाई देगा..."
+        'fr': {
+            transTab: "🌐 TRADUCTEUR", teacherTab: "👨‍🏫 PROF", quizTab: "⚔️ ARÈNE",
+            dailyTab: "🔥 QUOTIDIEN", statsTab: "📊 STATS", rankTab: "🏆 RANG",
+            translateBtn: "Traduire ➔", voiceBtn: "🎙️ Voix IA",
+            grammar: "✨ Correctif", pure: "🇫🇷 Français Pur", formal: "💼 Pro Master",
+            placeholder: "Entrez un mot ou un texte...", resultPlaceholder: "La traduction apparaîtra ici...",
+            aiVerified: "Sortie Corrigée par IA",
+            quizLang: "Langue du Quiz:", reviewText: "Tour de Revanche: Correction des erreurs !",
+            toastCopy: "Traduction copiée ! 📋",
+            dictPlaceholder: "Recherchez un mot pour voir sa définition et sa conjugaison.",
+            convoTitle: "🗣️ Conversation Vocale",
+            convoSub: "Discutez en temps réel en face à face dans deux langues différentes.",
+            convoBtnA: "🎙️ Parler en tant que Personne A",
+            convoBtnB: "🎙️ Parler en tant que Personne B",
+            convoPlaceholder: "Le résultat de la conversation apparaîtra ici..."
         },
         'en': {
             transTab: "🌐 TRANSLATOR", teacherTab: "👨‍🏫 TEACHER", quizTab: "⚔️ ARENA",
@@ -1029,7 +1029,7 @@
         { en: "Improve", bn: "উন্নতি করা", hi: "सुधारना", ar: "تحسين", zh: "改进", ja: "改善する", ko: "향상시키다", de: "Verbessern", fr: "Améliorer", es: "Mejorar", it: "Migliorare", pt: "Melhorar" },
         { en: "Difficult", bn: "কঠিন", hi: "कठिन", ar: "صعب", zh: "困难", ja: "難しい", ko: "어려운", de: "Schwierig", fr: "Difficile", es: "Difícil", it: "Difficile", pt: "Difícil" },
         { en: "Comfortable", bn: "আরামদায়ক", hi: "आरामदायक", ar: "مريح", zh: "舒适的", ja: "快適な", ko: "편안한", de: "Bequem", fr: "Confortable", es: "Cómodo", it: "Comodo", pt: "Confortável" },
-        { en: "Success", bn: "সাফল্য", hi: "सफलता", ar: "نجاح", zh: "成功", ja: "成功", ko: "성공", de: "Erfolg", fr: "Succès", es: "Éxito", it: "Successo", pt: "Sucesso" },
+        { en: "Success", bn: "সাফল্য", hi: "সफलता", ar: "نجاح", zh: "成功", ja: "成功", ko: "성공", de: "Erfolg", fr: "Succès", es: "Éxito", it: "Successo", pt: "Sucesso" },
         { en: "Challenge", bn: "চ্যালেঞ্জ", hi: "चुनौती", ar: "تحدي", zh: "挑战", ja: "挑戦", ko: "도전", de: "Herausforderung", fr: "Défi", es: "Desafío", it: "Sfida", pt: "Desafio" },
         { en: "Important", bn: "গুরুত্বপূর্ণ", hi: "महत्वपूर्ण", ar: "مهم", zh: "重要的", ja: "重要", ko: "중요한", de: "Wichtig", fr: "Important", es: "Importante", it: "Importante", pt: "Importante" },
         { en: "Experience", bn: "অভিজ্ঞতা", hi: "अनुभव", ar: "خبرة", zh: "经验", ja: "経験", ko: "경험", de: "Erfahrung", fr: "Expérience", es: "Experiencia", it: "Esperienza", pt: "Experiência" },
@@ -1108,7 +1108,7 @@
     function clearAll() {
         document.getElementById('sourceInput').value = '';
         document.getElementById('charCount').innerText = '0 / 5000';
-        const uiLang = (multiLangUI[currentSourceLang] ? currentSourceLang : 'en');
+        const uiLang = (multiLangUI[convoLangA] ? convoLangA : 'en');
         const t = multiLangUI[uiLang];
         document.getElementById('targetOutput').innerHTML = `<span class="result-placeholder">${t.resultPlaceholder}</span>`;
         currentResult = "";
@@ -1678,8 +1678,8 @@
         const el = document.getElementById('dictTargetLangLabel');
         if(el) el.innerText = `${dObj.native}`;
 
-        const uiLang = (multiLangUI[currentSourceLang] ? currentSourceLang : 'en');
-        const t = multiLangUI[uiLang];
+        const uiLang = (multiLangUI[convoLangA] ? convoLangA : 'en');
+        const t = multiLangUI[uiLang] || multiLangUI['en'];
         const placeholderEl = document.getElementById('dictPlaceholderText');
         if(placeholderEl) {
             placeholderEl.innerText = t.dictPlaceholder;
@@ -1693,6 +1693,22 @@
         const elB = document.getElementById('convoBLabel');
         if(elA) elA.innerText = aObj.native;
         if(elB) elB.innerText = bObj.native;
+
+        // Dynamically translate Convo UI based on Person A's language
+        const uiLang = (multiLangUI[convoLangA] ? convoLangA : 'en');
+        const t = multiLangUI[uiLang] || multiLangUI['en'];
+
+        const convoTitle = document.getElementById('convoTitleText');
+        const convoSub = document.getElementById('convoSubText');
+        const btnA = document.getElementById('convoBtnA');
+        const btnB = document.getElementById('convoBtnB');
+        const convoPH = document.getElementById('convoPlaceholderText');
+
+        if(convoTitle) convoTitle.innerText = t.convoTitle;
+        if(convoSub) convoSub.innerText = t.convoSub;
+        if(btnA) btnA.innerText = `🎙️ ${t.convoBtnA.replace('Speak as Person A', 'Speak as Person A').replace('Person A के रूप में बोलें', 'Person A के रूप में बोलें')}`;
+        if(btnB) btnB.innerText = `🎙️ ${t.convoBtnB.replace('Speak as Person B', 'Speak as Person B').replace('Person B के रूप में बोलें', 'Person B के रूप में बोलें')}`;
+        if(convoPH) convoPH.innerText = t.convoPlaceholder;
     }
 
     function openLangModal(type) {
@@ -1778,20 +1794,8 @@
         document.getElementById('resPlaceholder').innerText = t.resultPlaceholder;
         document.getElementById('aiVerifiedText').innerText = t.aiVerified;
 
-        // Convo Tab Localization based on selected source language
-        const convoTitle = document.getElementById('convoTitleText');
-        const convoSub = document.getElementById('convoSubText');
-        const btnA = document.getElementById('convoBtnA');
-        const btnB = document.getElementById('convoBtnB');
-        const convoPH = document.getElementById('convoPlaceholderText');
-
-        if(convoTitle) convoTitle.innerText = t.convoTitle;
-        if(convoSub) convoSub.innerText = t.convoSub;
-        if(btnA) btnA.innerText = t.convoBtnA;
-        if(btnB) btnB.innerText = t.convoBtnB;
-        if(convoPH) convoPH.innerText = t.convoPlaceholder;
-        
         updateDictLangDisplay();
+        updateConvoLangDisplay();
     }
 </script>
 </body>
