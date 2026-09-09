@@ -8,12 +8,15 @@
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#0B0F19">
     <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/technopower/Reve-dictionenary-app/main/icon.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="REVE AI">
     <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/technopower/Reve-dictionenary-app/main/icon.png">
 
     <!-- Fonts: Inter & Hind Siliguri -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- OCR Engine -->
+    <!-- Fast OCR Engine for Image Reading -->
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 
     <style>
@@ -70,6 +73,11 @@
         .brand-logo span {
             color: var(--accent-cyan);
             font-weight: 700;
+        }
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         .user-pts {
             background: rgba(15, 23, 42, 0.6);
@@ -297,6 +305,20 @@
             font-size: 15px;
         }
 
+        .admob-test-banner {
+            width: 100%;
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px dashed var(--border-color);
+            border-radius: 14px;
+            padding: 10px;
+            text-align: center;
+            margin-top: 4px;
+        }
+        .admob-test-banner span {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
         /* Language Modal */
         .lang-modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -340,6 +362,22 @@
         }
         .tab-panel { display: none; }
         .tab-panel.active { display: flex; flex-direction: column; gap: 12px; }
+
+        .quiz-header-status {
+            display: flex; justify-content: space-between; font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 10px;
+        }
+        .quiz-lang-selector-box {
+            display: flex; align-items: center; justify-content: space-between; background: rgba(15, 23, 42, 0.5); padding: 8px 12px; border-radius: 12px; margin-bottom: 10px; border: 1px solid var(--border-color); cursor: pointer;
+        }
+        .wrong-review-banner {
+            background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); color: #fca5a5; padding: 8px 12px; border-radius: 10px; font-size: 11px; font-weight: 600; margin-bottom: 10px; text-align: left;
+        }
+        .leaderboard-item {
+            display: flex; justify-content: space-between; align-items: center; background: rgba(15, 23, 42, 0.5); padding: 10px 14px; border-radius: 12px; margin-bottom: 8px; border: 1px solid var(--border-color); font-size: 13px;
+        }
+        .stats-card {
+            background: rgba(15, 23, 42, 0.5); border: 1px solid var(--border-color); border-radius: 16px; padding: 12px; text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -350,19 +388,21 @@
     <!-- Top Navigation Header -->
     <div class="top-navbar">
         <div class="brand-logo">
-            <span>REVE</span> AI
+            <span>REVE</span> AI Translate
         </div>
-        <div class="user-pts">🪙 <span id="rewardDisplay">21</span> Pts</div>
+        <div class="nav-actions">
+            <span class="user-pts">🪙 <span id="rewardDisplay">21</span> Pts</span>
+        </div>
     </div>
 
     <!-- Module Hub Bar -->
     <div class="hub-tabs">
-        <button class="hub-tab active" onclick="switchView('trans')">🌐 TRANSLATOR</button>
-        <button class="hub-tab" onclick="switchView('teacher')">👨‍🏫 TEACHER</button>
-        <button class="hub-tab" onclick="switchView('quiz')">⚔️ ARENA</button>
-        <button class="hub-tab" onclick="switchView('daily')">🔥 DAILY</button>
-        <button class="hub-tab" onclick="switchView('stats')">📊 STATS</button>
-        <button class="hub-tab" onclick="switchView('rank')">🏆 RANK</button>
+        <button class="hub-tab active" id="tabTransBtn" onclick="switchView('trans')">🌐 TRANSLATOR</button>
+        <button class="hub-tab" id="tabTeacherBtn" onclick="switchView('teacher')">👨‍🏫 TEACHER</button>
+        <button class="hub-tab" id="tabQuizBtn" onclick="switchView('quiz')">⚔️ ARENA</button>
+        <button class="hub-tab" id="tabDailyBtn" onclick="switchView('daily')">🔥 DAILY</button>
+        <button class="hub-tab" id="tabStatsBtn" onclick="switchView('stats')">📊 STATS</button>
+        <button class="hub-tab" id="tabRankBtn" onclick="switchView('rank')">🏆 RANK</button>
     </div>
 
     <!-- 1. TRANSLATOR VIEW -->
@@ -413,6 +453,10 @@
                 </div>
             </div>
         </div>
+
+        <div class="admob-test-banner">
+            <span>📢 [AdMob Test Banner Ad]<br>Ad Unit ID: ca-app-pub-3940256099942544/6300978111</span>
+        </div>
     </div>
 
     <!-- 2. TEACHER VIEW -->
@@ -427,8 +471,19 @@
 
     <!-- 3. ARENA VIEW -->
     <div id="quizView" class="workspace-content tab-panel">
-        <div class="translate-card" style="text-align:center;">
-            <h3 style="color:var(--accent-cyan); margin-bottom:10px;">⚔️ Vocab Arena Level 1</h3>
+        <div class="translate-card" id="quizCardBox" style="text-align:center;">
+            <div class="quiz-lang-selector-box" onclick="openLangModal('quiz')">
+                <span style="font-size:11px; font-weight:600; color:var(--text-muted);">কুইজ ভাষা:</span>
+                <span id="quizLangLabel" style="font-size:12px; font-weight:600; color:var(--accent-cyan);">Bengali — বাংলা ▾</span>
+            </div>
+            <div id="wrongReviewBanner" class="wrong-review-banner" style="display: none;">
+                ⚠️ <span id="reviewBannerText">রিভেঞ্জ রাউন্ড: ভুলগুলো আবার ঝালাই করা হচ্ছে!</span>
+            </div>
+            <div class="quiz-header-status">
+                <span id="quizCounterText">⚔️ Arena Level 1 • Q 1 / 5</span>
+                <span id="quizScoreText" style="color:var(--accent-cyan);">Score: 0</span>
+            </div>
+            <h4 id="quizLevelTitle" style="color:var(--accent-cyan); margin-bottom:6px; font-size:15px;">Vocab Arena Challenge</h4>
             <p id="quizPrompt" style="font-size:15px; font-weight:600; margin:12px 0 16px;"></p>
             <div id="quizOptionsContainer" style="display:flex; flex-direction:column; gap:10px;"></div>
         </div>
@@ -439,17 +494,27 @@
         <div class="translate-card" style="text-align:center;">
             <h3 style="color:var(--accent-cyan); margin-bottom:8px;">🔥 Daily Mission Challenge</h3>
             <p style="font-size:13px; color:var(--text-muted); margin-bottom:14px;">প্রতিদিন নতুন ভোকাবুলারি শিখুন এবং এক্সক্লুসিভ রিওয়ার্ড জিতুন!</p>
-            <p id="dailyPrompt" style="font-size:15px; font-weight:600; margin:12px 0;"></p>
-            <div id="dailyOptionsContainer" style="display:flex; flex-direction:column; gap:10px;"></div>
+            <div id="dailyCardBox">
+                <p id="dailyPrompt" style="font-size:15px; font-weight:600; margin:12px 0;"></p>
+                <div id="dailyOptionsContainer" style="display:flex; flex-direction:column; gap:10px;"></div>
+            </div>
         </div>
     </div>
 
     <!-- 5. STATS VIEW -->
     <div id="statsView" class="workspace-content tab-panel">
-        <div class="translate-card" style="text-align:center;">
-            <h3 style="color:var(--accent-cyan); margin-bottom:12px;">📊 Learning Analytics</h3>
-            <p style="font-size:14px; color:var(--text-muted);">Current Level: <strong style="color:white;">Level 1</strong></p>
-            <p style="font-size:14px; color:var(--text-muted); margin-top:8px;">Total Coins: <strong style="color:#FEE08A;">21 Pts</strong></p>
+        <div class="translate-card">
+            <h3 style="color:var(--accent-cyan); margin-bottom:12px; text-align:center;">📊 Learning Analytics</h3>
+            <div style="display:flex; flex-direction:column; gap:10px;">
+                <div class="stats-card">
+                    <span style="font-size:12px; color:var(--text-muted);">Current Level</span>
+                    <h2 id="statLevel" style="color:var(--accent-cyan); margin-top:4px;">Level 1</h2>
+                </div>
+                <div class="stats-card">
+                    <span style="font-size:12px; color:var(--text-muted);">Total Coins</span>
+                    <h2 id="statCoins" style="color:#FEE08A; margin-top:4px;">21 Pts</h2>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -457,9 +522,9 @@
     <div id="rankView" class="workspace-content tab-panel">
         <div class="translate-card">
             <h3 style="color:var(--accent-cyan); margin-bottom:12px; text-align:center;">🏆 Global Leaderboard</h3>
-            <div class="lang-item"><span>🥇 1. Alex_Pro (USA)</span> <strong>9,450 Pts</strong></div>
-            <div class="lang-item"><span>🥈 2. Tanvir_BD (Bangladesh)</span> <strong>8,920 Pts</strong></div>
-            <div class="lang-item" style="border:1px solid var(--accent-cyan); border-radius:12px; margin-top:6px;"><span>⭐ আপনি (You)</span> <strong>21 Pts</strong></div>
+            <div class="leaderboard-item"><span>🥇 1. Alex_Pro (USA)</span> <strong>9,450 Pts</strong></div>
+            <div class="leaderboard-item"><span>🥈 2. Tanvir_BD (Bangladesh)</span> <strong>8,920 Pts</strong></div>
+            <div class="leaderboard-item" style="border-color:var(--accent-cyan);"><span>⭐ আপনি (You)</span> <strong id="myRankScore">21 Pts</strong></div>
         </div>
     </div>
 </div>
@@ -488,16 +553,18 @@
 </div>
 
 <script>
+    let points = parseInt(localStorage.getItem('userPts')) || 21;
     let currentSourceLang = 'bn';
     let currentTargetLang = 'en';
+    let selectedQuizLang = 'bn';
     let activeLangType = 'src';
     let currentResult = "";
     let globalRecognition = null;
 
     const languagesDB = [
         { code: "en", en: "English", native: "English" },
-        { code: "hi", en: "Hindi", native: "हिन्दी" },
         { code: "bn", en: "Bengali", native: "বাংলা" },
+        { code: "hi", en: "Hindi", native: "हिन्दी" },
         { code: "zh", en: "Mandarin Chinese", native: "中文" },
         { code: "es", en: "Spanish", native: "Español" },
         { code: "fr", en: "French", native: "Français" },
@@ -512,13 +579,58 @@
         { code: "tr", en: "Turkish", native: "Türkçe" }
     ];
 
+    const langVoiceMap = {
+        'bn': 'bn-BD', 'en': 'en-US', 'hi': 'hi-IN', 'ar': 'ar-SA', 'zh': 'zh-CN', 'ja': 'ja-JP',
+        'ko': 'ko-KR', 'de': 'de-DE', 'fr': 'fr-FR', 'es': 'es-ES', 'it': 'it-IT', 'pt': 'pt-PT',
+        'ru': 'ru-RU', 'tr': 'tr-TR', 'fa': 'fa-IR', 'ur': 'ur-PK'
+    };
+
+    const masterVocabDatabase = [
+        { en: "Opportunity", bn: "সুযোগ", hi: "अवसर", ar: "فرصة" },
+        { en: "Essential", bn: "জরুরি", hi: "आवश्यक", ar: "ضروري" },
+        { en: "Improve", bn: "উন্নতি করা", hi: "सुधारना", ar: "تحسين" },
+        { en: "Difficult", bn: "কঠিন", hi: "कठिन", ar: "صعب" },
+        { en: "Comfortable", bn: "আরামদায়ক", hi: "आरामदायक", ar: "مريح" },
+        { en: "Success", bn: "সাফল্য", hi: "सफलता", ar: "نجاح" },
+        { en: "Challenge", bn: "চ্যালেঞ্জ", hi: "चुनौती", ar: "تحدي" },
+        { en: "Important", bn: "গুরুত্বপূর্ণ", hi: "महत्वपूर्ण", ar: "مهم" }
+    ];
+
+    let currentLevel = parseInt(localStorage.getItem('userQuizLevel')) || 1;
+    let currentQuizIndex = 0;
+    let quizScore = 0;
+    const totalMaxLevels = 1000;
+    const questionsPerLevel = 5;
+    let wrongAnswerPool = JSON.parse(localStorage.getItem('userWrongAnswers')) || [];
+    let currentLevelQuestions = [];
+
+    let dailyIndex = 0;
+    let dailyQuestions = masterVocabDatabase.slice(0, 3);
+
+    window.addEventListener('DOMContentLoaded', () => {
+        updateLanguageDisplay();
+        updateArenaLangDisplay();
+        buildLevelQuestions();
+        loadLevelEngine();
+        loadDailyChallenge();
+    });
+
     function switchView(tabId) {
         document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
         document.querySelectorAll('.hub-tab').forEach(b => b.classList.remove('active'));
         document.getElementById(tabId + 'View')?.classList.add('active');
         event.target.classList.add('active');
-        if(tabId === 'quiz') initQuiz();
-        if(tabId === 'daily') initDaily();
+        if(tabId === 'quiz') {
+            buildLevelQuestions();
+            loadLevelEngine();
+        } else if(tabId === 'stats') {
+            document.getElementById('statLevel').innerText = `Level ${currentLevel}`;
+            document.getElementById('statCoins').innerText = `${points} Pts`;
+        } else if(tabId === 'rank') {
+            document.getElementById('myRankScore').innerText = `${points} Pts`;
+        } else if(tabId === 'daily') {
+            loadDailyChallenge();
+        }
     }
 
     function showToast(msg) {
@@ -539,9 +651,20 @@
         currentResult = "";
     }
 
+    async function pasteClipboard() {
+        try {
+            const text = await navigator.clipboard.readText();
+            document.getElementById('sourceInput').value = text;
+            translateText();
+        } catch(e) {
+            showToast("ক্লিপবোর্ড অনুমতি প্রয়োজন");
+        }
+    }
+
     function openLangModal(type) {
         activeLangType = type;
         document.getElementById('langModal').style.display = 'flex';
+        document.getElementById('langSearchBox').value = '';
         renderLangList(languagesDB);
     }
 
@@ -556,12 +679,7 @@
             const div = document.createElement('div');
             div.className = 'lang-item';
             div.innerHTML = `<div><div style="font-weight:600;">${item.native}</div><div style="font-size:12px; color:var(--text-muted);">${item.en}</div></div><span style="color:var(--accent-cyan); font-size:12px;">${item.code}</span>`;
-            div.onclick = () => {
-                if(activeLangType === 'src') currentSourceLang = item.code;
-                else currentTargetLang = item.code;
-                updateLanguageDisplay();
-                closeLangModal();
-            };
+            div.onclick = () => selectLanguage(item.code);
             container.appendChild(div);
         });
     }
@@ -572,11 +690,32 @@
         renderLangList(filtered);
     }
 
+    function selectLanguage(code) {
+        if(activeLangType === 'src') {
+            currentSourceLang = code;
+            updateLanguageDisplay();
+        } else if(activeLangType === 'target') {
+            currentTargetLang = code;
+            updateLanguageDisplay();
+        } else if(activeLangType === 'quiz') {
+            selectedQuizLang = code;
+            updateArenaLangDisplay();
+            buildLevelQuestions();
+            loadLevelEngine();
+        }
+        closeLangModal();
+    }
+
     function updateLanguageDisplay() {
         const s = languagesDB.find(l => l.code === currentSourceLang) || languagesDB[2];
         const t = languagesDB.find(l => l.code === currentTargetLang) || languagesDB[0];
-        document.getElementById('srcLabel').innerText = s.native;
-        document.getElementById('targetLabel').innerText = t.native;
+        document.getElementById('srcLabel').innerText = `${s.native}`;
+        document.getElementById('targetLabel').innerText = `${t.native}`;
+    }
+
+    function updateArenaLangDisplay() {
+        const q = languagesDB.find(l => l.code === selectedQuizLang) || languagesDB[2];
+        document.getElementById('quizLangLabel').innerText = `${q.native} ▾`;
     }
 
     function swapLanguages() {
@@ -595,14 +734,14 @@
         const output = document.getElementById('targetOutput');
         if(!input) { showToast("দয়া করে কিছু লিখুন"); return; }
         
-        output.innerHTML = '<span style="color:var(--text-muted);">এআই স্মার্ট প্রসেসিং হচ্ছে...</span>';
+        output.innerHTML = '<span style="color:var(--text-muted);">প্রসেসিং হচ্ছে...</span>';
         try {
             const res = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${currentTargetLang}&dt=t&q=${encodeURIComponent(input)}`);
             const data = await res.json();
             currentResult = data[0].map(item => item[0]).join('');
             output.innerText = currentResult;
         } catch(e) {
-            output.innerText = "অনুবাদ ব্যর্থ হয়েছে, ইন্টারনেট সংযোগ পরীক্ষা করুন।";
+            output.innerText = "অনুবাদ ব্যর্থ হয়েছে।";
         }
     }
 
@@ -643,6 +782,7 @@
         document.getElementById('voiceModal').style.display = 'flex';
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         globalRecognition = new SpeechRecognition();
+        globalRecognition.lang = langVoiceMap[currentSourceLang] || 'en-US';
         globalRecognition.onresult = (e) => {
             document.getElementById('sourceInput').value = e.results[0][0].transcript;
             closeVoiceModal();
@@ -666,21 +806,105 @@
         });
     }
 
-    function initQuiz() {
-        document.getElementById('quizPrompt').innerText = '"Opportunity" এর সঠিক বাংলা অর্থ কোনটি?';
-        const container = document.getElementById('quizOptionsContainer');
-        container.innerHTML = `
-            <button class="ai-pill-btn" style="width:100%; padding:12px;" onclick="showToast('সঠিক উত্তর!')">ক) সুযোগ</button>
-            <button class="ai-pill-btn" style="width:100%; padding:12px;" onclick="showToast('ভুল উত্তর!')">খ) কঠিন</button>
-        `;
+    function loadDailyChallenge() {
+        const box = document.getElementById('dailyCardBox');
+        if(dailyIndex >= dailyQuestions.length) {
+            box.innerHTML = `<h4 style="color:var(--accent-emerald); margin:10px 0;">মমিশন সম্পন্ন! +৫০ কয়েন বোনাস 🎉</h4>`;
+            return;
+        }
+        const item = dailyQuestions[dailyIndex];
+        document.getElementById('dailyPrompt').innerText = `"${item.bn}" এর ইংরেজি অর্থ কী?`;
+        let wrong1 = masterVocabDatabase[(dailyIndex + 1) % masterVocabDatabase.length].en;
+        let options = [item.en, wrong1];
+        options.sort(() => 0.5 - Math.random());
+        const container = document.getElementById('dailyOptionsContainer');
+        container.innerHTML = '';
+        options.forEach((opt) => {
+            const btn = document.createElement('button');
+            btn.className = 'ai-pill-btn';
+            btn.style.width = '100%';
+            btn.innerText = opt;
+            btn.onclick = () => {
+                if(opt === item.en) {
+                    showToast("সঠিক উত্তর! +১৫ পয়েন্ট");
+                    points += 15;
+                } else {
+                    showToast("ভুল উত্তর!");
+                }
+                document.getElementById('rewardDisplay').innerText = points;
+                localStorage.setItem('userPts', points);
+                dailyIndex++;
+                loadDailyChallenge();
+            };
+            container.appendChild(btn);
+        });
     }
 
-    function initDaily() {
-        document.getElementById('dailyPrompt').innerText = '"Essential" শব্দের মানে কী?';
-        const container = document.getElementById('dailyOptionsContainer');
-        container.innerHTML = `
-            <button class="ai-pill-btn" style="width:100%; padding:12px;" onclick="showToast('অভিনন্দন! +১৫ বোনাস পয়েন্ট')">জরুরি</button>
-        `;
+    function generateQuestion(item, isReview = false) {
+        const targetWord = item[selectedQuizLang] || item['en'];
+        let options = [item.en, masterVocabDatabase[(currentLevel) % masterVocabDatabase.length].en];
+        options.sort(() => 0.5 - Math.random());
+        return {
+            rawItem: item,
+            q: `"${targetWord}" - এর সঠিক ইংরেজি অর্থ কোনটি?`,
+            options: options,
+            ans: options.indexOf(item.en),
+            isReview: isReview
+        };
+    }
+
+    function buildLevelQuestions() {
+        currentLevelQuestions = [];
+        wrongAnswerPool.forEach(item => currentLevelQuestions.push(generateQuestion(item, true)));
+        const needed = questionsPerLevel - currentLevelQuestions.length;
+        for (let i = 0; i < needed; i++) {
+            const item = masterVocabDatabase[Math.floor(Math.random() * masterVocabDatabase.length)];
+            currentLevelQuestions.push(generateQuestion(item, false));
+        }
+    }
+
+    function loadLevelEngine() {
+        const box = document.getElementById('quizCardBox');
+        if(currentQuizIndex >= currentLevelQuestions.length) {
+            box.innerHTML = `<h3 style="color:var(--accent-cyan); margin:10px 0;">Level ${currentLevel} Conquered! 🏆</h3><button class="btn-main-action" style="width:100%;" onclick="goToNextLevel()">Next Level ➔</button>`;
+            return;
+        }
+        const qData = currentLevelQuestions[currentQuizIndex];
+        document.getElementById('wrongReviewBanner').style.display = qData.isReview ? 'flex' : 'none';
+        document.getElementById('quizCounterText').innerText = `Arena Level ${currentLevel} • Q ${currentQuizIndex + 1}/${currentLevelQuestions.length}`;
+        document.getElementById('quizPrompt').innerText = qData.q;
+        const container = document.getElementById('quizOptionsContainer');
+        container.innerHTML = '';
+        qData.options.forEach((opt, idx) => {
+            const btn = document.createElement('button');
+            btn.className = 'ai-pill-btn';
+            btn.style.width = '100%';
+            btn.innerText = opt;
+            btn.onclick = () => {
+                if(idx === qData.ans) {
+                    showToast("সঠিক! +১০ পয়েন্ট");
+                    points += 10;
+                    quizScore++;
+                } else {
+                    showToast("ভুল হয়েছে!");
+                    wrongAnswerPool.push(qData.rawItem);
+                    localStorage.setItem('userWrongAnswers', JSON.stringify(wrongAnswerPool));
+                }
+                document.getElementById('rewardDisplay').innerText = points;
+                localStorage.setItem('userPts', points);
+                currentQuizIndex++;
+                loadLevelEngine();
+            };
+            container.appendChild(btn);
+        });
+    }
+
+    function goToNextLevel() {
+        currentLevel++;
+        currentQuizIndex = 0;
+        quizScore = 0;
+        localStorage.setItem('userQuizLevel', currentLevel);
+        location.reload();
     }
 </script>
 </body>
