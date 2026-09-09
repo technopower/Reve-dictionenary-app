@@ -1054,14 +1054,14 @@
         { en: "Challenge", bn: "চ্যালেঞ্জ", hi: "चुनौती", ar: "تحدي", zh: "挑战", ja: "挑戦", ko: "도전", de: "Herausforderung", fr: "Défi", es: "Desafío", it: "Sfida", pt: "Desafio" },
         { en: "Important", bn: "গুরুত্বপূর্ণ", hi: "महत्वपूर्ण", ar: "مهم", zh: "重要的", ja: "重要", ko: "중요한", de: "Wichtig", fr: "Important", es: "Importante", it: "Importante", pt: "Importante" },
         { en: "Experience", bn: "অভিজ্ঞতা", hi: "अनुभव", ar: "خبرة", zh: "经验", ja: "経験", ko: "경험", de: "Erfahrung", fr: "Expérience", es: "Experiencia", it: "Esperienza", pt: "Experiência" },
-        { en: "Resilient", bn: "সহনশীল", hi: "लचीला", ar: "مرن", zh: "有弹性の", ja: "回復力のある", ko: "회복력 있는", de: "Widerstandsfähig", fr: "Résilient", es: "Resiliente", it: "Resiliente", pt: "Resiliente" },
+        { en: "Resilient", bn: "সহনশীল", hi: "लचीला", ar: "مرن", zh: "有弹性的", ja: "回復力のある", ko: "회복력 있는", de: "Widerstandsfähig", fr: "Résilient", es: "Resiliente", it: "Resiliente", pt: "Resiliente" },
         { en: "Confidence", bn: "আত্মবিশ্বাস", hi: "आत्मविश्वास", ar: "ثقة", zh: "信心", ja: "自信", ko: "자신감", de: "Vertrauen", fr: "Confiance", es: "Confianza", it: "Fiducia", pt: "Confiança" },
         { en: "Knowledge", bn: "জ্ঞান", hi: "ज्ञान", ar: "معرفة", zh: "知识", ja: "知識", ko: "지식", de: "Wissen", fr: "Connaissance", es: "Conocimiento", it: "Conoscenza", pt: "Conhecimento" },
         { en: "Freedom", bn: "স্বাধীনতা", hi: "स्वतंत्रता", ar: "حرية", zh: "自由", ja: "自由", ko: "자유", de: "Freiheit", fr: "Liberté", es: "Libertad", it: "Libertà", pt: "Liberdade" },
         { en: "Curiosity", bn: "কৌতূহল", hi: "जिज्ञासा", ar: "فضول", zh: "好奇心", ja: "好奇心", ko: "호기심", de: "Neugier", fr: "Curiosité", es: "Curiosidad", it: "Curiosità", pt: "Curiosidade" },
         { en: "Patience", bn: "ধৈর্য", hi: "धैर्य", ar: "صبر", zh: "耐心", ja: "忍耐", ko: "인내", de: "Geduld", fr: "Patience", es: "Paciencia", it: "Pazienza", pt: "Paciência" },
         { en: "Ambition", bn: "উচ্চাভিলাষ", hi: "महत्वाकांक्षा", ar: "طموح", zh: "抱负", ja: "野心", ko: "야망", de: "Ambition", fr: "Ambition", es: "Ambición", it: "Ambizione", pt: "Ambição" },
-        { en: "Creativity", bn: "সৃজনশীলতা", hi: "रचनात्मकता", ar: "إبداع", zh: "创造力", ja: "創造性", ko: "창의력", de: "Kreativität", fr: "Créativité", es: "Creatividad", it: "Creatività", pt: "Criatividade" },
+        { en: "Creativity", bn: "সৃজনশীলতা", hi: "রचनात्मकता", ar: "إبداع", zh: "创造力", ja: "創造性", ko: "창의력", de: "Kreativität", fr: "Créativité", es: "Creatividad", it: "Creatività", pt: "Criatividade" },
         { en: "Dedication", bn: "নিষ্ঠা", hi: "समर्पण", ar: "تفان", zh: "奉献", ja: "헌신", ko: "헌신", de: "Hingabe", fr: "Dédicace", es: "Dedicación", it: "Dedizione", pt: "Dedicação" },
         { en: "Harmony", bn: "সম্প্রীতি", hi: "सामंजस्य", ar: "انسجام", zh: "和谐", ja: "調和", ko: "조화", de: "Harmonie", fr: "Harmonie", es: "Armonía", it: "Armonia", pt: "Harmonia" },
         { en: "Inspiration", bn: "অনুপ্রেরণা", hi: "प्रेरणा", ar: "إلهام", zh: "灵感", ja: "インスピレーション", ko: "영감", de: "Inspiration", fr: "Inspiration", es: "Inspiración", it: "Ispirazione", pt: "Inspiração" }
@@ -1099,11 +1099,6 @@
         if(tabId === 'quiz') {
             buildLevelQuestions();
             loadLevelEngine();
-        } else if(tabId === 'stats') {
-            document.getElementById('statLevel').innerText = `Level ${currentLevel}`;
-            document.getElementById('statCoins').innerText = `${points} Pts`;
-        } else if(tabId === 'rank') {
-            document.getElementById('myRankScore').innerText = `${points} Pts`;
         } else if(tabId === 'daily') {
             loadDailyChallenge();
         } else if(tabId === 'history') {
@@ -1156,51 +1151,18 @@
 
         output.innerHTML = '<span style="color:var(--text-muted);">এআই স্মার্ট প্রসেসিং হচ্ছে...</span>';
 
-        let cleanText = input;
-        const smartCorrections = {
-            "thiland": "Thailand", "malasiya": "Malaysia", "bangladesh": "Bangladesh",
-            "dhaka": "Dhaka", "indai": "India", "singapur": "Singapore",
-            "dubia": "Dubai", "london": "London", "omrica": "America",
-            "i goes": "I go", "he go": "he goes", "she go": "she goes",
-            "they was": "they were", "i is": "I am"
-        };
-
-        for (let wrong in smartCorrections) {
-            let reg = new RegExp("\\b" + wrong + "\\b", "gi");
-            cleanText = cleanText.replace(reg, smartCorrections[wrong]);
-        }
-
-        const clean = cleanText.toLowerCase().replace(/[।?!.]/g, '').trim();
-
-        if (banglishMap[clean] && currentTargetLang === 'en') {
-            currentResult = banglishMap[clean];
-            output.innerText = currentResult;
-            output.className = "result-text-area text-glow-effect";
-            saveHistory(input, currentResult);
-            return;
-        }
-
         try {
-            const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${currentTargetLang}&dt=t&q=${encodeURIComponent(cleanText)}`;
+            const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${currentSourceLang}&tl=${currentTargetLang}&dt=t&q=${encodeURIComponent(input)}`;
             const res = await fetch(url);
             const data = await res.json();
             if (data && data[0]) {
                 currentResult = data[0].map(item => item[0]).join('');
                 output.innerText = currentResult;
                 output.className = "result-text-area text-glow-effect";
-                
                 saveHistory(input, currentResult);
-
-                if (currentTargetLang === 'ur' || currentTargetLang === 'ar' || currentTargetLang === 'fa' || currentTargetLang === 'he' || currentTargetLang === 'ps') {
-                    output.style.direction = 'rtl';
-                    output.style.textAlign = 'right';
-                } else {
-                    output.style.direction = 'ltr';
-                    output.style.textAlign = 'left';
-                }
             }
         } catch(err) {
-            output.innerText = "সংযোগ সমস্যা, তবে এআই লোকাল কারেকশন সফল হয়েছে।";
+            output.innerText = "সংযোগ সমস্যা, ইন্টারনেট চেক করুন।";
         }
     }
 
@@ -1694,7 +1656,7 @@
         const el = document.getElementById('dictTargetLangLabel');
         if(el) el.innerText = `${dObj.native}`;
 
-        const uiLang = (multiLangUI[currentSourceLang] ? currentSourceLang : 'en');
+        const uiLang = (multiLangUI[selectedDictLang] ? selectedDictLang : 'en');
         const t = multiLangUI[uiLang] || multiLangUI['en'];
         const placeholderEl = document.getElementById('dictPlaceholderText');
         if(placeholderEl) {
@@ -1709,6 +1671,21 @@
         const elB = document.getElementById('convoBLabel');
         if(elA) elA.innerText = aObj.native;
         if(elB) elB.innerText = bObj.native;
+
+        const uiLang = (multiLangUI[convoLangA] ? convoLangA : 'en');
+        const t = multiLangUI[uiLang] || multiLangUI['en'];
+
+        const convoTitle = document.getElementById('convoTitleText');
+        const convoSub = document.getElementById('convoSubText');
+        const btnA = document.getElementById('convoBtnA');
+        const btnB = document.getElementById('convoBtnB');
+        const convoPH = document.getElementById('convoPlaceholderText');
+
+        if(convoTitle) convoTitle.innerText = t.convoTitle;
+        if(convoSub) convoSub.innerText = t.convoSub;
+        if(btnA) btnA.innerText = t.convoBtnA;
+        if(btnB) btnB.innerText = t.convoBtnB;
+        if(convoPH) convoPH.innerText = t.convoPlaceholder;
     }
 
     function openLangModal(type) {
