@@ -984,38 +984,6 @@
             convoBtnB: "🎙️ Speak as Person B",
             convoPlaceholder: "কনভার্সেশন আউটপুট এখানে দেখাবে..."
         },
-        'fr': {
-            transTab: "🌐 TRADUCTEUR", teacherTab: "👨‍🏫 PROF", quizTab: "⚔️ ARÈNE",
-            dailyTab: "🔥 QUOTIDIEN", statsTab: "📊 STATS", rankTab: "🏆 RANG",
-            translateBtn: "Traduire ➔", voiceBtn: "🎙️ Voix IA",
-            grammar: "✨ Correctif", pure: "🇫🇷 Français Pur", formal: "💼 Pro Master",
-            placeholder: "Entrez un mot ou un texte...", resultPlaceholder: "La traduction apparaîtra ici...",
-            aiVerified: "Sortie Corrigée par IA",
-            quizLang: "Langue du Quiz:", reviewText: "Tour de Revanche: Correction des erreurs !",
-            toastCopy: "Traduction copiée ! 📋",
-            dictPlaceholder: "Recherchez un mot pour voir sa définition et sa conjugaison.",
-            convoTitle: "🗣️ Conversation Vocale",
-            convoSub: "Discutez en temps réel en face à face dans deux langues différentes.",
-            convoBtnA: "🎙️ Parler (Personne A)",
-            convoBtnB: "🎙️ Parler (Personne B)",
-            convoPlaceholder: "Le résultat de la conversation apparaîtra ici..."
-        },
-        'hi': {
-            transTab: "🌐 TRANSLATOR", teacherTab: "👨‍🏫 TEACHER", quizTab: "⚔️ ARENA",
-            dailyTab: "🔥 DAILY", statsTab: "📊 STATS", rankTab: "🏆 RANK",
-            translateBtn: "अनुवाद करें ➔", voiceBtn: "🎙️ Smart Voice AI",
-            grammar: "✨ Smart Fix", pure: "🇬🇧 Pure English", formal: "💼 Pro Master",
-            placeholder: "शब्द या वाक्य दर्ज करें...", resultPlaceholder: "परिणाम यहाँ दिखाई देगा...",
-            aiVerified: "AI Smart Corrected Output",
-            quizLang: "क्विज़ भाषा:", reviewText: "रिवेंज राउंड: पिछली गलतियाँ सुधारी जा रही हैं!",
-            toastCopy: "अनुवाद कॉपी हो गया! 📋",
-            dictPlaceholder: "शब्द खोजे जाने पर अर्थ, पर्यायवाची और क्रिया रूप यहाँ दिखाई देंगे।",
-            convoTitle: "🗣️ Voice-to-Voice Conversation",
-            convoSub: "आमने-सामने बैठकर दो अलग-अलग भाषाओं में वास्तविक समय में बात करें।",
-            convoBtnA: "🎙️ Person A के रूप में बोलें",
-            convoBtnB: "🎙️ Person B के रूप में बोलें",
-            convoPlaceholder: "वार्तालाप आउटपुट यहाँ दिखाई देगा..."
-        },
         'en': {
             transTab: "🌐 TRANSLATOR", teacherTab: "👨‍🏫 TEACHER", quizTab: "⚔️ ARENA",
             dailyTab: "🔥 DAILY", statsTab: "📊 STATS", rankTab: "🏆 RANK",
@@ -1151,8 +1119,33 @@
 
         output.innerHTML = '<span style="color:var(--text-muted);">এআই স্মার্ট প্রসেসিং হচ্ছে...</span>';
 
+        let cleanText = input;
+        const smartCorrections = {
+            "thiland": "Thailand", "malasiya": "Malaysia", "bangladesh": "Bangladesh",
+            "dhaka": "Dhaka", "indai": "India", "singapur": "Singapore",
+            "dubia": "Dubai", "london": "London", "omrica": "America",
+            "i goes": "I go", "he go": "he goes", "she go": "she goes",
+            "they was": "they were", "i is": "I am",
+            "ami nepal jabo": "I will go to Nepal."
+        };
+
+        for (let wrong in smartCorrections) {
+            let reg = new RegExp("\\b" + wrong + "\\b", "gi");
+            cleanText = cleanText.replace(reg, smartCorrections[wrong]);
+        }
+
+        const clean = cleanText.toLowerCase().replace(/[।?!.]/g, '').trim();
+
+        if (banglishMap[clean] && currentTargetLang === 'en') {
+            currentResult = banglishMap[clean];
+            output.innerText = currentResult;
+            output.className = "result-text-area text-glow-effect";
+            saveHistory(input, currentResult);
+            return;
+        }
+
         try {
-            const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${currentSourceLang}&tl=${currentTargetLang}&dt=t&q=${encodeURIComponent(input)}`;
+            const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${currentSourceLang}&tl=${currentTargetLang}&dt=t&q=${encodeURIComponent(cleanText)}`;
             const res = await fetch(url);
             const data = await res.json();
             if (data && data[0]) {
@@ -1160,6 +1153,14 @@
                 output.innerText = currentResult;
                 output.className = "result-text-area text-glow-effect";
                 saveHistory(input, currentResult);
+
+                if (currentTargetLang === 'ur' || currentTargetLang === 'ar' || currentTargetLang === 'fa' || currentTargetLang === 'he' || currentTargetLang === 'ps') {
+                    output.style.direction = 'rtl';
+                    output.style.textAlign = 'right';
+                } else {
+                    output.style.direction = 'ltr';
+                    output.style.textAlign = 'left';
+                }
             }
         } catch(err) {
             output.innerText = "সংযোগ সমস্যা, ইন্টারনেট চেক করুন।";
