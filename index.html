@@ -658,13 +658,27 @@
 
     </div>
 
-    <!-- MAIN VIEW 2: VOICE-TO-VOICE CONV -->
+    <!-- MAIN VIEW 2: VOICE-TO-VOICE CONV WITH LANGUAGE OPTIONS -->
     <div id="convoView" class="workspace-content tab-panel">
-        <div class="translate-card" style="text-align:center; padding: 22px;">
-            <h3 style="color:#60a5fa; margin-bottom:10px;">🗣️ Voice-to-Voice Conversation</h3>
-            <p style="font-size:13px; color:var(--text-muted); margin-bottom:18px;">মুখোমুখি বসে দুটি ভিন্ন ভাষায় রিয়েল-টাইম কথা বলুন ও শুনুন।</p>
-            <button class="btn-main-action" style="background:linear-gradient(135deg, #059669, #047857); width:100%; margin-bottom:12px;" onclick="openVoiceModal()">🎙️ Speak (Person A)</button>
-            <button class="btn-main-action" style="width:100%;" onclick="openVoiceModal()">🎙️ Speak (Person B)</button>
+        <div class="translate-card" style="text-align:center; padding: 20px;">
+            <h3 style="color:#60a5fa; margin-bottom:6px;">🗣️ Voice-to-Voice Conversation</h3>
+            <p style="font-size:12px; color:var(--text-muted); margin-bottom:14px;">মুখোমুখি বসে দুটি ভিন্ন ভাষায় রিয়েল-টাইম কথা বলুন।</p>
+            
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; gap:8px;">
+                <div class="custom-lang-pill" style="flex:1; padding:6px; font-size:12px;" onclick="openLangModal('convoA')">
+                    <span>👤 A: </span><span id="convoALabel">বাংলা</span> ▾
+                </div>
+                <div class="custom-lang-pill" style="flex:1; padding:6px; font-size:12px;" onclick="openLangModal('convoB')">
+                    <span>👤 B: </span><span id="convoBLabel">English</span> ▾
+                </div>
+            </div>
+
+            <button class="btn-main-action" style="background:linear-gradient(135deg, #059669, #047857); width:100%; margin-bottom:10px;" onclick="startConvo('A')">🎙️ Speak as Person A</button>
+            <button class="btn-main-action" style="width:100%; margin-bottom:12px;" onclick="startConvo('B')">🎙️ Speak as Person B</button>
+            
+            <div id="convoResultBox" style="background:rgba(15,23,42,0.6); padding:12px; border-radius:12px; font-size:14px; min-height:50px; color:var(--text-main);">
+                <span style="color:var(--text-muted);">কনভার্সেশন আউটপুট এখানে দেখাবে...</span>
+            </div>
         </div>
     </div>
 
@@ -798,7 +812,7 @@
     let points = parseInt(localStorage.getItem('userPts')) || 21;
     let globalRecognition = null;
     let currentResult = "";
-    let activeLangType = 'src'; // 'src', 'target', 'quiz', or 'dict'
+    let activeLangType = 'src'; // 'src', 'target', 'quiz', 'dict', 'convoA', 'convoB'
     let translationHistory = JSON.parse(localStorage.getItem('userHistory')) || [];
 
     // Complete Languages Database with Native Name & English Name (131+ Languages)
@@ -939,6 +953,8 @@
     let currentTargetLang = 'en';
     let selectedQuizLang = 'bn';
     let selectedDictLang = 'bn';
+    let convoLangA = 'bn';
+    let convoLangB = 'en';
 
     const langVoiceMap = {
         'bn': 'bn-BD', 'en': 'en-US', 'hi': 'hi-IN', 'ar': 'ar-SA', 'zh': 'zh-CN', 'ja': 'ja-JP',
@@ -957,17 +973,6 @@
             quizLang: "কুইজ ভাষা:", reviewText: "রিভেঞ্জ রাউন্ড: ভুলগুলো আবার ঝালাই করা হচ্ছে!",
             toastCopy: "অনুবাদ কপি করা হয়েছে! 📋",
             dictPlaceholder: "শব্দ সার্চ করলে অর্থ, সমার্থক শব্দ ও ভার্ব কনজুগেশন এখানে দেখাবে।"
-        },
-        'hi': {
-            transTab: "🌐 TRANSLATOR", teacherTab: "👨‍🏫 TEACHER", quizTab: "⚔️ ARENA",
-            dailyTab: "🔥 DAILY", statsTab: "📊 STATS", rankTab: "🏆 RANK",
-            translateBtn: "अनुवाद करें ➔", voiceBtn: "🎙️ Smart Voice AI",
-            grammar: "✨ Smart Fix", pure: "🇬🇧 Pure English", formal: "💼 Pro Master",
-            placeholder: "शब्द या वाक्य दर्ज करें...", resultPlaceholder: "परिणाम यहाँ दिखाई देगा...",
-            aiVerified: "AI Smart Corrected Output",
-            quizLang: "क्विज़ भाषा:", reviewText: "रिवेंज राउंड: पिछली गलतियाँ सुधारी जा रही हैं!",
-            toastCopy: "अनुवाद कॉपी हो गया! 📋",
-            dictPlaceholder: "शब्द खोजे जाने पर अर्थ, पर्यायवाची और क्रिया रूप यहाँ दिखाई देंगे।"
         },
         'en': {
             transTab: "🌐 TRANSLATOR", teacherTab: "👨‍🏫 TEACHER", quizTab: "⚔️ ARENA",
@@ -998,7 +1003,7 @@
         { en: "Improve", bn: "উন্নতি করা", hi: "सुधारना", ar: "تحسين", zh: "改进", ja: "改善する", ko: "향상시키다", de: "Verbessern", fr: "Améliorer", es: "Mejorar", it: "Migliorare", pt: "Melhorar" },
         { en: "Difficult", bn: "কঠিন", hi: "कठिन", ar: "صعب", zh: "困难", ja: "難しい", ko: "어려운", de: "Schwierig", fr: "Difficile", es: "Difícil", it: "Difficile", pt: "Difícil" },
         { en: "Comfortable", bn: "আরামদায়ক", hi: "आरामदायक", ar: "مريح", zh: "舒适的", ja: "快適な", ko: "편안한", de: "Bequem", fr: "Confortable", es: "Cómodo", it: "Comodo", pt: "Confortável" },
-        { en: "Success", bn: "সাফল্য", hi: "सफलता", ar: "نجاح", zh: "成功", ja: "成功", ko: "성공", de: "Erfolg", fr: "Succès", es: "Éxito", it: "Successo", pt: "Sucesso" },
+        { en: "Success", bn: "সাফল্য", hi: "সफलता", ar: "نجاح", zh: "成功", ja: "成功", ko: "성공", de: "Erfolg", fr: "Succès", es: "Éxito", it: "Successo", pt: "Sucesso" },
         { en: "Challenge", bn: "চ্যালেঞ্জ", hi: "चुनौती", ar: "تحدي", zh: "挑战", ja: "挑戦", ko: "도전", de: "Herausforderung", fr: "Défi", es: "Desafío", it: "Sfida", pt: "Desafio" },
         { en: "Important", bn: "গুরুত্বপূর্ণ", hi: "महत्वपूर्ण", ar: "مهم", zh: "重要的", ja: "重要", ko: "중요한", de: "Wichtig", fr: "Important", es: "Importante", it: "Importante", pt: "Importante" },
         { en: "Experience", bn: "অভিজ্ঞতা", hi: "अनुभव", ar: "خبرة", zh: "经验", ja: "経験", ko: "경험", de: "Erfahrung", fr: "Expérience", es: "Experiencia", it: "Esperienza", pt: "Experiência" },
@@ -1031,6 +1036,7 @@
         updateLanguageDisplay();
         updateArenaLangDisplay();
         updateDictLangDisplay();
+        updateConvoLangDisplay();
         buildLevelQuestions();
         loadLevelEngine();
         loadDailyChallenge();
@@ -1201,6 +1207,36 @@
         } catch(e) {
             box.innerHTML = "অর্থ পাওয়া যায়নি।";
         }
+    }
+
+    function startConvo(person) {
+        const lang = person === 'A' ? convoLangA : convoLangB;
+        const targetLang = person === 'A' ? convoLangB : convoLangA;
+        if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+            showToast("স্পিচ রিকগনিশন সমর্থিত নয়।");
+            return;
+        }
+        showToast(`Listening as Person ${person}...`);
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        let rec = new SpeechRecognition();
+        rec.lang = langVoiceMap[lang] || 'en-US';
+        rec.onresult = async function(e) {
+            let spokenText = e.results[0][0].transcript;
+            try {
+                const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${lang}&tl=${targetLang}&dt=t&q=${encodeURIComponent(spokenText)}`;
+                const res = await fetch(url);
+                const data = await res.json();
+                let translated = data[0].map(item => item[0]).join('');
+                document.getElementById('convoResultBox').innerHTML = `
+                    <div><strong>Person ${person} (${lang}):</strong> ${spokenText}</div>
+                    <div style="color:var(--accent-cyan); margin-top:4px;"><strong>Translated (${targetLang}):</strong> ${translated}</div>
+                `;
+                speakCustom(translated, langVoiceMap[targetLang] || 'en-US');
+            } catch(err) {
+                showToast("কনভার্সেশন অনুবাদ ব্যর্থ হয়েছে");
+            }
+        };
+        rec.start();
     }
 
     function openFloatingModal() { document.getElementById('floatingModal').style.display = 'flex'; }
@@ -1620,7 +1656,6 @@
         const el = document.getElementById('dictTargetLangLabel');
         if(el) el.innerText = `${dObj.native}`;
 
-        // Localized Dict Placeholder based on selected language
         const dictTexts = {
             'bn': "শব্দ সার্চ করলে অর্থ, সমার্থক শব্দ ও ভার্ব কনজুগেশন এখানে দেখাবে।",
             'hi': "शब्द खोजे जाने पर अर्थ, पर्यायवाची और क्रिया रूप यहाँ दिखाई देंगे।",
@@ -1632,8 +1667,17 @@
         }
     }
 
+    function updateConvoLangDisplay() {
+        const aObj = languagesDB.find(l => l.code === convoLangA) || languagesDB[2];
+        const bObj = languagesDB.find(l => l.code === convoLangB) || languagesDB[0];
+        const elA = document.getElementById('convoALabel');
+        const elB = document.getElementById('convoBLabel');
+        if(elA) elA.innerText = aObj.native;
+        if(elB) elB.innerText = bObj.native;
+    }
+
     function openLangModal(type) {
-        activeLangType = type; // 'src', 'target', 'quiz', or 'dict'
+        activeLangType = type; // 'src', 'target', 'quiz', 'dict', 'convoA', 'convoB'
         document.getElementById('langModal').style.display = 'flex';
         document.getElementById('langSearchBox').value = '';
         renderLangList(languagesDB);
@@ -1675,6 +1719,12 @@
         } else if (activeLangType === 'dict') {
             selectedDictLang = code;
             updateDictLangDisplay();
+        } else if (activeLangType === 'convoA') {
+            convoLangA = code;
+            updateConvoLangDisplay();
+        } else if (activeLangType === 'convoB') {
+            convoLangB = code;
+            updateConvoLangDisplay();
         }
         closeLangModal();
     }
