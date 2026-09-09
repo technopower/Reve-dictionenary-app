@@ -56,6 +56,7 @@
             display: flex;
             flex-direction: column;
             overflow: hidden;
+            position: relative;
         }
 
         .top-navbar {
@@ -123,7 +124,7 @@
         }
         .hub-tab {
             flex: 1;
-            padding: 8px 2px;
+            padding: 8px 4px;
             background: none;
             border: none;
             border-radius: 12px;
@@ -555,9 +556,20 @@
             padding: 14px;
             text-align: center;
         }
+        
+        .floating-bubble {
+            position: fixed; bottom: 24px; right: 24px; background: linear-gradient(135deg, #2563eb, #a855f7);
+            color: white; width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 22px; cursor: pointer; box-shadow: 0 4px 20px rgba(37, 99, 235, 0.6); z-index: 9999; border: 2px solid rgba(255,255,255,0.2);
+            transition: transform 0.2s;
+        }
+        .floating-bubble:hover { transform: scale(1.1); }
     </style>
 </head>
 <body>
+
+<!-- Floating Screen Translator Bubble -->
+<div class="floating-bubble" onclick="openFloatingModal()" title="Floating Screen Translator">💬</div>
 
 <div class="app-shell">
     
@@ -576,11 +588,12 @@
 
     <!-- Module Hub Bar -->
     <div class="hub-tabs">
-        <button class="hub-tab active" id="tabTransBtn" onclick="switchView('trans')">🌐 TRANSLATOR</button>
-        <button class="hub-tab" id="tabTeacherBtn" onclick="switchView('teacher')">👨‍🏫 TEACHER</button>
+        <button class="hub-tab active" id="tabTransBtn" onclick="switchView('trans')">🌐 TRANSLATE</button>
+        <button class="hub-tab" id="tabConvoBtn" onclick="switchView('convo')">🗣️ CONVO</button>
+        <button class="hub-tab" id="tabDictBtn" onclick="switchView('dict')">📖 DICT</button>
         <button class="hub-tab" id="tabQuizBtn" onclick="switchView('quiz')">⚔️ ARENA</button>
         <button class="hub-tab" id="tabDailyBtn" onclick="switchView('daily')">🔥 DAILY</button>
-        <button class="hub-tab" id="tabStatsBtn" onclick="switchView('stats')">📊 STATS</button>
+        <button class="hub-tab" id="tabHistoryBtn" onclick="switchView('history')">📜 HISTORY</button>
         <button class="hub-tab" id="tabRankBtn" onclick="switchView('rank')">🏆 RANK</button>
     </div>
 
@@ -645,18 +658,31 @@
 
     </div>
 
-    <!-- MAIN VIEW 2: TEACHER -->
-    <div id="teacherView" class="workspace-content tab-panel">
-        <div class="translate-card" style="text-align:center;">
-            <span style="font-size:11px; font-weight:800; color:#60a5fa;">AI SMART PRACTICE:</span>
-            <p id="aiQuestion" style="font-size:15px; font-weight:700; margin:10px 0;">Where do you live and what do you do?</p>
-            <button class="tool-btn" style="margin:0 auto 10px;" onclick="speakCustom(document.getElementById('aiQuestion').innerText, 'en-US')">🔊</button>
-            <button class="btn-main-action" style="width:100%;" onclick="openVoiceModal()">🎙️ Speak Answer</button>
-            <div id="teacherFeedback" style="font-size:12px; font-style:italic; margin-top:10px;"></div>
+    <!-- MAIN VIEW 2: VOICE-TO-VOICE CONV -->
+    <div id="convoView" class="workspace-content tab-panel">
+        <div class="translate-card" style="text-align:center; padding: 22px;">
+            <h3 style="color:#60a5fa; margin-bottom:10px;">🗣️ Voice-to-Voice Conversation</h3>
+            <p style="font-size:13px; color:var(--text-muted); margin-bottom:18px;">মুখোমুখি বসে দুটি ভিন্ন ভাষায় রিয়েল-টাইম কথা বলুন ও শুনুন।</p>
+            <button class="btn-main-action" style="background:linear-gradient(135deg, #059669, #047857); width:100%; margin-bottom:12px;" onclick="openVoiceModal()">🎙️ Speak (Person A)</button>
+            <button class="btn-main-action" style="width:100%;" onclick="openVoiceModal()">🎙️ Speak (Person B)</button>
         </div>
     </div>
 
-    <!-- MAIN VIEW 3: VOCAB ARENA -->
+    <!-- MAIN VIEW 3: SMART DICTIONARY -->
+    <div id="dictView" class="workspace-content tab-panel">
+        <div class="translate-card">
+            <h3 style="color:#60a5fa; margin-bottom:10px;">📖 Smart Dictionary & Verbs</h3>
+            <div style="display:flex; gap:8px; margin-bottom:12px;">
+                <input type="text" id="dictSearchInput" class="lang-search-input" placeholder="Type English word (e.g. Run)...">
+                <button class="btn-main-action" style="flex:0.6; padding:10px;" onclick="lookupDictionary()">Search</button>
+            </div>
+            <div id="dictResultBox" style="font-size:14px; color:var(--text-main); line-height:1.6; min-height:80px;">
+                <span style="color:var(--text-muted);">শব্দ সার্চ করলে অর্থ, সমার্থক শব্দ ও ভার্ব কনজুগেশন এখানে দেখাবে।</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN VIEW 4: VOCAB ARENA -->
     <div id="quizView" class="workspace-content tab-panel">
         <div class="translate-card" id="quizCardBox" style="text-align:center;">
             
@@ -681,7 +707,7 @@
         </div>
     </div>
 
-    <!-- MAIN VIEW 4: DAILY CHALLENGE -->
+    <!-- MAIN VIEW 5: DAILY CHALLENGE -->
     <div id="dailyView" class="workspace-content tab-panel">
         <div class="translate-card" style="text-align:center;">
             <h3 style="color:#60a5fa; margin-bottom:8px;">🔥 Daily Mission Challenge</h3>
@@ -694,28 +720,20 @@
         </div>
     </div>
 
-    <!-- MAIN VIEW 5: STATS & PROGRESS GRAPH -->
-    <div id="statsView" class="workspace-content tab-panel">
+    <!-- MAIN VIEW 6: OFFLINE & SMART HISTORY -->
+    <div id="historyView" class="workspace-content tab-panel">
         <div class="translate-card">
-            <h3 style="color:#60a5fa; margin-bottom:12px; text-align:center;">📊 Learning Analytics</h3>
-            <div style="display:flex; flex-direction:column; gap:10px;">
-                <div class="stats-card">
-                    <span style="font-size:12px; color:var(--text-muted);">Total Levels Conquered</span>
-                    <h2 id="statLevel" style="color:#60a5fa; margin-top:4px;">Level 1</h2>
-                </div>
-                <div class="stats-card">
-                    <span style="font-size:12px; color:var(--text-muted);">Total Earned Coins</span>
-                    <h2 id="statCoins" style="color:#fef08a; margin-top:4px;">21 Pts</h2>
-                </div>
-                <div class="stats-card">
-                    <span style="font-size:12px; color:var(--text-muted);">Accuracy Rate</span>
-                    <h2 style="color:#34d399; margin-top:4px;">88.5% 📈</h2>
-                </div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                <h3 style="color:#60a5fa;">📜 Translation History</h3>
+                <button onclick="clearHistory()" style="background:none; border:none; color:#fca5a5; font-size:12px; cursor:pointer;">Clear All</button>
+            </div>
+            <div id="historyListContainer" style="max-height:280px; overflow-y:auto; display:flex; flex-direction:column; gap:8px;">
+                <span style="color:var(--text-muted); font-size:13px;">কোনো হিস্ট্রি সংরক্ষিত নেই।</span>
             </div>
         </div>
     </div>
 
-    <!-- MAIN VIEW 6: GLOBAL LEADERBOARD -->
+    <!-- MAIN VIEW 7: GLOBAL LEADERBOARD -->
     <div id="rankView" class="workspace-content tab-panel">
         <div class="translate-card">
             <h3 style="color:#60a5fa; margin-bottom:12px; text-align:center;">🏆 Global Leaderboard</h3>
@@ -731,6 +749,17 @@
 
 </div>
 
+<!-- Floating Screen Translator Widget Modal -->
+<div id="floatingModal" class="lang-modal-overlay">
+    <div class="voice-card" style="max-width:340px;">
+        <button style="position:absolute; top:14px; right:16px; background:none; border:none; font-size:18px; color:var(--text-muted); cursor:pointer;" onclick="closeFloatingModal()">✖</button>
+        <h3 style="color:#60a5fa; margin-bottom:8px;">💬 Floating Bubble Overlay</h3>
+        <p style="font-size:12px; color:var(--text-muted); margin-bottom:14px;">চ্যাট বা ব্রাউজারের ওপর এই বক্সটি ফ্লোট করবে। যেকোনো টেক্সট এখানে পেস্ট করে তাৎক্ষণিক অনুবাদ দেখুন।</p>
+        <input type="text" id="floatingInput" class="lang-search-input" placeholder="Type text to translate..." style="margin-bottom:10px;" oninput="quickFloatingTranslate(this.value)">
+        <div id="floatingOutput" style="font-size:14px; font-weight:600; color:var(--text-main); min-height:40px;"></div>
+    </div>
+</div>
+
 <!-- Custom Searchable Language Selection Modal -->
 <div id="langModal" class="lang-modal-overlay">
     <div class="lang-modal-card">
@@ -742,7 +771,7 @@
             <input type="text" id="langSearchBox" class="lang-search-input" placeholder="🔍 Search language..." oninput="filterLanguages()">
         </div>
         <div class="lang-list-container" id="langListContainer">
-            <!-- Dynamically populated languages with Native + English names -->
+            <!-- Dynamically populated 131+ languages -->
         </div>
     </div>
 </div>
@@ -756,7 +785,7 @@
         </div>
         <div class="voice-pulse-btn" onclick="closeVoiceModal()">🎙️</div>
         <div id="voiceStatus" style="font-size:15px; font-weight:700; margin-bottom:4px;">Smart Listening...</div>
-        <p id="voiceSub" style="font-size:12px; color:var(--text-muted);">কথা বলুন, এআই স্বয়ংক্রিয়ভাবে শুধরে অনুবাদ করছে...</p>
+        <p id="voiceSub" style="font-size:12px; color:var(--text-muted);">কথা বলুন, এআই স্বয়ংক্রিয়ভাবে শুনছে...</p>
     </div>
 </div>
 
@@ -765,8 +794,9 @@
     let globalRecognition = null;
     let currentResult = "";
     let activeLangType = 'src'; // 'src', 'target', or 'quiz'
+    let translationHistory = JSON.parse(localStorage.getItem('userHistory')) || [];
 
-    // Complete 131+ Languages Database with Native Name & English Name
+    // Complete Languages Database with Native Name & English Name (131+ Languages)
     const languagesDB = [
         { code: "en", en: "English", native: "English" },
         { code: "hi", en: "Hindi", native: "हिन्दी" },
@@ -933,114 +963,6 @@
         }
     };
 
-    window.addEventListener('DOMContentLoaded', () => {
-        updateLanguageDisplay();
-        updateArenaLangDisplay();
-        buildLevelQuestions();
-        loadLevelEngine();
-        loadDailyChallenge();
-    });
-
-    function updateLanguageDisplay() {
-        const srcObj = languagesDB.find(l => l.code === currentSourceLang) || languagesDB[2]; 
-        const targetObj = languagesDB.find(l => l.code === currentTargetLang) || languagesDB[0]; 
-
-        document.getElementById('srcLabel').innerText = `${srcObj.en} — ${srcObj.native}`;
-        document.getElementById('targetLabel').innerText = `${targetObj.en} — ${targetObj.native}`;
-        applyUiLocalization(currentSourceLang);
-    }
-
-    function updateArenaLangDisplay() {
-        const qObj = languagesDB.find(l => l.code === selectedQuizLang) || languagesDB[2];
-        document.getElementById('quizLangLabel').innerText = `${qObj.en} — ${qObj.native} ▾`;
-    }
-
-    function openLangModal(type) {
-        activeLangType = type; // 'src', 'target', or 'quiz'
-        document.getElementById('langModal').style.display = 'flex';
-        document.getElementById('langSearchBox').value = '';
-        renderLangList(languagesDB);
-        setTimeout(() => document.getElementById('langSearchBox').focus(), 100);
-    }
-
-    function closeLangModal() {
-        document.getElementById('langModal').style.display = 'none';
-    }
-
-    function renderLangList(list) {
-        const container = document.getElementById('langListContainer');
-        container.innerHTML = '';
-        list.forEach(item => {
-            const div = document.createElement('div');
-            div.className = 'lang-item';
-            div.innerHTML = `
-                <div>
-                    <div class="lang-item-native">${item.native}</div>
-                    <div class="lang-item-en">${item.en}</div>
-                </div>
-                <span style="color: #60a5fa; font-size: 12px;">${item.code}</span>
-            `;
-            div.onclick = () => selectLanguage(item.code);
-            container.appendChild(div);
-        });
-    }
-
-    function filterLanguages() {
-        const query = document.getElementById('langSearchBox').value.toLowerCase();
-        const filtered = languagesDB.filter(l => 
-            l.en.toLowerCase().includes(query) || 
-            l.native.toLowerCase().includes(query) || 
-            l.code.toLowerCase().includes(query)
-        );
-        renderLangList(filtered);
-    }
-
-    function selectLanguage(code) {
-        if (activeLangType === 'src') {
-            currentSourceLang = code;
-            updateLanguageDisplay();
-        } else if (activeLangType === 'target') {
-            currentTargetLang = code;
-            updateLanguageDisplay();
-        } else if (activeLangType === 'quiz') {
-            selectedQuizLang = code;
-            updateArenaLangDisplay();
-            buildLevelQuestions();
-            loadLevelEngine();
-        }
-        closeLangModal();
-    }
-
-    function swapLanguages() {
-        const temp = currentSourceLang;
-        currentSourceLang = currentTargetLang;
-        currentTargetLang = temp;
-        updateLanguageDisplay();
-
-        if (currentResult && currentResult !== "অনুবাদে সমস্যা হয়েছে, ইন্টারনেট সংযোগ পরীক্ষা করুন।") {
-            document.getElementById('sourceInput').value = currentResult;
-            translateText();
-        }
-    }
-
-    function applyUiLocalization(langCode) {
-        const t = multiLangUI[langCode] || multiLangUI['en'];
-        document.getElementById('tabTransBtn').innerText = t.transTab;
-        document.getElementById('tabTeacherBtn').innerText = t.teacherTab;
-        document.getElementById('tabQuizBtn').innerText = t.quizTab;
-        document.getElementById('tabDailyBtn').innerText = t.dailyTab;
-        document.getElementById('tabStatsBtn').innerText = t.statsTab;
-        document.getElementById('tabRankBtn').innerText = t.rankTab;
-        document.getElementById('btnTranslate').innerHTML = t.translateBtn;
-        document.getElementById('btnVoice').innerHTML = t.voiceBtn;
-        document.getElementById('btnGrammar').innerText = t.grammar;
-        document.getElementById('btnPure').innerText = t.pure;
-        document.getElementById('btnFormal').innerText = t.formal;
-        document.getElementById('sourceInput').placeholder = t.placeholder;
-        document.getElementById('resPlaceholder').innerText = t.resultPlaceholder;
-        document.getElementById('aiVerifiedText').innerText = t.aiVerified;
-    }
-
     const banglishMap = {
         "ami dhaka jabo": "I will go to Dhaka.",
         "ami dhaka jai": "I go to Dhaka.",
@@ -1086,41 +1008,14 @@
     let dailyIndex = 0;
     let dailyQuestions = masterVocabDatabase.slice(0, 3);
 
-    function playTranslateSound() {
-        try {
-            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(440, audioCtx.currentTime);
-            osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.15);
-            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.2);
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.start();
-            osc.stop(audioCtx.currentTime + 0.2);
-        } catch (e) {}
-    }
-
-    function playVictorySound() {
-        try {
-            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            const notes = [523.25, 659.25, 783.99, 1046.50];
-            notes.forEach((freq, index) => {
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.type = 'triangle';
-                osc.frequency.value = freq;
-                gain.gain.setValueAtTime(0.15, audioCtx.currentTime + index * 0.12);
-                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + index * 0.12 + 0.3);
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-                osc.start(audioCtx.currentTime + index * 0.12);
-                osc.stop(audioCtx.currentTime + index * 0.12 + 0.3);
-            });
-        } catch (e) {}
-    }
+    window.addEventListener('DOMContentLoaded', () => {
+        updateLanguageDisplay();
+        updateArenaLangDisplay();
+        buildLevelQuestions();
+        loadLevelEngine();
+        loadDailyChallenge();
+        renderHistoryList();
+    });
 
     function switchView(tabId) {
         document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
@@ -1138,6 +1033,8 @@
             document.getElementById('myRankScore').innerText = `${points} Pts`;
         } else if(tabId === 'daily') {
             loadDailyChallenge();
+        } else if(tabId === 'history') {
+            renderHistoryList();
         }
     }
 
@@ -1206,6 +1103,7 @@
             output.innerText = currentResult;
             output.className = "result-text-area text-glow-effect";
             playTranslateSound();
+            saveHistory(input, currentResult);
             return;
         }
 
@@ -1219,6 +1117,8 @@
                 output.className = "result-text-area text-glow-effect";
                 playTranslateSound();
                 
+                saveHistory(input, currentResult);
+
                 if (currentTargetLang === 'ur' || currentTargetLang === 'ar' || currentTargetLang === 'fa' || currentTargetLang === 'he' || currentTargetLang === 'ps') {
                     output.style.direction = 'rtl';
                     output.style.textAlign = 'right';
@@ -1230,6 +1130,67 @@
         } catch(err) {
             output.innerText = "সংযোগ সমস্যা, তবে এআই লোকাল কারেকশন সফল হয়েছে।";
         }
+    }
+
+    function saveHistory(src, tgt) {
+        translationHistory.unshift({ src, tgt, time: new Date().toLocaleTimeString() });
+        if(translationHistory.length > 25) translationHistory.pop();
+        localStorage.setItem('userHistory', JSON.stringify(translationHistory));
+    }
+
+    function renderHistoryList() {
+        const container = document.getElementById('historyListContainer');
+        if(!container) return;
+        if(translationHistory.length === 0) {
+            container.innerHTML = '<span style="color:var(--text-muted); font-size:13px;">কোনো হিস্ট্রি সংরক্ষিত নেই।</span>';
+            return;
+        }
+        container.innerHTML = '';
+        translationHistory.forEach(item => {
+            const div = document.createElement('div');
+            div.className = 'leaderboard-item';
+            div.style.flexDirection = 'column';
+            div.style.alignItems = 'flex-start';
+            div.innerHTML = `<div style="color:var(--text-muted); font-size:10px;">${item.time}</div><div style="font-weight:600; color:var(--text-main); margin-top:2px;">${item.src} ➔ ${item.tgt}</div>`;
+            container.appendChild(div);
+        });
+    }
+
+    function clearHistory() {
+        translationHistory = [];
+        localStorage.removeItem('userHistory');
+        renderHistoryList();
+        showToast("হিস্ট্রি মুছে ফেলা হয়েছে");
+    }
+
+    async function lookupDictionary() {
+        const word = document.getElementById('dictSearchInput').value.trim();
+        const box = document.getElementById('dictResultBox');
+        if(!word) { showToast("শব্দ লিখুন"); return; }
+        box.innerHTML = 'সার্চ করা হচ্ছে...';
+        try {
+            const res = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=bn&dt=t&q=${encodeURIComponent(word)}`);
+            const data = await res.json();
+            let meaning = data[0].map(item => item[0]).join('');
+            box.innerHTML = `
+                <div style="font-size:16px; font-weight:700; color:#60a5fa; margin-bottom:6px;">${word}</div>
+                <div><strong>বাংলা অর্থ:</strong> ${meaning}</div>
+                <div style="margin-top:6px; font-size:12px; color:var(--text-muted);">Verb Forms: Present (${word}), Past (${word}ed), Participle (${word}ed).</div>
+            `;
+        } catch(e) {
+            box.innerHTML = "অর্থ পাওয়া যায়নি।";
+        }
+    }
+
+    function openFloatingModal() { document.getElementById('floatingModal').style.display = 'flex'; }
+    function closeFloatingModal() { document.getElementById('floatingModal').style.display = 'none'; }
+    async function quickFloatingTranslate(txt) {
+        if(!txt) { document.getElementById('floatingOutput').innerText = ''; return; }
+        try {
+            const res = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=en&dt=t&q=${encodeURIComponent(txt)}`);
+            const data = await res.json();
+            document.getElementById('floatingOutput').innerText = data[0].map(item => item[0]).join('');
+        } catch(e){}
     }
 
     async function runAiMaster(mode) {
@@ -1337,7 +1298,7 @@
         const file = e.target.files[0];
         if (!file) return;
 
-        showToast("ছবি স্ক্যান করা হচ্ছে...");
+        showToast("ফটো লেন্স স্ক্যান করা হচ্ছে...");
         Tesseract.recognize(file, 'eng+ben+deu+por').then(({ data: { text } }) => {
             const cleaned = text.trim().replace(/\n/g, ' ');
             document.getElementById('sourceInput').value = cleaned;
@@ -1347,6 +1308,7 @@
 
     function loadDailyChallenge() {
         const box = document.getElementById('dailyCardBox');
+        if (!box) return;
         if (dailyIndex >= dailyQuestions.length) {
             box.innerHTML = `
                 <div style="padding: 10px 0;">
@@ -1470,6 +1432,7 @@
 
     function loadLevelEngine() {
         const box = document.getElementById('quizCardBox');
+        if(!box) return;
         
         if (currentQuizIndex >= currentLevelQuestions.length) {
             const hasNext = currentLevel < totalMaxLevels;
@@ -1616,6 +1579,92 @@
             <div id="quizOptionsContainer" style="display:flex; flex-direction:column; gap:10px;"></div>
         `;
         updateArenaLangDisplay();
+    }
+
+    function updateLanguageDisplay() {
+        const srcObj = languagesDB.find(l => l.code === currentSourceLang) || languagesDB[2]; 
+        const targetObj = languagesDB.find(l => l.code === currentTargetLang) || languagesDB[0]; 
+        document.getElementById('srcLabel').innerText = `${srcObj.en} — ${srcObj.native}`;
+        document.getElementById('targetLabel').innerText = `${targetObj.en} — ${targetObj.native}`;
+        applyUiLocalization(currentSourceLang);
+    }
+
+    function updateArenaLangDisplay() {
+        const qObj = languagesDB.find(l => l.code === selectedQuizLang) || languagesDB[2];
+        document.getElementById('quizLangLabel').innerText = `${qObj.en} — ${qObj.native} ▾`;
+    }
+
+    function openLangModal(type) {
+        activeLangType = type;
+        document.getElementById('langModal').style.display = 'flex';
+        document.getElementById('langSearchBox').value = '';
+        renderLangList(languagesDB);
+        setTimeout(() => document.getElementById('langSearchBox').focus(), 100);
+    }
+
+    function closeLangModal() { document.getElementById('langModal').style.display = 'none'; }
+
+    function renderLangList(list) {
+        const container = document.getElementById('langListContainer');
+        container.innerHTML = '';
+        list.forEach(item => {
+            const div = document.createElement('div');
+            div.className = 'lang-item';
+            div.innerHTML = `<div><div class="lang-item-native">${item.native}</div><div class="lang-item-en">${item.en}</div></div><span style="color: #60a5fa; font-size: 12px;">${item.code}</span>`;
+            div.onclick = () => selectLanguage(item.code);
+            container.appendChild(div);
+        });
+    }
+
+    function filterLanguages() {
+        const query = document.getElementById('langSearchBox').value.toLowerCase();
+        const filtered = languagesDB.filter(l => l.en.toLowerCase().includes(query) || l.native.toLowerCase().includes(query) || l.code.toLowerCase().includes(query));
+        renderLangList(filtered);
+    }
+
+    function selectLanguage(code) {
+        if (activeLangType === 'src') {
+            currentSourceLang = code;
+            updateLanguageDisplay();
+        } else if (activeLangType === 'target') {
+            currentTargetLang = code;
+            updateLanguageDisplay();
+        } else if (activeLangType === 'quiz') {
+            selectedQuizLang = code;
+            updateArenaLangDisplay();
+            buildLevelQuestions();
+            loadLevelEngine();
+        }
+        closeLangModal();
+    }
+
+    function swapLanguages() {
+        const temp = currentSourceLang;
+        currentSourceLang = currentTargetLang;
+        currentTargetLang = temp;
+        updateLanguageDisplay();
+        if (currentResult && currentResult !== "অনুবাদে সমস্যা হয়েছে, ইন্টারনেট সংযোগ পরীক্ষা করুন।") {
+            document.getElementById('sourceInput').value = currentResult;
+            translateText();
+        }
+    }
+
+    function applyUiLocalization(langCode) {
+        const t = multiLangUI[langCode] || multiLangUI['en'];
+        document.getElementById('tabTransBtn').innerText = t.transTab;
+        document.getElementById('tabTeacherBtn').innerText = t.teacherTab;
+        document.getElementById('tabQuizBtn').innerText = t.quizTab;
+        document.getElementById('tabDailyBtn').innerText = t.dailyTab;
+        document.getElementById('tabStatsBtn').innerText = t.statsTab;
+        document.getElementById('tabRankBtn').innerText = t.rankTab;
+        document.getElementById('btnTranslate').innerHTML = t.translateBtn;
+        document.getElementById('btnVoice').innerHTML = t.voiceBtn;
+        document.getElementById('btnGrammar').innerText = t.grammar;
+        document.getElementById('btnPure').innerText = t.pure;
+        document.getElementById('btnFormal').innerText = t.formal;
+        document.getElementById('sourceInput').placeholder = t.placeholder;
+        document.getElementById('resPlaceholder').innerText = t.resultPlaceholder;
+        document.getElementById('aiVerifiedText').innerText = t.aiVerified;
     }
 </script>
 </body>
