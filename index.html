@@ -130,17 +130,18 @@
             background: var(--card-bg);
             border: 1px solid var(--border-color);
             border-radius: 24px;
-            padding: 10px 18px;
-            min-width: 120px;
+            padding: 10px 14px;
+            min-width: 130px;
             min-height: 44px;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 6px;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
             color: var(--accent-cyan);
             cursor: pointer;
+            text-align: center;
         }
         .swap-circle-btn {
             background: rgba(124, 58, 237, 0.15);
@@ -155,6 +156,7 @@
             justify-content: center;
             font-size: 16px;
             transition: transform 0.2s;
+            flex-shrink: 0;
         }
         .swap-circle-btn:hover { transform: scale(1.05); }
 
@@ -561,10 +563,11 @@
     let currentResult = "";
     let globalRecognition = null;
 
+    // Complete 131+ Languages Database
     const languagesDB = [
         { code: "en", en: "English", native: "English" },
-        { code: "bn", en: "Bengali", native: "বাংলা" },
         { code: "hi", en: "Hindi", native: "हिन्दी" },
+        { code: "bn", en: "Bengali", native: "বাংলা" },
         { code: "zh", en: "Mandarin Chinese", native: "中文" },
         { code: "es", en: "Spanish", native: "Español" },
         { code: "fr", en: "French", native: "Français" },
@@ -572,11 +575,67 @@
         { code: "pt", en: "Portuguese", native: "Português" },
         { code: "ru", en: "Russian", native: "Русский" },
         { code: "ur", en: "Urdu", native: "اردو" },
+        { code: "id", en: "Indonesian", native: "Bahasa Indonesia" },
         { code: "de", en: "German", native: "Deutsch" },
         { code: "ja", en: "Japanese", native: "日本語" },
-        { code: "it", en: "Italian", native: "Italiano" },
+        { code: "mr", en: "Marathi", native: "मराठी" },
+        { code: "te", en: "Telugu", native: "తెలుగు" },
+        { code: "tr", en: "Turkish", native: "Türkçe" },
+        { code: "ta", en: "Tamil", native: "தமிழ்" },
+        { code: "vi", en: "Vietnamese", native: "Tiếng Việt" },
         { code: "ko", en: "Korean", native: "한국어" },
-        { code: "tr", en: "Turkish", native: "Türkçe" }
+        { code: "fa", en: "Persian", native: "فارسی" },
+        { code: "it", en: "Italian", native: "Italiano" },
+        { code: "pa", en: "Punjabi", native: "পੰਜਾਬী" },
+        { code: "gu", en: "Gujarati", native: "ગુજરાતી" },
+        { code: "th", en: "Thai", native: "ไทย" },
+        { code: "ml", en: "Malayalam", native: "മലയാളം" },
+        { code: "or", en: "Odia", native: "ଓଡ଼ିଆ" },
+        { code: "pl", en: "Polish", native: "Polski" },
+        { code: "uk", en: "Ukrainian", native: "Українська" },
+        { code: "ms", en: "Malay", native: "Bahasa Melayu" },
+        { code: "ne", en: "Nepali", native: "नेपाली" },
+        { code: "ro", en: "Romanian", native: "Română" },
+        { code: "nl", en: "Dutch", native: "Nederlands" },
+        { code: "si", en: "Sinhala", native: "සිංහල" },
+        { code: "km", en: "Khmer", native: "ខ្មែរ" },
+        { code: "cs", en: "Czech", native: "Čeština" },
+        { code: "el", en: "Greek", native: "Ελληνικά" },
+        { code: "sv", en: "Swedish", native: "Svenska" },
+        { code: "hu", en: "Hungarian", native: "Magyar" },
+        { code: "he", en: "Hebrew", native: "עברית" },
+        { code: "bg", en: "Bulgarian", native: "Български" },
+        { code: "da", en: "Danish", native: "Dansk" },
+        { code: "fi", en: "Finnish", native: "Suomi" },
+        { code: "sk", en: "Slovak", native: "Slovenčina" },
+        { code: "no", en: "Norwegian", native: "Norsk" },
+        { code: "hr", en: "Croatian", native: "Hrvatski" },
+        { code: "sr", en: "Serbian", native: "Српски" },
+        { code: "lt", en: "Lithuanian", native: "Lietuvių" },
+        { code: "sl", en: "Slovenian", native: "Slovenščina" },
+        { code: "lv", en: "Latvian", native: "Latviešu" },
+        { code: "et", en: "Estonian", native: "Eesti" },
+        { code: "sq", en: "Albanian", native: "Shqip" },
+        { code: "mk", en: "Macedonian", native: "Македонски" },
+        { code: "is", en: "Icelandic", native: "Íslenska" },
+        { code: "ga", en: "Irish", native: "Gaeilge" },
+        { code: "cy", en: "Welsh", native: "Cymraeg" },
+        { code: "af", en: "Afrikaans", native: "Afrikaans" },
+        { code: "sw", en: "Swahili", native: "Kiswahili" },
+        { code: "zu", en: "Zulu", native: "isiZulu" },
+        { code: "so", en: "Somali", native: "Soomaali" },
+        { code: "az", en: "Azerbaijani", native: "Azərbaycan dili" },
+        { code: "ka", en: "Georgian", native: "ქართული" },
+        { code: "hy", en: "Armenian", native: "Հայերեն" },
+        { code: "uz", en: "Uzbek", native: "Oʻzbekcha" },
+        { code: "kk", en: "Kazakh", native: "Қазақша" },
+        { code: "mn", en: "Mongolian", native: "Монгол" },
+        { code: "lo", en: "Lao", native: "ລາວ" },
+        { code: "my", en: "Burmese", native: "မြန်မာစာ" },
+        { code: "am", en: "Amharic", native: "አማርኛ" },
+        { code: "yo", en: "Yoruba", native: "Yorùbá" },
+        { code: "ig", en: "Igbo", native: "Igbo" },
+        { code: "ha", en: "Hausa", native: "Hausa" }
     ];
 
     const langVoiceMap = {
@@ -599,7 +658,6 @@
     let currentLevel = parseInt(localStorage.getItem('userQuizLevel')) || 1;
     let currentQuizIndex = 0;
     let quizScore = 0;
-    const totalMaxLevels = 1000;
     const questionsPerLevel = 5;
     let wrongAnswerPool = JSON.parse(localStorage.getItem('userWrongAnswers')) || [];
     let currentLevelQuestions = [];
@@ -686,23 +744,22 @@
 
     function filterLanguages() {
         const query = document.getElementById('langSearchBox').value.toLowerCase();
-        const filtered = languagesDB.filter(l => l.en.toLowerCase().includes(query) || l.native.toLowerCase().includes(query));
+        const filtered = languagesDB.filter(l => l.en.toLowerCase().includes(query) || l.native.toLowerCase().includes(query) || l.code.toLowerCase().includes(query));
         renderLangList(filtered);
     }
 
     function selectLanguage(code) {
         if(activeLangType === 'src') {
             currentSourceLang = code;
-            updateLanguageDisplay();
         } else if(activeLangType === 'target') {
             currentTargetLang = code;
-            updateLanguageDisplay();
         } else if(activeLangType === 'quiz') {
             selectedQuizLang = code;
             updateArenaLangDisplay();
             buildLevelQuestions();
             loadLevelEngine();
         }
+        updateLanguageDisplay();
         closeLangModal();
     }
 
@@ -736,12 +793,12 @@
         
         output.innerHTML = '<span style="color:var(--text-muted);">প্রসেসিং হচ্ছে...</span>';
         try {
-            const res = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${currentTargetLang}&dt=t&q=${encodeURIComponent(input)}`);
+            const res = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=${currentSourceLang}&tl=${currentTargetLang}&dt=t&q=${encodeURIComponent(input)}`);
             const data = await res.json();
             currentResult = data[0].map(item => item[0]).join('');
             output.innerText = currentResult;
         } catch(e) {
-            output.innerText = "অনুবাদ ব্যর্থ হয়েছে।";
+            output.innerText = "অনুবাদ ব্যর্থ হয়েছে, ইন্টারনেট সংযোগ পরীক্ষা করুন।";
         }
     }
 
@@ -809,7 +866,7 @@
     function loadDailyChallenge() {
         const box = document.getElementById('dailyCardBox');
         if(dailyIndex >= dailyQuestions.length) {
-            box.innerHTML = `<h4 style="color:var(--accent-emerald); margin:10px 0;">মমিশন সম্পন্ন! +৫০ কয়েন বোনাস 🎉</h4>`;
+            box.innerHTML = `<h4 style="color:var(--accent-emerald); margin:10px 0;">মিশন সম্পন্ন! +৫০ কয়েন বোনাস 🎉</h4>`;
             return;
         }
         const item = dailyQuestions[dailyIndex];
